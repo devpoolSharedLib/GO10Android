@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:text="@string/host_topic"
+    android:id="@+id/hostSubject"
+    android:textStyle="bold"
+    android:background="@drawable/host_topic"
+    android:textColor="#ffffff"
+    android:paddingLeft="10dp"
+    android:textAlignment="gravity"
+    android:gravity="center_vertical"
+    android:textSize="18dp"/>
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/host_conetent"
+    android:id="@+id/hostContent"
+    android:padding="10dp"
+    android:layout_below="@+id/hostSubject"
+    android:layout_centerHorizontal="true"
+    android:background="@drawable/host_content"
+    android:textColor="@color/primary_material_dark" />
+
+    <TableRow
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@+id/hostContent"
+    android:padding="5dp"
+    android:background="@drawable/host_footer">
+
+    <ImageView
+    android:layout_width="25dp"
+    android:layout_height="25dp"
+    android:id="@+id/hostImage" />
+
+    <TextView
+    android:layout_weight="1"
+    android:layout_height="match_parent"
+    android:text="@string/host_username"
+    android:textAlignment="gravity"
+    android:gravity="bottom"
+    android:id="@+id/hostUsername" />
+
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:text="@string/host_date"
+    android:layout_gravity="right"
+    android:textAlignment="gravity"
+    android:gravity="bottom"
+    android:id="@+id/hostTime" />
+
+    </TableRow>
+
+</RelativeLayout>

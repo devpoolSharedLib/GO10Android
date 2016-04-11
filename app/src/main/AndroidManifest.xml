@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="gosoft.th.co.go10"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-sdk android:minSdkVersion="8" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/chatboxfinal3"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/MyCustomTheme">
+
+        <activity android:name="th.co.gosoft.go10.activity.LoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name="th.co.gosoft.go10.activity.SplashScreen"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.AddSelectMultiAvatarActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.SelectRoomActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.RegisterActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.UtilityActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.AddAvatarActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.AllAvatarActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.BoardContentActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.WritingCommentActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.WritingTopicActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.PreviewActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.RoomActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.SelectAvatarActivity"></activity>
+        <activity android:name="th.co.gosoft.go10.activity.BoardUpdateCommentActivity"></activity>
+    </application>
+
+</manifest>

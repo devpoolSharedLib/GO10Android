@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="th.co.gosoft.go10.activity.WritingCommentActivity">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/txtHostSubject"
+        android:hint="Subject"
+        android:background="@drawable/host_topic"
+        android:textColor="#FFFFFF"
+        style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+        android:padding="8dp"
+        android:gravity="start"
+        android:minLines="2" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtHostContent"
+        android:scrollIndicators="right"
+        android:textAlignment="textStart"
+        android:inputType="textMultiLine"
+        android:layout_below="@id/txtHostSubject"
+        android:layout_marginTop="10dp"
+        android:hint="Content"
+        android:background="@drawable/host_content"
+        android:padding="8dp"
+        android:gravity="start"
+        android:minLines="19" />
+
+    <Button
+        android:layout_width="105dp"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_post"
+        android:id="@+id/btnPost"
+        android:onClick="postTopic"
+        android:layout_below="@+id/txtHostContent"
+        android:layout_alignRight="@+id/txtHostContent"
+        android:layout_alignEnd="@+id/txtHostContent"
+        android:layout_marginTop="10dp" />
+
+</RelativeLayout>
