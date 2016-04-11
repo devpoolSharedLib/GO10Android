@@ -30,7 +30,7 @@ public class BoardContentActivity extends UtilityActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.i(LOG_TAG, "BoardContentActivity");
+        Log.i(LOG_TAG, "Oncreate : BoardContentActivity");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_board_content);
@@ -57,7 +57,7 @@ public class BoardContentActivity extends UtilityActivity {
 
         try {
             AsyncHttpClient client = new AsyncHttpClient();
-            client.get(concatString, new BaseJsonHttpResponseHandler() {
+            client.get(concatString, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
 
                 @Override
                 public void onStart() {
@@ -65,7 +65,7 @@ public class BoardContentActivity extends UtilityActivity {
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, Object response) {
+                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
                     try {
                         List<TopicModel> topicModelList = (List<TopicModel>) parseResponse(rawJsonResponse, false);
                         room_id = topicModelList.get(0).getRoomId();
@@ -81,12 +81,12 @@ public class BoardContentActivity extends UtilityActivity {
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, Object errorResponse) {
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
                 }
 
                 @Override
-                protected Object parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                protected List<TopicModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
                     return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {});
                 }

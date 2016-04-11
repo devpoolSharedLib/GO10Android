@@ -57,7 +57,7 @@ public class SelectRoomActivity extends UtilityActivity {
     private void callGetWebService(){
         try {
             AsyncHttpClient client = new AsyncHttpClient();
-            client.get(URL_HOT, new BaseJsonHttpResponseHandler() {
+            client.get(URL_HOT, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
 
                 @Override
                 public void onStart() {
@@ -65,9 +65,9 @@ public class SelectRoomActivity extends UtilityActivity {
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, Object response) {
+                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
                     try {
-                        topicModelList = (List<TopicModel>) parseResponse(rawJsonResponse, false);
+                        topicModelList = response;
                         generateListView();
                         closeLoadingDialog();
                         Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
@@ -80,27 +80,27 @@ public class SelectRoomActivity extends UtilityActivity {
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, Object errorResponse) {
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
                 }
 
                 @Override
-                  protected Object parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                  protected List<TopicModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
                     return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {});
                 }
 
             });
-            client.get(URL_ROOM, new BaseJsonHttpResponseHandler() {
+            client.get(URL_ROOM, new BaseJsonHttpResponseHandler<List<RoomModel>>() {
 
                 @Override
                 public void onStart() {
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, Object response) {
+                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<RoomModel> response) {
                     try {
-                        roomModelList = (List<RoomModel>) parseResponse(rawJsonResponse, false);
+                        roomModelList = response;
                         generateGridView();
                         closeLoadingDialog();
                         Log.i(LOG_TAG, "Room Model List Size : " + roomModelList.size());
@@ -113,12 +113,12 @@ public class SelectRoomActivity extends UtilityActivity {
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, Object errorResponse) {
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<RoomModel> errorResponse) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
                 }
 
                 @Override
-                protected Object parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                protected List<RoomModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
                     return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<RoomModel>>() {});
                 }

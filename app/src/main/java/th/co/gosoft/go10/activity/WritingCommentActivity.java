@@ -110,6 +110,7 @@ public class WritingCommentActivity extends UtilityActivity {
 
     private void callNextActivity(String _id) {
         Intent intent = new Intent(this, BoardContentActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("_id", _id);
         startActivity(intent);
     }
