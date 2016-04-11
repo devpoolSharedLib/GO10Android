@@ -37,11 +37,9 @@ public class RoomActivity extends UtilityActivity {
     private String room_id;
     private String roomName;
 
-    @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
         setContentView(R.layout.activity_room);
-        Log.i(LOG_TAG, "onCreate");
 
         Intent intent = getIntent();
         room_id = intent.getStringExtra("room_id");
@@ -50,13 +48,19 @@ public class RoomActivity extends UtilityActivity {
         Log.i(LOG_TAG, "room_id : " + room_id);
         Log.i(LOG_TAG, "roomName : " + roomName);
 
+//        try{
+//            callGetWebService();
+            generateImageToMap(imageIdMap);
+            ImageView imageView = (ImageView)findViewById(R.id.roomIcon);
+            imageView.setImageResource(imageIdMap.get(room_id));
+            TextView txtRoomName = (TextView)findViewById(R.id.txtRoomName);
+            txtRoomName.setText(roomName);
 
-        generateImageToMap(imageIdMap);
-        ImageView imageView = (ImageView)findViewById(R.id.roomIcon);
-        imageView.setImageResource(imageIdMap.get(room_id));
+//        } catch (Throwable e) {
+//            Log.e(LOG_TAG, e.getMessage(), e);
+//            throw new RuntimeException(e.getMessage(), e);
+//        }
 
-        TextView txtRoomName = (TextView)findViewById(R.id.txtRoomName);
-        txtRoomName.setText(roomName);
 
     }
 
@@ -69,17 +73,12 @@ public class RoomActivity extends UtilityActivity {
         callGetWebService();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.i(LOG_TAG, "onStart");
-    }
-
     private void callGetWebService(){
         String concatString = URL+"?roomId="+room_id;
         try {
             AsyncHttpClient client = new AsyncHttpClient();
-            client.get(concatString, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
+            Log.i(LOG_TAG, "client");
+            client.get(concatString, new BaseJsonHttpResponseHandler() {
 
                 @Override
                 public void onStart() {
@@ -87,14 +86,14 @@ public class RoomActivity extends UtilityActivity {
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
+                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, Object response) {
                     try {
                         Log.i(LOG_TAG, "raw json : " + rawJsonResponse);
-                        topicModelList = response;
-                        Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
-
+                        topicModelList = (List<TopicModel>) parseResponse(rawJsonResponse, false);
                         generateListView();
                         closeLoadingDialog();
+                        Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
+
                     } catch (Throwable e) {
                         closeLoadingDialog();
                         Log.e(LOG_TAG, e.getMessage(), e);
@@ -102,15 +101,17 @@ public class RoomActivity extends UtilityActivity {
                     }
                 }
 
+
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, Object errorResponse) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
                 }
 
                 @Override
-                protected List<TopicModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                protected Object parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : " + rawJsonData);
-                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {});
+                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {
+                    });
                 }
 
             });
@@ -134,17 +135,22 @@ public class RoomActivity extends UtilityActivity {
 
     private void goBoardContentActivity(int position) {
         Intent intent = new Intent(RoomActivity.this, BoardContentActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("_id", topicModelList.get(position).get_id());
         startActivity(intent);
+//        finish();
     }
 
 
-    public void createNewTopic(View view){
+    public void createNewTopic(View view) {
         Intent intent = new Intent(RoomActivity.this, WritingTopicActivity.class);
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra("room_id", room_id);
         startActivity(intent);
+
     }
+
 
 
     private void generateImageToMap(Map<String, Integer> imageIdMap) {

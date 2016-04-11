@@ -70,7 +70,7 @@ public class WritingCommentActivity extends UtilityActivity {
             Log.i(LOG_TAG, jsonString);
 
             AsyncHttpClient client = new AsyncHttpClient();
-            client.post(this, URL, new StringEntity(jsonString, "utf-8"),
+            client.post(this, URL, new StringEntity(jsonString,"utf-8"),
                     RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
 
                         @Override
@@ -113,6 +113,7 @@ public class WritingCommentActivity extends UtilityActivity {
         intent.putExtra("_id", _id);
         startActivity(intent);
     }
+
 
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);

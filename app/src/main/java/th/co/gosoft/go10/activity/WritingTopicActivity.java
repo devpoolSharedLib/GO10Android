@@ -19,8 +19,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.ContentType;
 import cz.msebera.android.httpclient.entity.StringEntity;
+import cz.msebera.android.httpclient.protocol.HTTP;
 import gosoft.th.co.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.Session;
@@ -56,7 +56,8 @@ public class WritingTopicActivity extends UtilityActivity {
         topicModel.setUser(session.getusename());
         topicModel.setType("host");
         topicModel.setRoomId(room_id);
-
+        System.out.println("Subject : " + edtHostSubject.getText().toString());
+        System.out.println("content : "+edtHostContent.getText().toString());
         callPostWebService(topicModel);
     }
 
@@ -81,6 +82,7 @@ public class WritingTopicActivity extends UtilityActivity {
                             Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                             Log.i(LOG_TAG, "new id : "+new String(response));
                             closeLoadingDialog();
+
                             callNextActivity(new String(response));
                         }
 
@@ -95,6 +97,10 @@ public class WritingTopicActivity extends UtilityActivity {
             Log.e(LOG_TAG, "JsonProcessingException : "+e.getMessage(), e);
             showErrorDialog().show();
         }
+//        catch (UnsupportedEncodingException e) {
+//            Log.e(LOG_TAG, "UnsupportedEncodingException : "+e.getMessage(), e);
+//            showErrorDialog().show();
+//        }
     }
 
     private void showLoadingDialog() {
@@ -106,12 +112,17 @@ public class WritingTopicActivity extends UtilityActivity {
         progress.dismiss();
     }
 
-    private void callNextActivity(String _id) {
+    private void callNextActivity(String _id)
+    {
         Intent intent = new Intent(this, BoardContentActivity.class);
         intent.putExtra("_id", _id);
         intent.putExtra("room_id", room_id);
+
         startActivity(intent);
     }
+
+
+
 
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);

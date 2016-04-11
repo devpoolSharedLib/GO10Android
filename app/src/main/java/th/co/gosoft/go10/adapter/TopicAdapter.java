@@ -63,17 +63,18 @@ public class TopicAdapter extends BaseAdapter {
         Log.i(LOG_TAG, "Position : "+position);
 
         View view = convertView;
-        LayoutInflater layoutInflater = null;
+        LayoutInflater layoutInflater =  LayoutInflater.from(context);
 
-        if (view == null) {
-            layoutInflater = LayoutInflater.from(context);
-        }
+//        if (view == null) {
+//            layoutInflater = LayoutInflater.from(context);
+//        }
 
         TopicModel topicModel = (TopicModel) getItem(position);
         Log.i(LOG_TAG, "Item Type : "+topicModel.getType());
 
         if(getItemViewType(position) == 0){
             Log.i(LOG_TAG, "HOST : 0");
+            Log.i(LOG_TAG,rowLayoutMap.get(0)+"");
             view = layoutInflater.inflate(rowLayoutMap.get(0), null);
 
             TextView hostSubject = (TextView) view.findViewById(R.id.hostSubject);

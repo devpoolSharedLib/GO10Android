@@ -91,6 +91,7 @@
                     android:layout_marginRight="15dp"
                     android:textSize="20dp"
                     android:inputType="textPassword" />
+
             </LinearLayout>
 
         </LinearLayout>
