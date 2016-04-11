@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -14,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 import gosoft.th.co.go10.R;
-import th.co.gosoft.go10.model.CommentModel;
 import th.co.gosoft.go10.model.TopicModel;
 
 public class TopicAdapter extends BaseAdapter {

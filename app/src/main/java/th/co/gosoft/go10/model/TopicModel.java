@@ -1,7 +1,5 @@
 package th.co.gosoft.go10.model;
 
-import java.util.Date;
-
 public class TopicModel {
 
     private String _id;
@@ -10,7 +8,7 @@ public class TopicModel {
     private String user;
     private String subject;
     private String content;
-    private Date date;
+    private String date;
     private String type;
     private String roomId;
 
@@ -32,10 +30,10 @@ public class TopicModel {
     public void setUser(String user) {
         this.user = user;
     }
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
     public String get_id() {
