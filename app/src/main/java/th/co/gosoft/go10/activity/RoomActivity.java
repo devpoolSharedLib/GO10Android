@@ -89,7 +89,7 @@ public class RoomActivity extends UtilityActivity {
                 public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
                     try {
                         Log.i(LOG_TAG, "raw json : " + rawJsonResponse);
-                        topicModelList = (List<TopicModel>) parseResponse(rawJsonResponse, false);
+                        topicModelList = response;
                         generateListView();
                         closeLoadingDialog();
                         Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
