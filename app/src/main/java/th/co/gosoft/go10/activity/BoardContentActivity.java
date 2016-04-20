@@ -67,7 +67,7 @@ public class BoardContentActivity extends UtilityActivity {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
                     try {
-                        List<TopicModel> topicModelList = (List<TopicModel>) parseResponse(rawJsonResponse, false);
+                        List<TopicModel> topicModelList = response;
                         room_id = topicModelList.get(0).getRoomId();
                         generateListView(topicModelList);
                         closeLoadingDialog();
