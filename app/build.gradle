@@ -25,6 +25,9 @@ android {
         exclude 'META-INF/NOTICE'
     }
 }
+repositories {
+    mavenCentral()
+}
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -32,13 +35,23 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.0'
+
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
+
+    compile group: 'com.ibm.mobilefirstplatform.clientsdk.android',
+            name:'facebookauthentication',
+            version: '2.+',
+            ext: 'aar',
+            transitive: true
+//    compile group: 'com.ibm.mobilefirstplatform.clientsdk.android',
+//            name:'core',
+//            version: '1.+',
+//            ext: 'aar',
+//            transitive: true
 }
 
 configurations {
     compile.exclude group: 'javax.inject', module: 'javax.inject'
 }
 
-repositories {
-    mavenLocal()
 
-}

@@ -21,4 +21,7 @@
     <string name="btn_send">Send</string>
     <string name="btn_post">Post</string>
     <string name="btn_preview">Preview</string>
+    <string name="action_settings">Settings</string>
+    <string name="facebook_app_id">634836273332467</string>
+    <string name="fb_login_protocol_scheme">fbAPP_ID</string>
 </resources>

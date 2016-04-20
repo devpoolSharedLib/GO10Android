@@ -28,8 +28,8 @@ import th.co.gosoft.go10.model.TopicModel;
 public class SelectRoomActivity extends UtilityActivity {
 
     private final String LOG_TAG = "SelectRoomActivity";
-    private final String URL_HOT = "http://liberty-java-2.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
-    private final String URL_ROOM = "http://liberty-java-2.mybluemix.net/GO10WebService/api/room/get";
+    private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
+    private final String URL_ROOM = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
     private ProgressDialog progress;
     private List<TopicModel> topicModelList = new ArrayList<>();
     private List<RoomModel> roomModelList = new ArrayList<>();
