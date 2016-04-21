@@ -29,7 +29,7 @@ import th.co.gosoft.go10.model.TopicModel;
 public class RoomActivity extends UtilityActivity {
 
     private final String LOG_TAG = "RoomActivity";
-    private final String URL = "http://liberty-java-2.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
+    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
     private ProgressDialog progress;
     private Map<String, Integer> imageIdMap = new HashMap<>();
     private List<TopicModel> topicModelList = new ArrayList<>();
@@ -150,8 +150,6 @@ public class RoomActivity extends UtilityActivity {
         startActivity(intent);
 
     }
-
-
 
     private void generateImageToMap(Map<String, Integer> imageIdMap) {
         imageIdMap.put("rm01", R.drawable.general);

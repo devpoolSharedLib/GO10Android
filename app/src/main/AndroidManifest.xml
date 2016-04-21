@@ -9,13 +9,16 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name="th.co.gosoft.go10.util.GO10Application"
         android:allowBackup="true"
         android:icon="@drawable/chatboxfinal3"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyCustomTheme">
 
-        <activity android:name="th.co.gosoft.go10.activity.LoginActivity">
+        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
+
+        <activity android:name="th.co.gosoft.go10.activity.LoginActivity" android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,6 +40,13 @@
         <activity android:name="th.co.gosoft.go10.activity.RoomActivity"></activity>
         <activity android:name="th.co.gosoft.go10.activity.SelectAvatarActivity"></activity>
         <activity android:name="th.co.gosoft.go10.activity.BoardUpdateCommentActivity"></activity>
+
+        <activity     android:name="com.facebook.FacebookActivity"
+            android:configChanges=
+                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name" />
+
     </application>
 
 </manifest>

@@ -12,7 +12,6 @@ public class Session {
     private SharedPreferences prefs;
 
     public Session(Context cntx) {
-        // TODO Auto-generated constructor stub
         prefs = PreferenceManager.getDefaultSharedPreferences(cntx);
     }
 
@@ -39,13 +38,11 @@ public class Session {
 
     public void setTopic(TopicModel topicModel) {
         prefs.edit().putString("topic_id", topicModel.get_id()).commit();
-//        prefs.edit().putString("room_name", roomModel.getName()).commit();
     }
 
     public TopicModel getTopic() {
         TopicModel topicModel = new TopicModel();
         topicModel.set_id(prefs.getString("topic_id", ""));
-//        roomModel.setName(prefs.getString("room_name", ""));
         return topicModel;
     }
 }

@@ -24,12 +24,13 @@ import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.model.TopicModel;
+import th.co.gosoft.go10.util.GO10Application;
 
 public class SelectRoomActivity extends UtilityActivity {
 
     private final String LOG_TAG = "SelectRoomActivity";
-    private final String URL_HOT = "http://liberty-java-2.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
-    private final String URL_ROOM = "http://liberty-java-2.mybluemix.net/GO10WebService/api/room/get";
+    private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
+    private final String URL_ROOM = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
     private ProgressDialog progress;
     private List<TopicModel> topicModelList = new ArrayList<>();
     private List<RoomModel> roomModelList = new ArrayList<>();
@@ -39,7 +40,13 @@ public class SelectRoomActivity extends UtilityActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_room);
 
-//        callGetWebService();
+        Bundle facebookBundle = ((GO10Application) this.getApplication()).getFacebookBundle();
+        if(facebookBundle != null){
+            Log.i(LOG_TAG, "facebookBundle is not null");
+            Log.i(LOG_TAG, facebookBundle.getString("idFacebook")+", "+facebookBundle.getString("birthday")+", "+facebookBundle.getString("gender")
+                    +", "+facebookBundle.getString("email")+", "+facebookBundle.getString("first_name")+", "+facebookBundle.getString("last_name")
+                    +", "+facebookBundle.getString("profile_pic")+", "+facebookBundle.getString("location"));
+        }
 
     }
 

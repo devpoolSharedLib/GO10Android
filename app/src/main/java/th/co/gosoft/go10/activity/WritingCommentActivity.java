@@ -26,7 +26,7 @@ import th.co.gosoft.go10.util.Session;
 public class WritingCommentActivity extends UtilityActivity {
 
     private final String LOG_TAG = "WritingCommentActivity";
-    private final String URL = "http://liberty-java-2.mybluemix.net/GO10WebService/api/topic/post";
+    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
     private ProgressDialog progress;
     private Session session;
     private String _id ;

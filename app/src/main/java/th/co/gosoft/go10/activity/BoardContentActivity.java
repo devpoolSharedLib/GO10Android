@@ -23,7 +23,7 @@ import th.co.gosoft.go10.model.TopicModel;
 public class BoardContentActivity extends UtilityActivity {
 
     private final String LOG_TAG = "BoardContentActivity";
-    private final String URL = "http://liberty-java-2.mybluemix.net/GO10WebService/api/topic/gettopicbyid";
+    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopicbyid";
     private ProgressDialog progress;
     private String _id ;
     private String room_id ;
