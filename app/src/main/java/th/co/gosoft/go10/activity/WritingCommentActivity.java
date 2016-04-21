@@ -14,7 +14,6 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;

@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
@@ -18,8 +15,6 @@ import com.facebook.GraphResponse;
 import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
-import com.ibm.mobilefirstplatform.clientsdk.android.security.facebookauthentication.FacebookAuthenticationManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,19 +26,13 @@ import java.util.List;
 
 import gosoft.th.co.go10.R;
 import th.co.gosoft.go10.util.GO10Application;
-import th.co.gosoft.go10.util.Session;
 
 public class LoginActivity extends Activity {
 
     private final String LOG_TAG = "LoginActivityTag";
 
-    private Button btnGotoLogin, btnGotoRegister;
-    private EditText edtUserName, edtPassword;
-    private Session session;
-
     CallbackManager callbackManager;
     Profile profile;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState){

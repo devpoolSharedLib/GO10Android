@@ -22,4 +22,5 @@
     <string name="btn_post">Post</string>
     <string name="btn_preview">Preview</string>
     <string name="facebook_app_id">132325190504041</string>
+    <string name="fb_login_protocol_scheme">fbAPP_ID</string>
 </resources>
