@@ -25,7 +25,7 @@
 
     <EditText
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:id="@+id/txtHostContent"
         android:scrollIndicators="right"
         android:textAlignment="textStart"
@@ -36,7 +36,7 @@
         android:background="@drawable/host_content"
         android:padding="8dp"
         android:gravity="start"
-        android:minLines="19" />
+        android:layout_above="@+id/btnPost" />
 
     <Button
         android:layout_width="105dp"
@@ -44,9 +44,8 @@
         android:text="@string/btn_post"
         android:id="@+id/btnPost"
         android:onClick="postTopic"
-        android:layout_below="@+id/txtHostContent"
-        android:layout_alignRight="@+id/txtHostContent"
-        android:layout_alignEnd="@+id/txtHostContent"
-        android:layout_marginTop="10dp" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

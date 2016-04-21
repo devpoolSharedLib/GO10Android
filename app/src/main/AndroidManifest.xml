@@ -15,48 +15,52 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/MyCustomTheme">
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
 
-        <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
-
-        <activity android:name="th.co.gosoft.go10.activity.LoginActivity" android:label="@string/app_name">
+        <activity android:name="th.co.gosoft.go10.activity.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name="th.co.gosoft.go10.activity.LoginActivity"
+            android:label="@string/app_name">
+        </activity>
         <activity
             android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name="th.co.gosoft.go10.activity.SplashScreen"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.AddSelectMultiAvatarActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.SelectRoomActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.RegisterActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.UtilityActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.AddAvatarActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.AllAvatarActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.BoardContentActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.WritingCommentActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.WritingTopicActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.PreviewActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.RoomActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.SelectAvatarActivity"></activity>
-        <activity android:name="th.co.gosoft.go10.activity.BoardUpdateCommentActivity"></activity>
-
-        <activity     android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:label="@string/app_name" />
-
+        <activity android:name="th.co.gosoft.go10.activity.SplashScreen" />
+        <activity android:name="th.co.gosoft.go10.activity.AddSelectMultiAvatarActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.SelectRoomActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.RegisterActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.UtilityActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.AddAvatarActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.AllAvatarActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.BoardContentActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.WritingCommentActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.WritingTopicActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.PreviewActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.RoomActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.SelectAvatarActivity" />
+        <activity android:name="th.co.gosoft.go10.activity.BoardUpdateCommentActivity" />
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

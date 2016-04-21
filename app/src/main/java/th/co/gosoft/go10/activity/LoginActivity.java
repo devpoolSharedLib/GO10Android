@@ -39,23 +39,7 @@ public class LoginActivity extends Activity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         try{
-            AccessToken accessToken = AccessToken.getCurrentAccessToken();
-            profile = Profile.getCurrentProfile();
-            if (accessToken != null) {
-                Log.i(LOG_TAG, "accessToken");
-//                gotoSelectRoomActivity();
-            } else {
-                Log.i(LOG_TAG, "not accessToken");
-//                prepareLoginSession();
-            }
-            if (profile != null) {
-                Log.i(LOG_TAG, "Logged in");
-                gotoSelectRoomActivity();
-            } else {
-                Log.i(LOG_TAG, "not Logged in");
-                prepareLoginSession();
-            }
-
+            prepareLoginSession();
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -89,6 +73,7 @@ public class LoginActivity extends Activity {
                     parameters.putString("fields","id, first_name, last_name, email, gender, birthday, location");
                     request.setParameters(parameters);
                     request.executeAsync();
+
                 }
 
                 @Override

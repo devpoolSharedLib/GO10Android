@@ -47,7 +47,7 @@ public class SplashScreen extends Activity {
         handler.removeCallbacks(runnable);
         time = delay_time - (System.currentTimeMillis() - time);
     }
-    }
+}
 
 
 
