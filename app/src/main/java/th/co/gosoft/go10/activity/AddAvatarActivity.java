@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import gosoft.th.co.go10.R;
+import gosoft.co.th.go10.R;
 
 public class AddAvatarActivity extends UtilityActivity {
 

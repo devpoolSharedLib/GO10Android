@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import gosoft.th.co.go10.R;
+import gosoft.co.th.go10.R;
 
 public class UtilityActivity extends Activity {
 

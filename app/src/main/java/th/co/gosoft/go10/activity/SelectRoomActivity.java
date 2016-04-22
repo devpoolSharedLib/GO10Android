@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-import gosoft.th.co.go10.R;
+import gosoft.co.th.go10.R;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.RoomModel;
@@ -39,6 +39,7 @@ public class SelectRoomActivity extends UtilityActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_room);
+        Log.i(LOG_TAG, "onCreate()");
 
         Bundle facebookBundle = ((GO10Application) this.getApplication()).getFacebookBundle();
         if(facebookBundle != null){

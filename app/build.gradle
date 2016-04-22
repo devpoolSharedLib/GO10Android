@@ -26,6 +26,7 @@ android {
     }
 }
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -41,11 +42,13 @@ dependencies {
             ext: 'aar',
             transitive: true
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-
+    compile 'com.google.android.gms:play-services-auth:8.3.0'
 }
 
 configurations {
     compile.exclude group: 'javax.inject', module: 'javax.inject'
 }
+
+apply plugin: 'com.google.gms.google-services'
 
 

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import gosoft.th.co.go10.R;
+import gosoft.co.th.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
 
 public class TopicAdapter extends BaseAdapter {

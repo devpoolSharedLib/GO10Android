@@ -7,7 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Window;
 
-import gosoft.th.co.go10.R;
+import gosoft.co.th.go10.R;
 
 
 public class SplashScreen extends Activity {

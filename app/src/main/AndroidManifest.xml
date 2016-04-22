@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="gosoft.th.co.go10"
+    package="gosoft.co.th.go10"
     android:versionCode="1"
     android:versionName="1.0">
 
@@ -14,7 +14,7 @@
         android:icon="@drawable/chatboxfinal3"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyCustomTheme">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

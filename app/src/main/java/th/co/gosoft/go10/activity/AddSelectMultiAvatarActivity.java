@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import gosoft.th.co.go10.R;
+import gosoft.co.th.go10.R;
 
 public class AddSelectMultiAvatarActivity extends Activity {
     GridView grid;
