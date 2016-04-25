@@ -14,7 +14,9 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/commentListView" />
+        android:id="@+id/commentListView"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="10.0sp"/>
 
     <Button
         android:layout_width="105dp"

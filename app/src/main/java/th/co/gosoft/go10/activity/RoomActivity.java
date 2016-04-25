@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.model.TopicModel;
 

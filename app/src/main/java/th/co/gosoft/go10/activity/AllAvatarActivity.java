@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 
 public class AllAvatarActivity extends UtilityActivity {
 

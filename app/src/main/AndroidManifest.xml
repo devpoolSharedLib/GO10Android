@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="gosoft.co.th.go10"
+    package="th.co.gosoft.go10"
     android:versionCode="1"
     android:versionName="1.0">
-
-    <uses-sdk android:minSdkVersion="8" />
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name="th.co.gosoft.go10.util.GO10Application"
+        android:name=".util.GO10Application"
         android:allowBackup="true"
-        android:icon="@drawable/chatboxfinal3"
+        android:icon="@drawable/go10_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        android:theme="@style/AppTheme">
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name="th.co.gosoft.go10.activity.LoadingActivity">
+        <activity android:name=".activity.LoadingActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity
-            android:name="th.co.gosoft.go10.activity.LoginActivity"
-            android:label="@string/app_name">
         </activity>
         <activity
             android:name="com.facebook.CustomTabActivity"
@@ -42,25 +36,32 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name="th.co.gosoft.go10.activity.SplashScreen" />
-        <activity android:name="th.co.gosoft.go10.activity.AddSelectMultiAvatarActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.SelectRoomActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.RegisterActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.UtilityActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.AddAvatarActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.AllAvatarActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.BoardContentActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.WritingCommentActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.WritingTopicActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.PreviewActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.RoomActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.SelectAvatarActivity" />
-        <activity android:name="th.co.gosoft.go10.activity.BoardUpdateCommentActivity" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:label="@string/app_name" />
+        <activity android:name=".activity.AddSelectMultiAvatarActivity" />
+        <activity android:name=".activity.SelectRoomActivity" />
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.UtilityActivity" />
+        <activity android:name=".activity.AddAvatarActivity" />
+        <activity android:name=".activity.AllAvatarActivity" />
+        <activity android:name=".activity.BoardContentActivity" />
+        <activity android:name=".activity.WritingCommentActivity" />
+        <activity android:name=".activity.WritingTopicActivity" />
+        <activity android:name=".activity.PreviewActivity" />
+        <activity android:name=".activity.RoomActivity" />
+        <activity android:name=".activity.SelectAvatarActivity" />
+        <activity android:name=".activity.BoardUpdateCommentActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:label="@string/title_activity_home"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

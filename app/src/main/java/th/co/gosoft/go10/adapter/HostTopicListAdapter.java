@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
 
 public class HostTopicListAdapter extends ArrayAdapter<TopicModel> {

@@ -23,4 +23,10 @@
     <string name="btn_preview">Preview</string>
     <string name="facebook_app_id">132325190504041</string>
     <string name="fb_login_protocol_scheme">fbAPP_ID</string>
+    <string name="title_activity_home">GO10</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

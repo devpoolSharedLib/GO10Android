@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.RoomModel;
 
 public class RoomAdapter extends ArrayAdapter<RoomModel> {

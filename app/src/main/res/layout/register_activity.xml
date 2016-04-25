@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:background="@drawable/bg2"
-    tools:context="gosoft.th.co.go10.RegisterActivity">
+    tools:context="th.co.gosoft.go10.activity.RegisterActivity">
     <!--  Header  Starts-->
 
     <LinearLayout

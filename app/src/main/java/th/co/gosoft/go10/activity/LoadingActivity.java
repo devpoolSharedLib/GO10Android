@@ -15,13 +15,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 
 public class LoadingActivity extends Activity {
 
     private final String LOG_TAG = "LoadingActivityTag";
     private final long SPLASH_TIME_OUT = 2000L;
-
+    private Boolean FLAG_FACEBOOK = false;
+    private Boolean FLAG_GMAIL = false;
     private AccessTokenTracker accessTokenTracker;
     private GoogleApiClient mGoogleApiClient;
 
@@ -32,45 +33,30 @@ public class LoadingActivity extends Activity {
         try{
             FacebookSdk.sdkInitialize(this.getApplicationContext());
             setContentView(R.layout.activity_loading);
-
-//            accessTokenTracker = new AccessTokenTracker() {
-//                @Override
-//                protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
-//                    updateWithToken(newAccessToken);
-//                }
-//            };
-//
-//            updateWithToken(AccessToken.getCurrentAccessToken());
-
+            checkCurrentTokenFacebook();
             prepareGmailLoginSession();
-
-            OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
-            if (opr.isDone()) {
-                Log.i(LOG_TAG, "Got cached sign-in");
+            checkCurrentTokenGmail();
+            if(FLAG_FACEBOOK || FLAG_GMAIL){
                 new Handler().postDelayed(new Runnable() {
-
                     @Override
                     public void run() {
-//                    Intent i = new Intent(LoadingActivity.this, SelectRoomActivity.class);
-                        Intent i = new Intent(LoadingActivity.this, LoginActivity.class);
+                        Intent i = new Intent(LoadingActivity.this, HomeActivity.class);
                         startActivity(i);
                         finish();
                     }
                 }, SPLASH_TIME_OUT);
-            } else {
-                Log.i(LOG_TAG, "Not Get cached sign-in");
+            }else{
                 new Handler().postDelayed(new Runnable() {
 
                     @Override
                     public void run() {
-//                    Intent i = new Intent(LoadingActivity.this, SelectRoomActivity.class);
                         Intent i = new Intent(LoadingActivity.this, LoginActivity.class);
                         startActivity(i);
                         finish();
+
                     }
                 }, SPLASH_TIME_OUT);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -78,31 +64,39 @@ public class LoadingActivity extends Activity {
 
     }
 
+    private void checkCurrentTokenFacebook() {
+//        accessTokenTracker = new AccessTokenTracker() {
+//            @Override
+//            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
+//                updateWithToken(newAccessToken);
+//            }
+//        };
+
+        updateWithToken(AccessToken.getCurrentAccessToken());
+    }
+
     private void updateWithToken(AccessToken currentAccessToken) {
 
         if (currentAccessToken != null) {
-            Log.i(LOG_TAG, "currentAccessToken");
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-//                    Intent i = new Intent(LoadingActivity.this, SelectRoomActivity.class);
-                    Intent i = new Intent(LoadingActivity.this, LoginActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            }, SPLASH_TIME_OUT);
+            Log.i(LOG_TAG, "Facebook cached sign-in");
+            FLAG_FACEBOOK = true;
         } else {
-            Log.i(LOG_TAG, "null currentAccessToken");
-            new Handler().postDelayed(new Runnable() {
+            Log.i(LOG_TAG, "Facebook cached not sign-in");
+            FLAG_FACEBOOK = false;
+        }
+    }
 
-                @Override
-                public void run() {
-                    Intent i = new Intent(LoadingActivity.this, LoginActivity.class);
-                    startActivity(i);
-                    finish();
-                }
-            }, SPLASH_TIME_OUT);
+    private void checkCurrentTokenGmail() {
+
+        OptionalPendingResult<GoogleSignInResult> opr = Auth.GoogleSignInApi.silentSignIn(mGoogleApiClient);
+        if (opr.isDone()) {
+            Log.i(LOG_TAG, "Gmail cached sign-in");
+            FLAG_GMAIL = true;
+
+        } else {
+            Log.i(LOG_TAG, "Gmail cached not sign-in");
+            FLAG_GMAIL = false;
+
         }
     }
 

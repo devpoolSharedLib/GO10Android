@@ -2,7 +2,7 @@ package th.co.gosoft.go10.activity;
 
 import android.os.Bundle;
 
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 
 public class BoardUpdateCommentActivity extends UtilityActivity {
 

@@ -1,4 +1,4 @@
-package gosoft.co.th.go10;
+package th.co.gosoft.go10;
 
 import org.junit.Test;
 

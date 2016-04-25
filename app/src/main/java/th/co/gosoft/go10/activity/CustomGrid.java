@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 
 public class CustomGrid extends BaseAdapter{
     private Context mContext;

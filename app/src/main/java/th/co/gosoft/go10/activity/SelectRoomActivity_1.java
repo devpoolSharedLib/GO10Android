@@ -1,11 +1,14 @@
 package th.co.gosoft.go10.activity;
 
+import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
@@ -24,9 +27,8 @@ import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.model.TopicModel;
-import th.co.gosoft.go10.util.GO10Application;
 
-public class SelectRoomActivity extends UtilityActivity {
+public class SelectRoomActivity_1 extends Fragment {
 
     private final String LOG_TAG = "SelectRoomActivity";
     private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
@@ -35,29 +37,37 @@ public class SelectRoomActivity extends UtilityActivity {
     private List<TopicModel> topicModelList = new ArrayList<>();
     private List<RoomModel> roomModelList = new ArrayList<>();
 
+    private boolean isLoadTopicDone = false;
+    private boolean isLoadRoomDone = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_room);
         Log.i(LOG_TAG, "onCreate()");
 
-        Bundle facebookBundle = ((GO10Application) this.getApplication()).getFacebookBundle();
-        if(facebookBundle != null){
-            Log.i(LOG_TAG, "facebookBundle is not null");
-            Log.i(LOG_TAG, facebookBundle.getString("idFacebook")+", "+facebookBundle.getString("birthday")+", "+facebookBundle.getString("gender")
-                    +", "+facebookBundle.getString("email")+", "+facebookBundle.getString("first_name")+", "+facebookBundle.getString("last_name")
-                    +", "+facebookBundle.getString("profile_pic")+", "+facebookBundle.getString("location"));
-        }
+//        Bundle facebookBundle = ((GO10Application) this.getApplication()).getFacebookBundle();
+//        if(facebookBundle != null){
+//            Log.i(LOG_TAG, "facebookBundle is not null");
+//            Log.i(LOG_TAG, facebookBundle.getString("idFacebook")+", "+facebookBundle.getString("birthday")+", "+facebookBundle.getString("gender")
+//                    +", "+facebookBundle.getString("email")+", "+facebookBundle.getString("first_name")+", "+facebookBundle.getString("last_name")
+//                    +", "+facebookBundle.getString("profile_pic")+", "+facebookBundle.getString("location"));
+//        }
 
     }
 
     @Override
-    protected void onResume() {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.activity_select_room, container, false);
+    }
+
+    @Override
+    public void onResume() {
         super.onResume();
         Log.i(LOG_TAG, "onResume");
-        ListView listViewSelectAvatar = (ListView)findViewById(R.id.listViewSelectAvatar);
+        ListView listViewSelectAvatar = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
         listViewSelectAvatar.setAdapter(null);
-        GridView gridViewRoom = (GridView)findViewById(R.id.gridViewRoom);
+        GridView gridViewRoom = (GridView) getView().findViewById(R.id.gridViewRoom);
         gridViewRoom.setAdapter(null);
         callGetWebService();
     }
@@ -65,11 +75,11 @@ public class SelectRoomActivity extends UtilityActivity {
     private void callGetWebService(){
         try {
             AsyncHttpClient client = new AsyncHttpClient();
+            showLoadingDialog();
             client.get(URL_HOT, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
 
                 @Override
                 public void onStart() {
-                    showLoadingDialog();
                 }
 
                 @Override
@@ -77,7 +87,10 @@ public class SelectRoomActivity extends UtilityActivity {
                     try {
                         topicModelList = response;
                         generateListView();
-                        closeLoadingDialog();
+                        isLoadTopicDone = true;
+                        if(isLoadTopicDone && isLoadRoomDone){
+                            closeLoadingDialog();
+                        }
                         Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
 
                     } catch (Throwable e) {
@@ -110,7 +123,10 @@ public class SelectRoomActivity extends UtilityActivity {
                     try {
                         roomModelList = response;
                         generateGridView();
-                        closeLoadingDialog();
+                        isLoadRoomDone = true;
+                        if(isLoadTopicDone && isLoadRoomDone){
+                            closeLoadingDialog();
+                        }
                         Log.i(LOG_TAG, "Room Model List Size : " + roomModelList.size());
 
                     } catch (Throwable e) {
@@ -140,8 +156,8 @@ public class SelectRoomActivity extends UtilityActivity {
     }
 
     private void generateListView() {
-        ListView hotTopicListView = (ListView)findViewById(R.id.listViewSelectAvatar);
-        HostTopicListAdapter hostTopicListAdapter = new HostTopicListAdapter(this, R.layout.hot_topic_row, topicModelList);
+        ListView hotTopicListView = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
+        HostTopicListAdapter hostTopicListAdapter = new HostTopicListAdapter(getActivity(), R.layout.hot_topic_row, topicModelList);
         hotTopicListView.setAdapter(hostTopicListAdapter);
 
         hotTopicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -154,8 +170,8 @@ public class SelectRoomActivity extends UtilityActivity {
     }
 
     private void generateGridView() {
-        GridView gridView = (GridView) findViewById(R.id.gridViewRoom);
-        RoomAdapter roomAdapter = new RoomAdapter(this, R.layout.room_grid, roomModelList);
+        GridView gridView = (GridView)  getView().findViewById(R.id.gridViewRoom);
+        RoomAdapter roomAdapter = new RoomAdapter(getActivity(), R.layout.room_grid, roomModelList);
         gridView.setAdapter(roomAdapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -169,7 +185,7 @@ public class SelectRoomActivity extends UtilityActivity {
 
     private void goBoardContentActivity(int position) {
         try{
-            Intent intent = new Intent(SelectRoomActivity.this, BoardContentActivity.class);
+            Intent intent = new Intent(getActivity(), BoardContentActivity.class);
             intent.putExtra("_id", topicModelList.get(position).get_id());
             startActivity(intent);
         } catch (Exception e) {
@@ -181,7 +197,7 @@ public class SelectRoomActivity extends UtilityActivity {
     private void goRoomActivity(int position) {
         Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. goRoomActivity");
         try{
-            Intent intent = new Intent(SelectRoomActivity.this, RoomActivity.class);
+            Intent intent = new Intent(getActivity(), RoomActivity.class);
             intent.putExtra("room_id", roomModelList.get(position).get_id());
             intent.putExtra("roomName", roomModelList.get(position).getName());
             Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. build intent complete");
@@ -216,7 +232,7 @@ public class SelectRoomActivity extends UtilityActivity {
     }
 
     private void showLoadingDialog() {
-        progress = ProgressDialog.show(this, null,
+        progress = ProgressDialog.show(getActivity(), null,
                 "Processing", true);
     }
 
@@ -225,7 +241,7 @@ public class SelectRoomActivity extends UtilityActivity {
     }
 
     private AlertDialog.Builder showErrorDialog(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setMessage("Error Occurred!!!");
         alert.setCancelable(true);
         return alert;

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 
 public class PreviewActivity extends UtilityActivity {
 

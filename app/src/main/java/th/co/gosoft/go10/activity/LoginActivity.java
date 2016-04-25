@@ -29,7 +29,7 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-import gosoft.co.th.go10.R;
+import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.util.GO10Application;
 
 public class LoginActivity extends Activity implements
@@ -127,7 +127,7 @@ public class LoginActivity extends Activity implements
     }
 
     private void gotoSelectRoomActivity() {
-        Intent newActivity = new Intent(LoginActivity.this, SelectRoomActivity.class);
+        Intent newActivity = new Intent(LoginActivity.this, HomeActivity.class);
         startActivity(newActivity);
     }
 
