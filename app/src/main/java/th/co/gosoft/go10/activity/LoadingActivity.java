@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.util.Log;
 
 import com.facebook.AccessToken;
-import com.facebook.AccessTokenTracker;
 import com.facebook.FacebookSdk;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -23,7 +22,6 @@ public class LoadingActivity extends Activity {
     private final long SPLASH_TIME_OUT = 2000L;
     private Boolean FLAG_FACEBOOK = false;
     private Boolean FLAG_GMAIL = false;
-    private AccessTokenTracker accessTokenTracker;
     private GoogleApiClient mGoogleApiClient;
 
     @Override
@@ -65,13 +63,6 @@ public class LoadingActivity extends Activity {
     }
 
     private void checkCurrentTokenFacebook() {
-//        accessTokenTracker = new AccessTokenTracker() {
-//            @Override
-//            protected void onCurrentAccessTokenChanged(AccessToken oldAccessToken, AccessToken newAccessToken) {
-//                updateWithToken(newAccessToken);
-//            }
-//        };
-
         updateWithToken(AccessToken.getCurrentAccessToken());
     }
 
