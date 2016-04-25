@@ -8,13 +8,13 @@ import android.os.Bundle;
  */
 public class GO10Application extends Application {
 
-    private Bundle facebookBundle;
+    private Bundle bundle;
 
-    public Bundle getFacebookBundle() {
-        return facebookBundle;
+    public Bundle getBundle() {
+        return bundle;
     }
 
-    public void setFacebookBundle(Bundle facebookBundle) {
-        this.facebookBundle = facebookBundle;
+    public void setBundle(Bundle bundle) {
+        this.bundle = bundle;
     }
 }

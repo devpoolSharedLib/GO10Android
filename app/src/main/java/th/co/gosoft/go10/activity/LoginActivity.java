@@ -122,8 +122,9 @@ public class LoginActivity extends Activity implements
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
 
-    private void addBundleToApplication(Bundle facebookBundle) {
-        ((GO10Application) this.getApplication()).setFacebookBundle(facebookBundle);
+    private void addBundleToApplication(Bundle bundle) {
+        Log.i(LOG_TAG, "addBundleToApplication()");
+        ((GO10Application) this.getApplication()).setBundle(bundle);
     }
 
     private void gotoSelectRoomActivity() {
@@ -182,7 +183,8 @@ public class LoginActivity extends Activity implements
         Log.d(LOG_TAG, "handleSignInResult:" + result.isSuccess());
         if (result.isSuccess()) {
             GoogleSignInAccount acct = result.getSignInAccount();
-            createBundleFromGmailObject(acct);
+            Bundle googleBundle = createBundleFromGmailObject(acct);
+            addBundleToApplication(googleBundle);
             gotoSelectRoomActivity();
         } else {
             Log.i(LOG_TAG, "Cannot Login GMAIL Accout !!!");

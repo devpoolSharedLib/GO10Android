@@ -1,4 +1,4 @@
-package th.co.gosoft.go10.activity;
+package th.co.gosoft.go10.fragment;
 
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -23,12 +23,14 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
+import th.co.gosoft.go10.activity.BoardContentActivity;
+import th.co.gosoft.go10.activity.RoomActivity;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.model.TopicModel;
 
-public class SelectRoomActivity_1 extends Fragment {
+public class SelectRoomFragment extends Fragment {
 
     private final String LOG_TAG = "SelectRoomActivity";
     private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
@@ -44,14 +46,6 @@ public class SelectRoomActivity_1 extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "onCreate()");
-
-//        Bundle facebookBundle = ((GO10Application) this.getApplication()).getFacebookBundle();
-//        if(facebookBundle != null){
-//            Log.i(LOG_TAG, "facebookBundle is not null");
-//            Log.i(LOG_TAG, facebookBundle.getString("idFacebook")+", "+facebookBundle.getString("birthday")+", "+facebookBundle.getString("gender")
-//                    +", "+facebookBundle.getString("email")+", "+facebookBundle.getString("first_name")+", "+facebookBundle.getString("last_name")
-//                    +", "+facebookBundle.getString("profile_pic")+", "+facebookBundle.getString("location"));
-//        }
 
     }
 

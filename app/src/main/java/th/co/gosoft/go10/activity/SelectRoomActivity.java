@@ -41,7 +41,7 @@ public class SelectRoomActivity extends UtilityActivity {
         setContentView(R.layout.activity_select_room);
         Log.i(LOG_TAG, "onCreate()");
 
-        Bundle facebookBundle = ((GO10Application) this.getApplication()).getFacebookBundle();
+        Bundle facebookBundle = ((GO10Application) this.getApplication()).getBundle();
         if(facebookBundle != null){
             Log.i(LOG_TAG, "facebookBundle is not null");
             Log.i(LOG_TAG, facebookBundle.getString("idFacebook")+", "+facebookBundle.getString("birthday")+", "+facebookBundle.getString("gender")
