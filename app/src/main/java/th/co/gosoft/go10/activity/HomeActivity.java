@@ -76,22 +76,18 @@ public class HomeActivity extends AppCompatActivity
 
                 profileView = (ImageView) headerLayout.findViewById(R.id.imgProfileImage);
                 profileName = (TextView) headerLayout.findViewById(R.id.txtProfileName);
-    //            myAwesomeTextView.setText("My Awesome Text");
-                if(profileView == null || profileName == null){
-                    Log.i(LOG_TAG, "Holy Shit");
-                }
 
                 Bundle profileBundle = ((GO10Application) this.getApplication()).getBundle();
                 if(profileBundle != null){
                     Log.i(LOG_TAG, "Bundle not Null");
                     initialUserProfile(profileBundle);
-                }else{
+                } else {
                     Log.i(LOG_TAG, "Bundle Null");
-                    if(checkCurrentTokenFacebook()){
-                        initialNewBundle();
-                    }else if(checkCurrentTokenGmail()) {
-                            GoogleSignInResult result = opr.get();
-                            handleSignInResult(result);
+                    if(checkCurrentTokenFacebook()) {
+                        initialNewFacebookBundle();
+                    } else if(checkCurrentTokenGmail()) {
+                        GoogleSignInResult result = opr.get();
+                        handleSignInResult(result);
                     }
                 }
 
@@ -103,29 +99,28 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    private void initialNewBundle() {
+    private void initialNewFacebookBundle() {
         Bundle params = new Bundle();
         params.putString("fields","id, name, email, gender, birthday, location");
 
         new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
-                new GraphRequest.Callback() {
-                    @Override
-                    public void onCompleted(GraphResponse response) {
-                        Log.i(LOG_TAG, "GraphResponse onCompleted");
-                        if (response != null) {
-                            try {
-                                Log.i(LOG_TAG, "response not null");
-                                JSONObject data = response.getJSONObject();
-                                Log.i(LOG_TAG, "xxxxxxx");
-                                Bundle facebookBundle = createBundleFromFacebookObject(data);
-                                addBundleToApplication(facebookBundle);
-                                initialUserProfile(facebookBundle);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+            new GraphRequest.Callback() {
+                @Override
+                public void onCompleted(GraphResponse response) {
+                    Log.i(LOG_TAG, "GraphResponse onCompleted");
+                    if (response != null) {
+                        try {
+                            Log.i(LOG_TAG, "response not null");
+                            JSONObject data = response.getJSONObject();
+                            Bundle facebookBundle = createBundleFromFacebookObject(data);
+                            addBundleToApplication(facebookBundle);
+                            initialUserProfile(facebookBundle);
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
                     }
-                }).executeAsync();
+                }
+            }).executeAsync();
     }
 
 

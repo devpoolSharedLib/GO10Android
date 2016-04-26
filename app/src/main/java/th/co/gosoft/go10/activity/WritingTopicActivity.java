@@ -20,6 +20,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
+import th.co.gosoft.go10.util.GO10Application;
 import th.co.gosoft.go10.util.Session;
 
 public class WritingTopicActivity extends UtilityActivity {
@@ -28,7 +29,7 @@ public class WritingTopicActivity extends UtilityActivity {
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
     private ProgressDialog progress;
     private String room_id;
-    private Session session;
+    private Bundle profileBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,7 @@ public class WritingTopicActivity extends UtilityActivity {
 
         Intent intent = getIntent();
         room_id = intent.getStringExtra("room_id");
-        session = new Session(this);
+        profileBundle = ((GO10Application) this.getApplication()).getBundle();
     }
 
     public void postTopic(View view) {
@@ -50,12 +51,16 @@ public class WritingTopicActivity extends UtilityActivity {
         TopicModel topicModel = new TopicModel();
         topicModel.setSubject(edtHostSubject.getText().toString());
         topicModel.setContent(edtHostContent.getText().toString());
-        topicModel.setUser(session.getusename());
+        topicModel.setUser(getUsernameFromApplication());
         topicModel.setType("host");
         topicModel.setRoomId(room_id);
-        System.out.println("Subject : " + edtHostSubject.getText().toString());
-        System.out.println("content : "+edtHostContent.getText().toString());
+        Log.i(LOG_TAG, "Subject : "+edtHostSubject.getText().toString());
+        Log.i(LOG_TAG, "content : "+edtHostContent.getText().toString());
         callPostWebService(topicModel);
+    }
+
+    private String getUsernameFromApplication() {
+        return profileBundle.getString("name");
     }
 
     private void callPostWebService(TopicModel topicModel){
@@ -94,10 +99,6 @@ public class WritingTopicActivity extends UtilityActivity {
             Log.e(LOG_TAG, "JsonProcessingException : "+e.getMessage(), e);
             showErrorDialog().show();
         }
-//        catch (UnsupportedEncodingException e) {
-//            Log.e(LOG_TAG, "UnsupportedEncodingException : "+e.getMessage(), e);
-//            showErrorDialog().show();
-//        }
     }
 
     private void showLoadingDialog() {
@@ -118,14 +119,12 @@ public class WritingTopicActivity extends UtilityActivity {
         startActivity(intent);
     }
 
-
-
-
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage("Error Occurred!!!");
         alert.setCancelable(true);
         return alert;
     }
+
 
 }

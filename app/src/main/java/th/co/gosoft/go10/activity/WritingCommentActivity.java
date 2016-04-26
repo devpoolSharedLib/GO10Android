@@ -20,6 +20,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
+import th.co.gosoft.go10.util.GO10Application;
 import th.co.gosoft.go10.util.Session;
 
 public class WritingCommentActivity extends UtilityActivity {
@@ -27,7 +28,7 @@ public class WritingCommentActivity extends UtilityActivity {
     private final String LOG_TAG = "WritingCommentActivity";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
     private ProgressDialog progress;
-    private Session session;
+    private Bundle profileBundle;
     private String _id ;
     private String room_id;
 
@@ -39,26 +40,25 @@ public class WritingCommentActivity extends UtilityActivity {
         Intent intent = getIntent();
         _id = intent.getStringExtra("_id");
         room_id = intent.getStringExtra("room_id");
+        profileBundle = ((GO10Application) this.getApplication()).getBundle();
     }
 
     public void sendComment(View view) {
         EditText edtCommentContent = (EditText) findViewById(R.id.txtCommentContent);
         Log.i(LOG_TAG, "Content : " + edtCommentContent.getText().toString());
-        session = new Session(this);
 
         TopicModel topicModel = new TopicModel();
         topicModel.setTopicId(_id);
         topicModel.setContent(edtCommentContent.getText().toString());
-        topicModel.setUser(session.getusename());
+        topicModel.setUser(getUsernameFromApplication());
         topicModel.setType("comment");
         topicModel.setRoomId(room_id);
 
         callPostWebService(topicModel);
     }
 
-    public void gotoPreviewPage(View view) {
-        Intent intent = new Intent(this, PreviewActivity.class);
-        startActivity(intent);
+    private String getUsernameFromApplication() {
+        return profileBundle.getString("name");
     }
 
     private void callPostWebService(TopicModel topicModel){
