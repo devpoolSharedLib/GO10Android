@@ -129,6 +129,7 @@ public class LoginActivity extends Activity implements
 
     private void gotoSelectRoomActivity() {
         Intent newActivity = new Intent(LoginActivity.this, HomeActivity.class);
+        newActivity.setFlags(newActivity.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(newActivity);
     }
 
