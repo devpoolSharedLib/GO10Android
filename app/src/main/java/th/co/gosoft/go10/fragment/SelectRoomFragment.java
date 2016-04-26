@@ -1,6 +1,7 @@
 package th.co.gosoft.go10.fragment;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +24,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.activity.BoardContentActivity;
+import th.co.gosoft.go10.activity.BoardContentFragment;
 import th.co.gosoft.go10.activity.RoomActivity;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomAdapter;
@@ -47,7 +48,10 @@ public class SelectRoomFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "onCreate()");
 
+
     }
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -177,11 +181,36 @@ public class SelectRoomFragment extends Fragment {
         });
     }
 
+    private void inflateSelectRoomFragment() {
+        Fragment fragment = new SelectRoomFragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+    }
+
+    private void inflateBoardActivityFragment() {
+        Fragment fragment = new Fragment();
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, fragment)
+                .commit();
+    }
+
     private void goBoardContentActivity(int position) {
         try{
-            Intent intent = new Intent(getActivity(), BoardContentActivity.class);
-            intent.putExtra("_id", topicModelList.get(position).get_id());
-            startActivity(intent);
+//            Intent intent = new Intent(getActivity(), BoardContentFragment.class);
+//            intent.putExtra("_id", topicModelList.get(position).get_id());
+//            startActivity(intent);
+            Bundle data = new Bundle();
+            data.putString("_id", topicModelList.get(position).get_id());
+            Fragment fragment = new BoardContentFragment();
+            fragment.setArguments(data);
+
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, fragment).addToBackStack("tag")
+                    .commit();
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
