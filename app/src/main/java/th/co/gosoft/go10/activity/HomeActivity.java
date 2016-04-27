@@ -158,8 +158,21 @@ public class HomeActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
+            if(getFragmentManager().getBackStackEntryCount() == 0) {
+                super.onBackPressed();
+            }
+            else {
+                for(int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
+                    getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                }
+//                getFragmentManager().popBackStack();
+            }
         }
+
+
+
+
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

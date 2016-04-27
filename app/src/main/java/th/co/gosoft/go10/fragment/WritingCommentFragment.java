@@ -1,12 +1,17 @@
-package th.co.gosoft.go10.activity;
+package th.co.gosoft.go10.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,13 +24,12 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.GO10Application;
 
-public class WritingCommentActivity extends UtilityActivity {
+public class WritingCommentFragment extends Fragment {
 
-    private final String LOG_TAG = "WritingCommentActivityTag";
+    private final String LOG_TAG = "WritingCommentFragmentTag";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
     private ProgressDialog progress;
     private Bundle profileBundle;
@@ -33,28 +37,52 @@ public class WritingCommentActivity extends UtilityActivity {
     private String room_id;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        Log.i(LOG_TAG, "WritingCommentFragmentTag");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_writing_comment);
-
-        Intent intent = getIntent();
-        _id = intent.getStringExtra("_id");
-        room_id = intent.getStringExtra("room_id");
-        profileBundle = ((GO10Application) this.getApplication()).getBundle();
     }
 
-    public void sendComment(View view) {
-        EditText edtCommentContent = (EditText) findViewById(R.id.txtCommentContent);
-        Log.i(LOG_TAG, "Content : " + edtCommentContent.getText().toString());
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view =  inflater.inflate(R.layout.activity_writing_comment, container, false);
+        Bundle bundle = getArguments();
+        _id = bundle.getString("_id");
+        room_id = bundle.getString("room_id");
+        Log.i(LOG_TAG, "_id : " + _id);
+        Log.i(LOG_TAG, "room_id : " + room_id);
+        profileBundle = ((GO10Application) getActivity().getApplication()).getBundle();
 
-        TopicModel topicModel = new TopicModel();
-        topicModel.setTopicId(_id);
-        topicModel.setContent(edtCommentContent.getText().toString());
-        topicModel.setUser(getUsernameFromApplication());
-        topicModel.setType("comment");
-        topicModel.setRoomId(room_id);
+        Button button = (Button) view.findViewById(R.id.btnSend);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                EditText edtCommentContent = (EditText) getView().findViewById(R.id.txtCommentContent);
+                Log.i(LOG_TAG, "Content : " + edtCommentContent.getText().toString());
 
-        callPostWebService(topicModel);
+                TopicModel topicModel = new TopicModel();
+                topicModel.setTopicId(_id);
+                topicModel.setContent(edtCommentContent.getText().toString());
+                topicModel.setUser(getUsernameFromApplication());
+                topicModel.setType("comment");
+                topicModel.setRoomId(room_id);
+
+                callPostWebService(topicModel);
+            }
+        });
+        Button buttonUploadImg = (Button) view.findViewById(R.id.btnUploadImg);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                ImageView UploadImg = (ImageView) getView().findViewById(R.id.btnUploadImg);
+
+            }
+        });
+        return view;
     }
 
     private String getUsernameFromApplication() {
@@ -69,7 +97,7 @@ public class WritingCommentActivity extends UtilityActivity {
             Log.i(LOG_TAG, jsonString);
 
             AsyncHttpClient client = new AsyncHttpClient();
-            client.post(this, URL, new StringEntity(jsonString,"utf-8"),
+            client.post(getActivity(), URL, new StringEntity(jsonString,"utf-8"),
                     RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
 
                         @Override
@@ -99,7 +127,7 @@ public class WritingCommentActivity extends UtilityActivity {
     }
 
     private void showLoadingDialog() {
-        progress = ProgressDialog.show(this, null,
+        progress = ProgressDialog.show(getActivity(), null,
                 "Processing", true);
     }
 
@@ -108,18 +136,20 @@ public class WritingCommentActivity extends UtilityActivity {
     }
 
     private void callNextActivity(String _id) {
-        Intent intent = new Intent(this, BoardContentFragment.class);
-        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra("_id", _id);
-        startActivity(intent);
+        Bundle data = new Bundle();
+        data.putString("_id", _id);
+        Fragment fragment = new BoardContentFragment();
+        fragment.setArguments(data);
+        FragmentManager fragmentManager = getFragmentManager();
+//            FragmentTransaction tx = fragmentManager.beginTransaction();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+
     }
 
-
     private AlertDialog.Builder showErrorDialog(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setMessage("Error Occurred!!!");
         alert.setCancelable(true);
         return alert;
     }
-
 }

@@ -1,11 +1,15 @@
-package th.co.gosoft.go10.activity;
+package th.co.gosoft.go10.fragment;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,45 +23,55 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.GO10Application;
 
-public class WritingTopicActivity extends UtilityActivity {
+public class WritingTopicFragment extends Fragment {
 
-    private final String LOG_TAG = "WritingTopicActivityTag";
+    private final String LOG_TAG = "WritingTopicFragmentTag";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
     private ProgressDialog progress;
     private String room_id;
     private Bundle profileBundle;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        Log.i(LOG_TAG, "WritingTopicFragment");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_writing_topic);
+    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view =  inflater.inflate(R.layout.activity_writing_topic, container, false);
+        Bundle bundle = getArguments();
+        room_id = bundle.getString("room_id");
+        Log.i(LOG_TAG, "room_id : " + room_id);
+        profileBundle = ((GO10Application) getActivity().getApplication()).getBundle();
+        Button button = (Button) view.findViewById(R.id.btnPost);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                EditText edtHostSubject = (EditText) getView().findViewById(R.id.txtHostSubject);
+                EditText edtHostContent = (EditText) getView().findViewById(R.id.txtHostContent);
+                Log.i(LOG_TAG, "Subject : " + edtHostSubject.getText().toString());
+                Log.i(LOG_TAG, "Content : " + edtHostContent.getText().toString());
 
-        Intent intent = getIntent();
-        room_id = intent.getStringExtra("room_id");
-        profileBundle = ((GO10Application) this.getApplication()).getBundle();
+                TopicModel topicModel = new TopicModel();
+                topicModel.setSubject(edtHostSubject.getText().toString());
+                topicModel.setContent(edtHostContent.getText().toString());
+                topicModel.setUser(getUsernameFromApplication());
+                topicModel.setType("host");
+                topicModel.setRoomId(room_id);
+                Log.i(LOG_TAG, "Subject : "+edtHostSubject.getText().toString());
+                Log.i(LOG_TAG, "content : "+edtHostContent.getText().toString());
+                callPostWebService(topicModel);
+            }
+        });
+        return view;
     }
 
-    public void postTopic(View view) {
-
-        EditText edtHostSubject = (EditText) findViewById(R.id.txtHostSubject);
-        EditText edtHostContent = (EditText) findViewById(R.id.txtHostContent);
-        Log.i(LOG_TAG, "Subject : " + edtHostSubject.getText().toString());
-        Log.i(LOG_TAG, "Content : " + edtHostContent.getText().toString());
-
-        TopicModel topicModel = new TopicModel();
-        topicModel.setSubject(edtHostSubject.getText().toString());
-        topicModel.setContent(edtHostContent.getText().toString());
-        topicModel.setUser(getUsernameFromApplication());
-        topicModel.setType("host");
-        topicModel.setRoomId(room_id);
-        Log.i(LOG_TAG, "Subject : "+edtHostSubject.getText().toString());
-        Log.i(LOG_TAG, "content : "+edtHostContent.getText().toString());
-        callPostWebService(topicModel);
-    }
 
     private String getUsernameFromApplication() {
         return profileBundle.getString("name");
@@ -71,7 +85,7 @@ public class WritingTopicActivity extends UtilityActivity {
             Log.i(LOG_TAG, jsonString);
 
             AsyncHttpClient client = new AsyncHttpClient();
-            client.post(this, URL, new StringEntity(jsonString, "utf-8"),
+            client.post(getActivity(), URL, new StringEntity(jsonString, "utf-8"),
                     RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
 
                         @Override
@@ -102,7 +116,7 @@ public class WritingTopicActivity extends UtilityActivity {
     }
 
     private void showLoadingDialog() {
-        progress = ProgressDialog.show(this, null,
+        progress = ProgressDialog.show(getActivity(), null,
                 "Processing", true);
     }
 
@@ -112,15 +126,18 @@ public class WritingTopicActivity extends UtilityActivity {
 
     private void callNextActivity(String _id)
     {
-        Intent intent = new Intent(this, BoardContentFragment.class);
-        intent.putExtra("_id", _id);
-        intent.putExtra("room_id", room_id);
-
-        startActivity(intent);
+        Bundle data = new Bundle();
+        data.putString("_id", _id);
+        data.putString("room_id", room_id);
+        Fragment fragment = new BoardContentFragment();
+        fragment.setArguments(data);
+        FragmentManager fragmentManager = getFragmentManager();
+//            FragmentTransaction tx = fragmentManager.beginTransaction();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
     }
 
     private AlertDialog.Builder showErrorDialog(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setMessage("Error Occurred!!!");
         alert.setCancelable(true);
         return alert;

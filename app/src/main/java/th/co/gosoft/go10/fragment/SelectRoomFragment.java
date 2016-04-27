@@ -3,7 +3,6 @@ package th.co.gosoft.go10.fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -24,8 +23,6 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.activity.BoardContentFragment;
-import th.co.gosoft.go10.activity.RoomActivity;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.RoomModel;
@@ -33,7 +30,7 @@ import th.co.gosoft.go10.model.TopicModel;
 
 public class SelectRoomFragment extends Fragment {
 
-    private final String LOG_TAG = "SelectRoomActivity";
+    private final String LOG_TAG = "SelectRoomFragmentTag";
     private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
     private final String URL_ROOM = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
     private ProgressDialog progress;
@@ -47,8 +44,6 @@ public class SelectRoomFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "onCreate()");
-
-
     }
 
 
@@ -181,50 +176,38 @@ public class SelectRoomFragment extends Fragment {
         });
     }
 
-    private void inflateSelectRoomFragment() {
-        Fragment fragment = new SelectRoomFragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-    }
-
-    private void inflateBoardActivityFragment() {
-        Fragment fragment = new Fragment();
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
-    }
 
     private void goBoardContentActivity(int position) {
         try{
-//            Intent intent = new Intent(getActivity(), BoardContentFragment.class);
-//            intent.putExtra("_id", topicModelList.get(position).get_id());
-//            startActivity(intent);
             Bundle data = new Bundle();
             data.putString("_id", topicModelList.get(position).get_id());
             Fragment fragment = new BoardContentFragment();
             fragment.setArguments(data);
-
             FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, fragment).addToBackStack("tag")
-                    .commit();
+//            FragmentTransaction tx = fragmentManager.beginTransaction();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
+
     private void goRoomActivity(int position) {
         Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. goRoomActivity");
         try{
-            Intent intent = new Intent(getActivity(), RoomActivity.class);
-            intent.putExtra("room_id", roomModelList.get(position).get_id());
-            intent.putExtra("roomName", roomModelList.get(position).getName());
-            Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. build intent complete");
-            startActivity(intent);
+            Bundle data = new Bundle();
+            data.putString("room_id", roomModelList.get(position).get_id());
+            Log.i(LOG_TAG, ">>>>>>>>> room_id " +data.getString("room_id"));
+            data.putString("roomName", roomModelList.get(position).getName());
+            Log.i(LOG_TAG, ">>>>>>>>> roomName " +data.getString("roomName"));
+            Fragment fragment = new RoomFragment();
+            fragment.setArguments(data);
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+
+
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);

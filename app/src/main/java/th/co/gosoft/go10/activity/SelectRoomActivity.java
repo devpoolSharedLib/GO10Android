@@ -22,13 +22,15 @@ import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomAdapter;
+import th.co.gosoft.go10.fragment.BoardContentFragment;
+import th.co.gosoft.go10.fragment.RoomFragment;
 import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.GO10Application;
 
 public class SelectRoomActivity extends UtilityActivity {
 
-    private final String LOG_TAG = "SelectRoomActivity";
+    private final String LOG_TAG = "SelectRoomActivityTag";
     private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
     private final String URL_ROOM = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
     private ProgressDialog progress;
@@ -169,7 +171,7 @@ public class SelectRoomActivity extends UtilityActivity {
 
     private void goBoardContentActivity(int position) {
         try{
-            Intent intent = new Intent(SelectRoomActivity.this, BoardContentActivity.class);
+            Intent intent = new Intent(SelectRoomActivity.this, BoardContentFragment.class);
             intent.putExtra("_id", topicModelList.get(position).get_id());
             startActivity(intent);
         } catch (Exception e) {
@@ -181,7 +183,7 @@ public class SelectRoomActivity extends UtilityActivity {
     private void goRoomActivity(int position) {
         Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. goRoomActivity");
         try{
-            Intent intent = new Intent(SelectRoomActivity.this, RoomActivity.class);
+            Intent intent = new Intent(SelectRoomActivity.this, RoomFragment.class);
             intent.putExtra("room_id", roomModelList.get(position).get_id());
             intent.putExtra("roomName", roomModelList.get(position).getName());
             Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. build intent complete");

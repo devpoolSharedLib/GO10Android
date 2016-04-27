@@ -25,7 +25,7 @@ public class TopicAdapter extends BaseAdapter {
     private Map<Integer,Integer> rowLayoutMap;
     private List<TopicModel> topicModelList;
 
-    public TopicAdapter(Context context, List<TopicModel> topicModelList) {
+    public TopicAdapter(Context  context, List<TopicModel> topicModelList) {
         this.topicModelList = topicModelList;
         this.context = context;
         rowLayoutMap = new HashMap<>();

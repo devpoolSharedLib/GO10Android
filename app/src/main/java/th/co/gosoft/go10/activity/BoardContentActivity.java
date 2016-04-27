@@ -1,14 +1,12 @@
 package th.co.gosoft.go10.activity;
 
-import android.app.Fragment;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -23,9 +21,9 @@ import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.TopicAdapter;
 import th.co.gosoft.go10.model.TopicModel;
 
-public class BoardContentFragment extends Fragment {
+public class BoardContentActivity extends Activity {
 
-    private final String LOG_TAG = "BoardContentFragment";
+    private final String LOG_TAG = "BoardContentActivityTag";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopicbyid";
     private ProgressDialog progress;
     private String _id ;
@@ -35,29 +33,19 @@ public class BoardContentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i(LOG_TAG, "Oncreate : BoardContentFragment");
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_board_content);
 
-//        setContentView(R.layout.activity_board_content);
+        Intent intent =getIntent();
 
-//        Intent intent =intent getIntent();
-//
-//        _id = intent.getStringExtra("_id");
-        Bundle bundle = getArguments();
-        _id = bundle.getString("_id");
-
-        Log.i(LOG_TAG, "_id : " + _id);
+        _id = intent.getStringExtra("_id");
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_board_content, container, false);
-    }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.i(LOG_TAG, "onResume");
-        ListView commentListView = (ListView) getView().findViewById(R.id.commentListView);
+        ListView commentListView = (ListView) findViewById(R.id.commentListView);
         commentListView.setAdapter(null);
         callGetWebService();
     }
@@ -109,13 +97,13 @@ public class BoardContentFragment extends Fragment {
     }
 
     private void generateListView(List<TopicModel> topicModelList) {
-        ListView commentListView = (ListView) getView().findViewById(R.id.commentListView);
-        TopicAdapter commentAdapter = new TopicAdapter(getActivity(), topicModelList);
+        ListView commentListView = (ListView) findViewById(R.id.commentListView);
+        TopicAdapter commentAdapter = new TopicAdapter(this, topicModelList);
         commentListView.setAdapter(commentAdapter);
     }
 
     public void gotoCommentPage(View view) {
-        Intent intent = new Intent(getActivity(), WritingCommentActivity.class);
+        Intent intent = new Intent(this, WritingCommentActivity.class);
         intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra("_id", _id);
         intent.putExtra("room_id", room_id);
@@ -123,7 +111,7 @@ public class BoardContentFragment extends Fragment {
     }
 
     private void showLoadingDialog() {
-        progress = ProgressDialog.show(getActivity(), null,
+        progress = ProgressDialog.show(this, null,
                 "Processing", true);
     }
 
@@ -132,7 +120,7 @@ public class BoardContentFragment extends Fragment {
     }
 
     private AlertDialog.Builder showErrorDialog(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
         alert.setMessage("Error Occurred!!!");
         alert.setCancelable(true);
         return alert;
