@@ -35,10 +35,13 @@
         android:layout_width="@dimen/comment_icon_size"
         android:layout_height="@dimen/comment_icon_size"
         android:id="@+id/hostImage"
-        android:layout_below="@+id/hostContent"
-        android:layout_marginBottom="5dp"
+        android:src="@drawable/no_avatar"
+        android:layout_alignTop="@+id/hostUsername"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp" />
 
     <TextView
         android:layout_width="wrap_content"

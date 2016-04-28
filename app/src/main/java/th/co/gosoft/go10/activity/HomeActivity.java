@@ -149,16 +149,12 @@ public class HomeActivity extends AppCompatActivity
                 .commit();
     }
 
-
-
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-//            super.onBackPressed();
             if(getFragmentManager().getBackStackEntryCount() == 0) {
                 super.onBackPressed();
             }
@@ -166,13 +162,8 @@ public class HomeActivity extends AppCompatActivity
                 for(int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
                     getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 }
-//                getFragmentManager().popBackStack();
             }
         }
-
-
-
-
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

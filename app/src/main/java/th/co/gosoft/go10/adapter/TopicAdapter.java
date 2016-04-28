@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -65,10 +66,6 @@ public class TopicAdapter extends BaseAdapter {
         View view = convertView;
         LayoutInflater layoutInflater =  LayoutInflater.from(context);
 
-//        if (view == null) {
-//            layoutInflater = LayoutInflater.from(context);
-//        }
-
         TopicModel topicModel = (TopicModel) getItem(position);
         Log.i(LOG_TAG, "Item Type : "+topicModel.getType());
 
@@ -89,6 +86,9 @@ public class TopicAdapter extends BaseAdapter {
             TextView hostDate = (TextView) view.findViewById(R.id.hostTime);
             hostDate.setText(topicModel.getDate().toString());
 
+            ImageView imageView = (ImageView) view.findViewById(R.id.hostImage);
+            imageView.setImageResource(R.drawable.no_avatar);
+
         } else {
             Log.i(LOG_TAG, "COMMENT : 1");
             view = layoutInflater.inflate(rowLayoutMap.get(1), null);
@@ -101,6 +101,9 @@ public class TopicAdapter extends BaseAdapter {
 
             TextView tt3 = (TextView) view.findViewById(R.id.commentTime);
             tt3.setText(topicModel.getDate().toString());
+
+            ImageView imageView = (ImageView) view.findViewById(R.id.commentImage);
+            imageView.setImageResource(R.drawable.no_avatar);
         }
 
         return view;

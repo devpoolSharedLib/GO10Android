@@ -124,19 +124,6 @@ public class BoardContentFragment extends Fragment {
         commentListView.setAdapter(commentAdapter);
     }
 
-
-
-//    private void gotoCommentFragment() {
-//        Bundle data = new Bundle();
-//        data.putString("_id", _id);
-//        data.putString("room_id", room_id);
-//        Fragment fragment = new WritingCommentFragment();
-//        fragment.setArguments(data);
-//        FragmentManager fragmentManager = getFragmentManager();
-////            FragmentTransaction tx = fragmentManager.beginTransaction();
-//        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
-//    }
-
     private void showLoadingDialog() {
         progress = ProgressDialog.show(getActivity(), null,
                 "Processing", true);

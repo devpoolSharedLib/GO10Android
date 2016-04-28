@@ -85,28 +85,28 @@ public class WritingTopicFragment extends Fragment {
 
             AsyncHttpClient client = new AsyncHttpClient();
             client.post(getActivity(), URL, new StringEntity(jsonString, "utf-8"),
-                    RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
+                RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
 
-                        @Override
-                        public void onStart() {
-                            showLoadingDialog();
-                        }
+                    @Override
+                    public void onStart() {
+                        showLoadingDialog();
+                    }
 
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                            Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                            Log.i(LOG_TAG, "new id : "+new String(response));
-                            closeLoadingDialog();
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                        Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                        Log.i(LOG_TAG, "new id : "+new String(response));
+                        closeLoadingDialog();
 
-                            callNextActivity(new String(response));
-                        }
+                        callNextActivity(new String(response));
+                    }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                            Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                            Log.e(LOG_TAG, "AsyncHttpClient returned error", e);
-                        }
-                    });
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                        Log.e(LOG_TAG, "AsyncHttpClient returned error", e);
+                    }
+                });
 
         } catch (JsonProcessingException e) {
             Log.e(LOG_TAG, "JsonProcessingException : "+e.getMessage(), e);

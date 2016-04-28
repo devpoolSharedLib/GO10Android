@@ -3,20 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     android:orientation="vertical"
     tools:context="th.co.gosoft.go10.activity.BoardContentActivity">
 
     <ListView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:id="@+id/commentListView"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="10.0sp"/>
+        />
 
     <Button
         android:layout_width="105dp"

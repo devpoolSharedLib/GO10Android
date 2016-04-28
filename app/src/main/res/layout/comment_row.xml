@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/activity_vertical_margin"
-    android:background="@drawable/comment_content">
+    android:layout_marginBottom="@dimen/activity_vertical_margin">
 
     <TextView
         android:id="@+id/commentContent"
@@ -14,16 +13,19 @@
         android:paddingLeft="10dp"
         android:paddingTop="15dp"
         android:paddingRight="10dp"
-        android:minLines="4" />
+        android:minLines="4"/>
 
     <ImageView
         android:id="@+id/commentImage"
         android:layout_width="@dimen/comment_icon_size"
         android:layout_height="@dimen/comment_icon_size"
         android:layout_below="@+id/commentContent"
-        android:layout_marginBottom="5dp"
+        android:layout_marginBottom="10dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:src="@drawable/no_avatar"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" />
 
     <TextView
         android:id="@+id/commentUsername"
