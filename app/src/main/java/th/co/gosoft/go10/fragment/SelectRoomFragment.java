@@ -46,11 +46,8 @@ public class SelectRoomFragment extends Fragment {
         Log.i(LOG_TAG, "onCreate()");
     }
 
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.activity_select_room, container, false);
     }
 
@@ -211,29 +208,6 @@ public class SelectRoomFragment extends Fragment {
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
-        }
-    }
-
-    private void addModelToTopicList(List<TopicModel> topicModelList, int size){
-        int i=0;
-        while (i<size){
-            TopicModel topicModel = new TopicModel();
-            topicModel.setSubject("subject"+(i+1));
-            topicModel.setContent("content"+(i+1));
-            topicModelList.add(topicModel);
-            i++;
-        }
-    }
-
-    private void addModelToRoomList(List<RoomModel> RoomModelList, int size){
-        int i=0;
-        while (i<size){
-            RoomModel roomModel = new RoomModel();
-            roomModel.set_id("rm0"+(i+1));
-            roomModel.setName("Name" + (i + 1));
-            roomModel.setDesc("Desc" + (i + 1));
-            RoomModelList.add(roomModel);
-            i++;
         }
     }
 

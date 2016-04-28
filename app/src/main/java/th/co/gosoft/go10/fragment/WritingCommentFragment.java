@@ -29,7 +29,7 @@ import th.co.gosoft.go10.util.GO10Application;
 
 public class WritingCommentFragment extends Fragment {
 
-    private final String LOG_TAG = "WritingCommentFragmentTag";
+    private final String LOG_TAG = "WritingCommentFragment";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
     private ProgressDialog progress;
     private Bundle profileBundle;
@@ -38,7 +38,6 @@ public class WritingCommentFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        Log.i(LOG_TAG, "WritingCommentFragmentTag");
         super.onCreate(savedInstanceState);
     }
 
@@ -59,27 +58,17 @@ public class WritingCommentFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                EditText edtCommentContent = (EditText) getView().findViewById(R.id.txtCommentContent);
-                Log.i(LOG_TAG, "Content : " + edtCommentContent.getText().toString());
+            EditText edtCommentContent = (EditText) getView().findViewById(R.id.txtCommentContent);
+            Log.i(LOG_TAG, "Content : " + edtCommentContent.getText().toString());
 
-                TopicModel topicModel = new TopicModel();
-                topicModel.setTopicId(_id);
-                topicModel.setContent(edtCommentContent.getText().toString());
-                topicModel.setUser(getUsernameFromApplication());
-                topicModel.setType("comment");
-                topicModel.setRoomId(room_id);
+            TopicModel topicModel = new TopicModel();
+            topicModel.setTopicId(_id);
+            topicModel.setContent(edtCommentContent.getText().toString());
+            topicModel.setUser(getUsernameFromApplication());
+            topicModel.setType("comment");
+            topicModel.setRoomId(room_id);
 
-                callPostWebService(topicModel);
-            }
-        });
-        Button buttonUploadImg = (Button) view.findViewById(R.id.btnUploadImg);
-        button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                ImageView UploadImg = (ImageView) getView().findViewById(R.id.btnUploadImg);
-
+            callPostWebService(topicModel);
             }
         });
         return view;
@@ -141,9 +130,7 @@ public class WritingCommentFragment extends Fragment {
         Fragment fragment = new BoardContentFragment();
         fragment.setArguments(data);
         FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction tx = fragmentManager.beginTransaction();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
-
     }
 
     private AlertDialog.Builder showErrorDialog(){

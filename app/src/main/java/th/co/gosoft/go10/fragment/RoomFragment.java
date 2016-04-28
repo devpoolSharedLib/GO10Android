@@ -59,7 +59,6 @@ public class RoomFragment extends Fragment {
 
         generateImageToMap(imageIdMap);
         ImageView imageView = (ImageView) view.findViewById(R.id.roomIcon);
-//      imageView.setImageResource(imageIdMap.get(room_id));
         int id = getResources().getIdentifier(String.valueOf(imageIdMap.get(room_id)), null, null);
         Log.i(LOG_TAG, "id img : " + id);
         imageView.setImageResource(id);
@@ -72,20 +71,16 @@ public class RoomFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                Bundle data = new Bundle();
-                data.putString("room_id", room_id);
-                Fragment fragment = new WritingTopicFragment();
-                fragment.setArguments(data);
-                FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction tx = fragmentManager.beginTransaction();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+            Bundle data = new Bundle();
+            data.putString("room_id", room_id);
+            Fragment fragment = new WritingTopicFragment();
+            fragment.setArguments(data);
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
             }
         });
             return view;
     }
-
-
-
 
     @Override
     public void onResume() {
@@ -124,7 +119,6 @@ public class RoomFragment extends Fragment {
                         throw new RuntimeException(e.getMessage(), e);
                     }
                 }
-
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
@@ -166,7 +160,6 @@ public class RoomFragment extends Fragment {
 //            FragmentTransaction tx = fragmentManager.beginTransaction();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
     }
-
 
     private void generateImageToMap(Map<String, Integer> imageIdMap) {
         imageIdMap.put("rm01", R.drawable.general);

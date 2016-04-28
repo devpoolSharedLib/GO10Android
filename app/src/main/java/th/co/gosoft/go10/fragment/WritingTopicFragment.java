@@ -72,7 +72,6 @@ public class WritingTopicFragment extends Fragment {
         return view;
     }
 
-
     private String getUsernameFromApplication() {
         return profileBundle.getString("name");
     }
@@ -124,24 +123,21 @@ public class WritingTopicFragment extends Fragment {
         progress.dismiss();
     }
 
-    private void callNextActivity(String _id)
-    {
+    private void callNextActivity(String _id) {
         Bundle data = new Bundle();
         data.putString("_id", _id);
         data.putString("room_id", room_id);
         Fragment fragment = new BoardContentFragment();
         fragment.setArguments(data);
         FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction tx = fragmentManager.beginTransaction();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
     }
 
-    private AlertDialog.Builder showErrorDialog(){
+    private AlertDialog.Builder showErrorDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setMessage("Error Occurred!!!");
         alert.setCancelable(true);
         return alert;
     }
-
 
 }

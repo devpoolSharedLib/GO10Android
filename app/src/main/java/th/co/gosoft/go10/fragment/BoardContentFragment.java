@@ -51,14 +51,13 @@ public class BoardContentFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-                Bundle data = new Bundle();
-                data.putString("_id", _id);
-                data.putString("room_id", room_id);
-                Fragment fragment = new WritingCommentFragment();
-                fragment.setArguments(data);
-                FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction tx = fragmentManager.beginTransaction();
-                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+            Bundle data = new Bundle();
+            data.putString("_id", _id);
+            data.putString("room_id", room_id);
+            Fragment fragment = new WritingCommentFragment();
+            fragment.setArguments(data);
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
             }
         });
         return view;
