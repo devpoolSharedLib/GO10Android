@@ -36,10 +36,14 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 import th.co.gosoft.go10.R;
+import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.fragment.SelectRoomFragment;
 import th.co.gosoft.go10.util.DownloadImageTask;
+import th.co.gosoft.go10.util.FragmentFactory;
 import th.co.gosoft.go10.util.GO10Application;
 
 public class HomeActivity extends AppCompatActivity
@@ -51,47 +55,64 @@ public class HomeActivity extends AppCompatActivity
     TextView profileName;
     AccessToken accessToken;
     OptionalPendingResult<GoogleSignInResult> opr;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         try{
-                prepareGmailLoginSession();
-                FacebookSdk.sdkInitialize(this.getApplicationContext());
+            prepareGmailLoginSession();
+            FacebookSdk.sdkInitialize(this.getApplicationContext());
 
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                setSupportActionBar(toolbar);
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            setSupportActionBar(toolbar);
 
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                        this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-                drawer.setDrawerListener(toggle);
-                toggle.syncState();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                    this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawer.setDrawerListener(toggle);
+            toggle.syncState();
 
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                navigationView.setNavigationItemSelectedListener(this);
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            navigationView.setNavigationItemSelectedListener(this);
 
-                View headerLayout = navigationView.getHeaderView(0);
+            View headerLayout = navigationView.getHeaderView(0);
 
-                profileView = (ImageView) headerLayout.findViewById(R.id.imgProfileImage);
-                profileName = (TextView) headerLayout.findViewById(R.id.txtProfileName);
+            profileView = (ImageView) headerLayout.findViewById(R.id.imgProfileImage);
+            profileName = (TextView) headerLayout.findViewById(R.id.txtProfileName);
 
-                Bundle profileBundle = ((GO10Application) this.getApplication()).getBundle();
-                if(profileBundle != null){
-                    Log.i(LOG_TAG, "Bundle not Null");
-                    initialUserProfile(profileBundle);
-                } else {
-                    Log.i(LOG_TAG, "Bundle Null");
-                    if(checkCurrentTokenFacebook()) {
-                        initialNewFacebookBundle();
-                    } else if(checkCurrentTokenGmail()) {
-                        GoogleSignInResult result = opr.get();
-                        handleSignInResult(result);
-                    }
+            Bundle profileBundle = ((GO10Application) this.getApplication()).getBundle();
+            if(profileBundle != null){
+                Log.i(LOG_TAG, "Bundle not Null");
+                initialUserProfile(profileBundle);
+            } else {
+                Log.i(LOG_TAG, "Bundle Null");
+                if(checkCurrentTokenFacebook()) {
+                    initialNewFacebookBundle();
+                } else if(checkCurrentTokenGmail()) {
+                    GoogleSignInResult result = opr.get();
+                    handleSignInResult(result);
                 }
+            }
 
-                inflateSelectRoomFragment();
+            Intent intent = getIntent();
+            String _id = intent.getStringExtra("_id");
+            if(_id == null || _id.equals("")){
+                Log.i(LOG_TAG, "IF");
+                inflateSelectRoomFragment("selectRoom");
+            } else {
+                Log.i(LOG_TAG, "ELSE");
+                Bundle data = new Bundle();
+                data.putString("_id", _id);
+                Fragment fragment = new BoardContentFragment();
+                fragment.setArguments(data);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+            }
+
+
+
 
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -138,11 +159,11 @@ public class HomeActivity extends AppCompatActivity
             profileName.setText(profileBundle.getString("name"));
         }
 
-
     }
 
-    private void inflateSelectRoomFragment() {
-        Fragment fragment = new SelectRoomFragment();
+    private void inflateSelectRoomFragment(String key) {
+        FragmentFactory fragmentFactory = new FragmentFactory();
+        Fragment fragment = fragmentFactory.getFactory(key);
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, fragment)

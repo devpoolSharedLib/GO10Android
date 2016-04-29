@@ -26,7 +26,7 @@ import th.co.gosoft.go10.util.GO10Application;
 
 public class WritingCommentActivity extends Activity {
 
-    private final String LOG_TAG = "WritingCommentActivityTag";
+    private final String LOG_TAG = "WritingCommentActivity";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
     private ProgressDialog progress;
     private Bundle profileBundle;
@@ -109,9 +109,9 @@ public class WritingCommentActivity extends Activity {
     }
 
     private void callNextActivity(String _id) {
-        Intent intent = new Intent(this, BoardContentFragment.class);
-        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("_id", _id);
+        intent.putExtra("nextFragment", "boardContent");
         startActivity(intent);
     }
 
