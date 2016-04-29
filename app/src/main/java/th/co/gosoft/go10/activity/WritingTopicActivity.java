@@ -116,10 +116,10 @@ public class WritingTopicActivity extends Activity {
 
     private void callNextActivity(String _id)
     {
-        Intent intent = new Intent(this, BoardContentFragment.class);
+        Intent intent = new Intent(this, HomeActivity.class);
         intent.putExtra("_id", _id);
         intent.putExtra("room_id", room_id);
-
+        intent.putExtra("nextFragment", "boardContent");
         startActivity(intent);
     }
 
