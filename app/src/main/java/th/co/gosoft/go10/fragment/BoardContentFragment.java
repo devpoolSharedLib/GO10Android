@@ -1,8 +1,8 @@
 package th.co.gosoft.go10.fragment;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -21,6 +21,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
+import th.co.gosoft.go10.activity.WritingCommentActivity;
 import th.co.gosoft.go10.adapter.TopicAdapter;
 import th.co.gosoft.go10.model.TopicModel;
 
@@ -51,13 +52,18 @@ public class BoardContentFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-            Bundle data = new Bundle();
-            data.putString("_id", _id);
-            data.putString("room_id", room_id);
-            Fragment fragment = new WritingCommentFragment();
-            fragment.setArguments(data);
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+                Intent intent = new Intent(getActivity(), WritingCommentActivity.class);
+                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
+                intent.putExtra("_id", _id);
+                intent.putExtra("room_id", room_id);
+                startActivity(intent);
+//            Bundle data = new Bundle();
+//            data.putString("_id", _id);
+//            data.putString("room_id", room_id);
+//            Fragment fragment = new WritingCommentFragment();
+//            fragment.setArguments(data);
+//            FragmentManager fragmentManager = getFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
             }
         });
         return view;
