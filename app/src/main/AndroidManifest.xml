@@ -39,13 +39,10 @@
         <activity
             android:name=".activity.LoginActivity"
             android:label="@string/app_name" />
-        <activity android:name=".activity.SelectRoomActivity" />
-        <activity android:name=".activity.WritingCommentActivity" />
-        <activity android:name=".activity.WritingTopicActivity" />
-        <activity android:name=".activity.PreviewActivity" />
-        <activity android:name=".activity.RoomActivity" />
-        <activity android:name=".activity.SelectAvatarActivity" />
-        <activity android:name=".activity.BoardUpdateCommentActivity" />
+        <activity android:name=".activity.WritingCommentActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activity.WritingTopicActivity"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"

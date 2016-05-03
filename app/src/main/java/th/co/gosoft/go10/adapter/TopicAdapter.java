@@ -15,6 +15,7 @@ import java.util.Map;
 
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
+import th.co.gosoft.go10.util.DownloadImageTask;
 
 public class TopicAdapter extends BaseAdapter {
 
@@ -87,7 +88,17 @@ public class TopicAdapter extends BaseAdapter {
             hostDate.setText(topicModel.getDate().toString());
 
             ImageView imageView = (ImageView) view.findViewById(R.id.hostImage);
-            imageView.setImageResource(R.drawable.no_avatar);
+//            imageView.setImageResource(R.drawable.no_avatar);
+            if(topicModel.getUser().equals("Cristiano Ronaldo")){
+                new DownloadImageTask(imageView)
+                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
+            }else if(topicModel.getUser().equals("Mon Nit Kannika")){
+                new DownloadImageTask(imageView)
+                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
+            }else{
+                imageView.setImageResource(R.drawable.avatar_woman2);
+            }
+
 
         } else {
             Log.i(LOG_TAG, "COMMENT : 1");
@@ -103,7 +114,17 @@ public class TopicAdapter extends BaseAdapter {
             tt3.setText(topicModel.getDate().toString());
 
             ImageView imageView = (ImageView) view.findViewById(R.id.commentImage);
-            imageView.setImageResource(R.drawable.no_avatar);
+//            imageView.setImageResource(R.drawable.no_avatar);
+            //            imageView.setImageResource(R.drawable.no_avatar);
+            if(topicModel.getUser().equals("Cristiano Ronaldo") || topicModel.getUser().equals("Thounsand Touching")||topicModel.getUser().equals("Chiradechwiroj Jirapas")){
+                new DownloadImageTask(imageView)
+                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
+            }else if(topicModel.getUser().equals("Mon Nit Kannika")||topicModel.getUser().equals("Jane Mary")){
+                new DownloadImageTask(imageView)
+                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
+            }else{
+                imageView.setImageResource(R.drawable.avatar_man2);
+            }
         }
 
         return view;

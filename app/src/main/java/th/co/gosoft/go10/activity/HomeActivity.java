@@ -36,14 +36,11 @@ import org.json.JSONObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.fragment.SelectRoomFragment;
 import th.co.gosoft.go10.util.DownloadImageTask;
-import th.co.gosoft.go10.util.FragmentFactory;
 import th.co.gosoft.go10.util.GO10Application;
 
 public class HomeActivity extends AppCompatActivity
@@ -85,7 +82,8 @@ public class HomeActivity extends AppCompatActivity
             Bundle profileBundle = ((GO10Application) this.getApplication()).getBundle();
             if(profileBundle != null){
                 Log.i(LOG_TAG, "Bundle not Null");
-                initialUserProfile(profileBundle);
+//                initialUserProfile(profileBundle);
+                createBundleFromAvatar(profileBundle);
             } else {
                 Log.i(LOG_TAG, "Bundle Null");
                 if(checkCurrentTokenFacebook()) {
@@ -100,7 +98,7 @@ public class HomeActivity extends AppCompatActivity
             String _id = intent.getStringExtra("_id");
             if(_id == null || _id.equals("")){
                 Log.i(LOG_TAG, "IF");
-                inflateSelectRoomFragment("selectRoom");
+                inflateSelectRoomFragment();
             } else {
                 Log.i(LOG_TAG, "ELSE");
                 Bundle data = new Bundle();
@@ -135,7 +133,8 @@ public class HomeActivity extends AppCompatActivity
                             JSONObject data = response.getJSONObject();
                             Bundle facebookBundle = createBundleFromFacebookObject(data);
                             addBundleToApplication(facebookBundle);
-                            initialUserProfile(facebookBundle);
+//                            initialUserProfile(facebookBundle);
+                            createBundleFromAvatar(facebookBundle);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -161,13 +160,33 @@ public class HomeActivity extends AppCompatActivity
 
     }
 
-    private void inflateSelectRoomFragment(String key) {
-        FragmentFactory fragmentFactory = new FragmentFactory();
-        Fragment fragment = fragmentFactory.getFactory(key);
+    private void createBundleFromAvatar(Bundle bundleFacebook) {
+        Bundle profilAvatar = new Bundle();
+        if(bundleFacebook.getString("name").equals("Thounsand Touching")||bundleFacebook.getString("name").equals("Chiradechwiroj Jirapas")){
+            profilAvatar.putString("name","Cristiano Ronaldo");
+            profilAvatar.putString("profile_pic","http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
+        }else if(bundleFacebook.getString("name").equals("Mon Nit Kannika")){
+            profilAvatar.putString("name", "Mary Jane");
+            profilAvatar.putString("profile_pic", "http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
+        }else{
+            profilAvatar =  bundleFacebook;
+        }
+
+        addBundleToApplication(profilAvatar);
+        initialUserProfile(profilAvatar);
+
+    }
+
+    private void inflateSelectRoomFragment() {
+//        FragmentFactory fragmentFactory = new FragmentFactory();
+//        Fragment fragment = fragmentFactory.getFactory(key);
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.content_frame, fragment).addToBackStack("tag")
+//                .commit();
+        Fragment fragment = new SelectRoomFragment();
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
     }
 
     @Override
@@ -178,10 +197,26 @@ public class HomeActivity extends AppCompatActivity
         } else {
             if(getFragmentManager().getBackStackEntryCount() == 0) {
                 super.onBackPressed();
+                Log.i(LOG_TAG,"if");
             }
             else {
-                for(int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
-                    getFragmentManager().popBackStack(null,FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                Log.i(LOG_TAG,"popbackstack");
+                String str="";
+                Log.i(LOG_TAG,"backStackName "+this.getFragmentManager().getBackStackEntryCount());
+//                if(this.getFragmentManager().getBackStackEntryCount()>0) {
+                    FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(this.getFragmentManager().getBackStackEntryCount()-1);
+                    str=backEntry.getName();
+//                }
+
+                Log.i(LOG_TAG,"backStackName "+str);
+                if(str == "tag"){
+                    Log.i(LOG_TAG,"xxxx");
+                    for(int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
+                        getFragmentManager().popBackStack("tag",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    }
+                }else{
+                    Log.i(LOG_TAG,"yyy");
+                        getFragmentManager().popBackStack();
                 }
             }
         }

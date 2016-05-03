@@ -182,7 +182,7 @@ public class SelectRoomFragment extends Fragment {
             fragment.setArguments(data);
             FragmentManager fragmentManager = getFragmentManager();
 //            FragmentTransaction tx = fragmentManager.beginTransaction();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
 
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);

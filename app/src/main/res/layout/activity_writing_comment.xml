@@ -20,16 +20,17 @@
         android:layout_alignParentEnd="true"
         android:scrollIndicators="right"
         android:gravity="start"
-        android:textAlignment="textStart" />
+        android:textAlignment="textStart"
+        android:layout_above="@+id/btnSend" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/btn_send"
         android:id="@+id/btnSend"
-        android:layout_below="@+id/txtCommentContent"
+        android:onClick="sendComment"
+        android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/txtCommentContent"
-        android:layout_alignEnd="@+id/txtCommentContent"
-        android:onClick="sendComment"/>
+        android:layout_alignEnd="@+id/txtCommentContent" />
 
 </RelativeLayout>
