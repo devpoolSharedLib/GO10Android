@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -58,18 +59,28 @@ public class WritingTopicFragment extends Fragment {
                 Log.i(LOG_TAG, "Subject : " + edtHostSubject.getText().toString());
                 Log.i(LOG_TAG, "Content : " + edtHostContent.getText().toString());
 
-                TopicModel topicModel = new TopicModel();
-                topicModel.setSubject(edtHostSubject.getText().toString());
-                topicModel.setContent(edtHostContent.getText().toString());
-                topicModel.setUser(getUsernameFromApplication());
-                topicModel.setType("host");
-                topicModel.setRoomId(room_id);
-                Log.i(LOG_TAG, "Subject : "+edtHostSubject.getText().toString());
-                Log.i(LOG_TAG, "content : "+edtHostContent.getText().toString());
-                callPostWebService(topicModel);
+                if(isEmpty(edtHostSubject) || isEmpty(edtHostContent)){
+                    Log.i(LOG_TAG, "empty subject & message");
+                    Toast.makeText(getActivity(), "Please enter your subject and comment message.", Toast.LENGTH_SHORT).show();
+                } else {
+                    TopicModel topicModel = new TopicModel();
+                    topicModel.setSubject(edtHostSubject.getText().toString());
+                    topicModel.setContent(edtHostContent.getText().toString());
+                    topicModel.setUser(getUsernameFromApplication());
+                    topicModel.setType("host");
+                    topicModel.setRoomId(room_id);
+                    Log.i(LOG_TAG, "Subject : "+edtHostSubject.getText().toString());
+                    Log.i(LOG_TAG, "content : "+edtHostContent.getText().toString());
+                    callPostWebService(topicModel);
+                }
+
             }
         });
         return view;
+    }
+
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
     }
 
     private String getUsernameFromApplication() {

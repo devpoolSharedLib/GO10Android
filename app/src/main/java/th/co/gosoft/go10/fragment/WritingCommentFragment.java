@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,20 +58,30 @@ public class WritingCommentFragment extends Fragment {
             @Override
             public void onClick(View v)
             {
-            EditText edtCommentContent = (EditText) getView().findViewById(R.id.txtCommentContent);
-            Log.i(LOG_TAG, "Content : " + edtCommentContent.getText().toString());
+                EditText edtCommentContent = (EditText) getView().findViewById(R.id.txtCommentContent);
+                Log.i(LOG_TAG, "Content : " + edtCommentContent.getText().toString());
 
-            TopicModel topicModel = new TopicModel();
-            topicModel.setTopicId(_id);
-            topicModel.setContent(edtCommentContent.getText().toString());
-            topicModel.setUser(getUsernameFromApplication());
-            topicModel.setType("comment");
-            topicModel.setRoomId(room_id);
+                if(isEmpty(edtCommentContent)){
+                    Log.i(LOG_TAG, "empty message");
+                    Toast.makeText(getActivity(), "Please enter your comment message.", Toast.LENGTH_SHORT).show();
+                } else {
+                    TopicModel topicModel = new TopicModel();
+                    topicModel.setTopicId(_id);
+                    topicModel.setContent(edtCommentContent.getText().toString());
+                    topicModel.setUser(getUsernameFromApplication());
+                    topicModel.setType("comment");
+                    topicModel.setRoomId(room_id);
 
-            callPostWebService(topicModel);
+                    callPostWebService(topicModel);
+                }
+
             }
         });
         return view;
+    }
+
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
     }
 
     private String getUsernameFromApplication() {
