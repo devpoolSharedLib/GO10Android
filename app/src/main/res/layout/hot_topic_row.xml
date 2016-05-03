@@ -36,7 +36,8 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_column="5"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:maxLines="1" />
         </LinearLayout>
 
     </TableRow>

@@ -20,7 +20,6 @@ import java.util.Locale;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.GO10Application;
 
@@ -110,6 +109,7 @@ public class WritingCommentActivity extends Activity {
 
     private void callNextActivity(String _id) {
         Intent intent = new Intent(this, HomeActivity.class);
+        intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.putExtra("_id", _id);
         intent.putExtra("nextFragment", "boardContent");
         startActivity(intent);

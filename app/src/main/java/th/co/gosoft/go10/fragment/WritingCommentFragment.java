@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -130,7 +129,7 @@ public class WritingCommentFragment extends Fragment {
         Fragment fragment = new BoardContentFragment();
         fragment.setArguments(data);
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
     }
 
     private AlertDialog.Builder showErrorDialog(){

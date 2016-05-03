@@ -22,7 +22,7 @@
         android:id="@+id/imgProfileImage"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@android:drawable/sym_def_app_icon"/>
+        android:src="@drawable/avatar_woman2"/>
 
     <TextView
         android:id="@+id/txtProfileName"

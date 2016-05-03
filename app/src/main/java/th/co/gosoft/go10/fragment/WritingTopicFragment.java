@@ -130,7 +130,7 @@ public class WritingTopicFragment extends Fragment {
         Fragment fragment = new BoardContentFragment();
         fragment.setArguments(data);
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
     }
 
     private AlertDialog.Builder showErrorDialog() {
