@@ -119,7 +119,7 @@ public class TopicAdapter extends BaseAdapter {
             if(topicModel.getUser().equals("Cristiano Ronaldo") || topicModel.getUser().equals("Thounsand Touching")||topicModel.getUser().equals("Chiradechwiroj Jirapas")){
                 new DownloadImageTask(imageView)
                         .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
-            }else if(topicModel.getUser().equals("Mon Nit Kannika")||topicModel.getUser().equals("Jane Mary")){
+            }else if(topicModel.getUser().equals("Mon Nit Kannika")||topicModel.getUser().equals("Mary Jane")){
                 new DownloadImageTask(imageView)
                         .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
             }else{
