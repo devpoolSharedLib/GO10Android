@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Go10</string>
+    <string name="action_all_avatar">All Avatar</string>
+    <string name="action_add_avatar">Add Avatar</string>
+    <string name="host_conetent">ชมรมฟุตบอลนัดแข่งขันฟุตบอลวันที่ 20/03/16 เวลา 19.00 ที่สนามบอลแถวนี้ ไม่จำกัดจำนวนทีม ใครสนใจลงทะเบียนได้เลยครับ</string>
+    <string name="host_topic">มาแข่งฟุตบอลกัน ด่วน!!!</string>
+    <string name="host_username">Mario</string>
+    <string name="host_date">16/03/2016 15:30:30</string>
+    <string name="comment_conetent_1">ไปแน่นอนครับ ไม่พลาดๆ :)</string>
+    <string name="comment_username_1">Iron Man</string>
+    <string name="comment_date_1">16/03/2016 15:47:20</string>
+    <string name="comment_conetent_2">น่าสนใจครับ เดี๋ยวชวนเพื่อนๆในทีมไป :)</string>
+    <string name="comment_username_2">Angry Bird</string>
+    <string name="comment_date_2">16/03/2016 18:47:36</string>
+    <string name="comment_conetent_3">ไปกันเยอะๆนะคะ จะไปเชียร์ค่ะ</string>
+    <string name="comment_username_3">Maruko</string>
+    <string name="comment_date_3">16/03/2016 19:00:07</string>
+    <string name="comment_conetent_4">มากันเยอะๆนะครับ ทีมที่ชนะจะมีเงินรางวัลและของรางวัลให้นะครับ ทีมชนะเลิศ เงินรางวัล 5,000 บาท พร้อมของขวัญสุดพิเศษ ทีมรองชนะเลิศ เงินรางวัล 3,000 บาท พร้อมของขวัญสุดพิเศษ</string>
+    <string name="comment_username_4">Captain</string>
+    <string name="comment_date_4">16/03/2016 19:30:59</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_post">Post</string>
+    <string name="btn_preview">Preview</string>
+    <string name="facebook_app_id">132325190504041</string>
+    <string name="fb_login_protocol_scheme">fbAPP_ID</string>
+    <string name="title_activity_home">GO๑๐</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+</resources>

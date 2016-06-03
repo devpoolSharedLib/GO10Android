@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_id": "go10login",
+    "project_number": "181972566105",
+    "name": "GO10Login"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:181972566105:android:e5b3eefc5546a620",
+        "client_id": "android:th.co.gosoft.go10",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "th.co.gosoft.go10",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "181972566105-skd8jvahd6v1k8et3o2r8ihlr4ktk1m7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "th.co.gosoft.go10",
+            "certificate_hash": "16A3529247D03390025A20B06A5C0FDEDF2E9596"
+          }
+        },
+        {
+          "client_id": "181972566105-qk02g1c2cg4urpplf4t3icj3gkh89hng.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

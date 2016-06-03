@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="th.co.gosoft.go10.activity.BoardContentActivity">
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingBottom="15dp"
+        android:scrollbars="horizontal" >
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:text="@string/host_topic"
+                    android:id="@+id/hostSubject"
+                    android:textStyle="bold"
+                    android:background="@drawable/host_topic"
+                    android:textColor="#ffffff"
+                    android:paddingLeft="10dp"
+                    android:textAlignment="gravity"
+                    android:gravity="center_vertical" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/host_conetent"
+                    android:id="@+id/hostContent"
+                    android:padding="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_below="@+id/hostSubject"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/host_content"
+                    android:textColor="@color/primary_material_dark" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/hostContent"
+                    android:padding="5dp"
+                    android:background="@drawable/host_footer">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:id="@+id/hostImage" />
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/host_username"
+                        android:textAlignment="gravity"
+                        android:gravity="bottom"
+                        android:id="@+id/hostUsername" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/host_date"
+                        android:layout_gravity="right"
+                        android:textAlignment="gravity"
+                        android:gravity="bottom"
+                        android:id="@+id/hostTime" />
+
+                </TableRow>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment_conetent_1"
+                    android:id="@+id/commentContent1"
+                    android:padding="10dp"
+                    android:background="@drawable/comment_content"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_centerHorizontal="true" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/commentContent1"
+                    android:id="@+id/commentFooter1"
+                    android:padding="5dp"
+                    android:background="@drawable/comment_footer">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:id="@+id/commentImage1"/>
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/comment_username_1"
+                        android:textAlignment="gravity"
+                        android:gravity="bottom"
+                        android:id="@+id/commentUsername1" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/comment_date_1"
+                        android:textAlignment="gravity"
+                        android:gravity="bottom"
+                        android:id="@+id/commentTime1" />
+
+                </TableRow>
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_alignRight="@id/commentContent1"
+                    android:layout_below="@id/commentFooter1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reply"
+                    android:id="@+id/commentReply1"
+                    android:layout_gravity="right"
+                    android:onClick="selectAvatarPage"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment_conetent_2"
+                    android:id="@+id/commentContent2"
+                    android:padding="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/comment_content" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/commentFooter2"
+                    android:layout_below="@id/commentContent2"
+                    android:padding="5dp"
+                    android:background="@drawable/comment_footer">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:id="@+id/commentImage2" />
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/comment_username_2"
+                        android:textAlignment="gravity"
+                        android:gravity="bottom"
+                        android:id="@+id/commentUsername2" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/comment_date_2"
+                        android:textAlignment="gravity"
+                        android:gravity="bottom"
+                        android:id="@+id/commentTime2" />
+
+                </TableRow>
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_alignRight="@id/commentContent2"
+                    android:layout_below="@id/commentFooter2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reply"
+                    android:id="@+id/commentReply2"
+                    android:layout_gravity="right"
+                    android:onClick="selectAvatarPage"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/comment_conetent_3"
+                    android:id="@+id/commentContent3"
+                    android:padding="10dp"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:layout_centerHorizontal="true"
+                    android:background="@drawable/comment_content" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/commentFooter3"
+                    android:layout_below="@id/commentContent3"
+                    android:padding="5dp"
+                    android:background="@drawable/comment_footer">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:id="@+id/commentImage3"/>
+
+                    <TextView
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/comment_username_3"
+                        android:textAlignment="gravity"
+                        android:gravity="bottom"
+                        android:id="@+id/commentUsername3" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/comment_date_3"
+                        android:textAlignment="gravity"
+                        android:gravity="bottom"
+                        android:id="@+id/commentTime3" />
+
+                </TableRow>
+
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_alignRight="@id/commentContent3"
+                    android:layout_below="@id/commentFooter3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Reply"
+                    android:id="@+id/commentReply3"
+                    android:layout_gravity="right"
+                    android:onClick="selectAvatarPage"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Comment"
+        android:layout_gravity="center"
+        android:id="@+id/commentButton"
+        android:onClick="selectAvatarPage"/>
+
+
+</LinearLayout>
