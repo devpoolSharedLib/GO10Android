@@ -29,31 +29,12 @@
         android:layout_marginLeft="8dp">
     </TextView>
 
-    <LinearLayout
-        android:id="@+id/layoutListView"
-        android:orientation="vertical"
+    <ListView
+        android:layout_marginTop="10dp"
+        android:id="@+id/listViewTopic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/txtRoomName"
-        android:layout_marginTop="20dp">
-
-        <ListView
-            android:id="@+id/listViewTopic"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="+  New Topic"
-            android:id="@+id/btnNewTopic"
-            android:onClick="createNewTopic"
-            android:layout_below="@+id/listViewTopic"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal" />
-    </LinearLayout>
-
+        android:layout_below="@id/txtRoomName"/>
 
 
 </RelativeLayout>

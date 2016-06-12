@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -64,70 +65,81 @@ public class TopicAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         Log.i(LOG_TAG, "Position : "+position);
 
-        View view = convertView;
         LayoutInflater layoutInflater =  LayoutInflater.from(context);
 
         TopicModel topicModel = (TopicModel) getItem(position);
         Log.i(LOG_TAG, "Item Type : "+topicModel.getType());
 
-        if(getItemViewType(position) == 0){
-            Log.i(LOG_TAG, "HOST : 0");
-            Log.i(LOG_TAG,rowLayoutMap.get(0)+"");
-            view = layoutInflater.inflate(rowLayoutMap.get(0), null);
+        ViewHolder holder = null;
+        int rowType = getItemViewType(position);
 
-            TextView hostSubject = (TextView) view.findViewById(R.id.hostSubject);
-            hostSubject.setText(topicModel.getSubject());
+        if (convertView == null) {
+            holder = new ViewHolder();
 
-            TextView hostContent = (TextView) view.findViewById(R.id.hostContent);
-            hostContent.setText(topicModel.getContent());
+            if(rowType == 0){
+                convertView = layoutInflater.inflate(rowLayoutMap.get(0), null);
+                holder.subject = (TextView) convertView.findViewById(R.id.hostSubject);
+                holder.content = (WebView) convertView.findViewById(R.id.hostContent);
+                holder.user = (TextView) convertView.findViewById(R.id.hostUsername);
+                holder.date = (TextView) convertView.findViewById(R.id.hostTime);
+                holder.imageView =(ImageView) convertView.findViewById(R.id.hostImage);
 
-            TextView hostUser = (TextView) view.findViewById(R.id.hostUsername);
-            hostUser.setText(topicModel.getUser());
 
-            TextView hostDate = (TextView) view.findViewById(R.id.hostTime);
-            hostDate.setText(topicModel.getDate().toString());
-
-            ImageView imageView = (ImageView) view.findViewById(R.id.hostImage);
-//            imageView.setImageResource(R.drawable.no_avatar);
-            if(topicModel.getUser().equals("Cristiano Ronaldo")){
-                new DownloadImageTask(imageView)
-                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
-            }else if(topicModel.getUser().equals("Mon Nit Kannika")){
-                new DownloadImageTask(imageView)
-                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
-            }else{
-                imageView.setImageResource(R.drawable.avatar_woman2);
+            } else if(rowType == 1){
+                convertView = layoutInflater.inflate(rowLayoutMap.get(1), null);
+                holder.content = (WebView) convertView.findViewById(R.id.commentContent);
+                holder.user = (TextView) convertView.findViewById(R.id.commentUsername);
+                holder.date = (TextView) convertView.findViewById(R.id.commentTime);
+                holder.imageView =(ImageView) convertView.findViewById(R.id.commentImage);
             }
 
+            convertView.setTag(holder);
 
         } else {
-            Log.i(LOG_TAG, "COMMENT : 1");
-            view = layoutInflater.inflate(rowLayoutMap.get(1), null);
+            Log.i(LOG_TAG, "else : "+position);
+            holder = (ViewHolder) convertView.getTag();
+        }
 
-            TextView tt1 = (TextView) view.findViewById(R.id.commentContent);
-            tt1.setText(topicModel.getContent());
+        if (rowType == 0){
+            holder.subject.setText(topicModel.getSubject());
+            holder.content.loadData(topicModel.getContent(), "text/html; charset=UTF-8", null);
+            holder.user.setText(topicModel.getAvatarName());
+            holder.date.setText(topicModel.getDate().toString());
 
-            TextView tt2 = (TextView) view.findViewById(R.id.commentUsername);
-            tt2.setText(topicModel.getUser());
-
-            TextView tt3 = (TextView) view.findViewById(R.id.commentTime);
-            tt3.setText(topicModel.getDate().toString());
-
-            ImageView imageView = (ImageView) view.findViewById(R.id.commentImage);
-//            imageView.setImageResource(R.drawable.no_avatar);
-            //            imageView.setImageResource(R.drawable.no_avatar);
-            if(topicModel.getUser().equals("Cristiano Ronaldo") || topicModel.getUser().equals("Thounsand Touching")||topicModel.getUser().equals("Chiradechwiroj Jirapas")){
-                new DownloadImageTask(imageView)
+            if(topicModel.getAvatarName().equals("Cristiano Ronaldo")){
+                new DownloadImageTask(holder.imageView)
                         .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
-            }else if(topicModel.getUser().equals("Mon Nit Kannika")||topicModel.getUser().equals("Mary Jane")){
-                new DownloadImageTask(imageView)
+            }else if(topicModel.getAvatarName().equals("Mon Nit Kannika")){
+                new DownloadImageTask(holder.imageView)
                         .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
             }else{
-                imageView.setImageResource(R.drawable.avatar_man2);
+                holder.imageView.setImageResource(R.drawable.avatar_woman2);
+            }
+        } else if(rowType == 1){
+            holder.content.loadData(topicModel.getContent(), "text/html; charset=UTF-8", null);
+            holder.user.setText(topicModel.getAvatarName());
+            holder.date.setText(topicModel.getDate().toString());
+
+            if(topicModel.getAvatarName().equals("Cristiano Ronaldo") || topicModel.getAvatarName().equals("Thounsand Touching")||topicModel.getAvatarName().equals("Chiradechwiroj Jirapas")){
+                new DownloadImageTask(holder.imageView)
+                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
+            }else if(topicModel.getAvatarName().equals("Mon Nit Kannika")||topicModel.getAvatarName().equals("Mary Jane")){
+                new DownloadImageTask(holder.imageView)
+                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
+            }else{
+                holder.imageView.setImageResource(R.drawable.avatar_man2);
             }
         }
 
-        return view;
+        return convertView;
+    }
+
+    private static class ViewHolder {
+        TextView subject;
+        WebView content;
+        TextView user;
+        TextView date;
+        ImageView imageView;
     }
 
 }

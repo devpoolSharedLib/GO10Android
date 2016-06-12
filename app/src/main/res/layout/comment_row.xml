@@ -4,17 +4,14 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/activity_vertical_margin">
 
-    <TextView
-        android:id="@+id/commentContent"
+    <WebView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/comment_conetent_1"
-        android:layout_centerHorizontal="true"
-        android:paddingLeft="10dp"
-        android:paddingTop="15dp"
-        android:paddingRight="10dp"
-        android:minLines="2"
-        android:layout_marginBottom="15dp" />
+        android:id="@+id/commentContent"
+        android:textAlignment="textStart"
+        android:layout_gravity="start"
+        android:padding="10dp"
+        android:layout_marginBottom="10dp"/>
 
     <ImageView
         android:id="@+id/commentImage"

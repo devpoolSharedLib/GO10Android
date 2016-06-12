@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Go10</string>
+    <string name="app_name">GO๑๐</string>
     <string name="action_all_avatar">All Avatar</string>
     <string name="action_add_avatar">Add Avatar</string>
     <string name="host_conetent">ชมรมฟุตบอลนัดแข่งขันฟุตบอลวันที่ 20/03/16 เวลา 19.00 ที่สนามบอลแถวนี้ ไม่จำกัดจำนวนทีม ใครสนใจลงทะเบียนได้เลยครับ</string>
@@ -24,9 +24,12 @@
     <string name="facebook_app_id">132325190504041</string>
     <string name="fb_login_protocol_scheme">fbAPP_ID</string>
     <string name="title_activity_home">GO๑๐</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-
     <string name="action_settings">Settings</string>
+    <string name="action_new_topic">New Topic</string>
+    <string name="save_setting">Save</string>
+    <string name="action_comment">Comment</string>
+    <string name="preference_key">gosoft.devpool.go10</string>
+    <string name="activation_token">Please enter the activation token.</string>
 </resources>

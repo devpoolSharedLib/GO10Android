@@ -36,6 +36,8 @@ public class SelectRoomFragment extends Fragment {
     private ProgressDialog progress;
     private List<TopicModel> topicModelList = new ArrayList<>();
     private List<RoomModel> roomModelList = new ArrayList<>();
+    private ListView hotTopicListView;
+    private GridView gridViewRoom;
 
     private boolean isLoadTopicDone = false;
     private boolean isLoadRoomDone = false;
@@ -52,13 +54,16 @@ public class SelectRoomFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        hotTopicListView = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
+        gridViewRoom = (GridView)  getView().findViewById(R.id.gridViewRoom);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
         Log.i(LOG_TAG, "onResume");
-        ListView listViewSelectAvatar = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
-        listViewSelectAvatar.setAdapter(null);
-        GridView gridViewRoom = (GridView) getView().findViewById(R.id.gridViewRoom);
-        gridViewRoom.setAdapter(null);
         callGetWebService();
     }
 
@@ -146,12 +151,10 @@ public class SelectRoomFragment extends Fragment {
     }
 
     private void generateListView() {
-        ListView hotTopicListView = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
         HostTopicListAdapter hostTopicListAdapter = new HostTopicListAdapter(getActivity(), R.layout.hot_topic_row, topicModelList);
         hotTopicListView.setAdapter(hostTopicListAdapter);
 
         hotTopicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 goBoardContentActivity(position);
@@ -160,10 +163,9 @@ public class SelectRoomFragment extends Fragment {
     }
 
     private void generateGridView() {
-        GridView gridView = (GridView)  getView().findViewById(R.id.gridViewRoom);
         RoomAdapter roomAdapter = new RoomAdapter(getActivity(), R.layout.room_grid, roomModelList);
-        gridView.setAdapter(roomAdapter);
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        gridViewRoom.setAdapter(roomAdapter);
+        gridViewRoom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -181,7 +183,6 @@ public class SelectRoomFragment extends Fragment {
             Fragment fragment = new BoardContentFragment();
             fragment.setArguments(data);
             FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction tx = fragmentManager.beginTransaction();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
 
         } catch (Exception e) {

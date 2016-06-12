@@ -1,46 +1,52 @@
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/tableLayout1"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/hotTopicRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
 
-    <TableRow
-        android:id="@+id/tableRow3"
+    <ImageView
+        android:id="@+id/iconImage"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:paddingLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/rowSubject"
+        android:text="column1"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:paddingLeft="10dp"
+        android:textSize="18dp"
+        android:textColor="#0080ff"
+        android:layout_alignParentTop="true"
+        android:layout_toRightOf="@+id/iconImage"
+        android:layout_toEndOf="@+id/iconImage" />
 
-        <ImageView
-            android:id="@+id/iconImage"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+    <TextView
+        android:id="@+id/rowUserName"
+        android:text="Column 2"
+        android:layout_gravity="center_vertical"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:textSize="10dp"
+        android:textColor="#4c4c4c"
+        android:maxLines="1"
+        android:layout_below="@+id/rowSubject"
+        android:layout_toRightOf="@+id/iconImage"
+        android:layout_toEndOf="@+id/iconImage" />
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="15dp">
+    <TextView
+        android:id="@+id/rowDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="Small Text"
+        android:textColor="#b3b3b3"
+        android:textSize="10dp"
+        android:paddingRight="10dp"
+        android:layout_alignTop="@+id/rowUserName"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 
-            <TextView
-                android:id="@+id/rowSubject"
-                android:text="Column 1"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_width="match_parent"
-                android:textSize="18dp" />
-
-            <TextView
-                android:id="@+id/rowContent"
-                android:text="Column 2"
-                android:layout_gravity="center_vertical"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_column="5"
-                android:textSize="14dp"
-                android:maxLines="1" />
-        </LinearLayout>
-
-    </TableRow>
-
-
-</TableLayout>
+</RelativeLayout>

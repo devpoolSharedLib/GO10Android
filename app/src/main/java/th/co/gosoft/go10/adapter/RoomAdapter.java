@@ -20,11 +20,6 @@ public class RoomAdapter extends ArrayAdapter<RoomModel> {
     private final String LOG_TAG = "RoomAdapter";
     private Map<String, Integer> imageIdMap = new HashMap<>();
 
-    public RoomAdapter(Context context, int textViewResourceId) {
-        super(context, textViewResourceId);
-        generateImageToMap(imageIdMap);
-    }
-
     public RoomAdapter(Context context, int resource, List<RoomModel> items) {
         super(context, resource, items);
         generateImageToMap(imageIdMap);

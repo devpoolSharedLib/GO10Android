@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -36,6 +38,7 @@ public class BoardContentFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         Log.i(LOG_TAG, "Oncreate : BoardContentFragment");
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -45,26 +48,7 @@ public class BoardContentFragment extends Fragment {
         Bundle bundle = getArguments();
         _id = bundle.getString("_id");
         Log.i(LOG_TAG, "_id : " + _id);
-        Button button = (Button) view.findViewById(R.id.commentButton);
-        button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-//                Intent intent = new Intent(getActivity(), WritingCommentActivity.class);
-//                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-//                intent.putExtra("_id", _id);
-//                intent.putExtra("room_id", room_id);
-//                startActivity(intent);
-            Bundle data = new Bundle();
-            data.putString("_id", _id);
-            data.putString("room_id", room_id);
-            Fragment fragment = new WritingCommentFragment();
-            fragment.setArguments(data);
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").addToBackStack(null).commit();
-            }
-        });
+
         return view;
     }
 
@@ -143,6 +127,32 @@ public class BoardContentFragment extends Fragment {
         alert.setMessage("Error Occurred!!!");
         alert.setCancelable(true);
         return alert;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.board_content_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btnComment:
+                Log.i(LOG_TAG, "click comment");
+                Bundle data = new Bundle();
+                data.putString("_id", _id);
+                data.putString("room_id", room_id);
+                Fragment fragment = new WritingCommentFragment();
+                fragment.setArguments(data);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").addToBackStack(null).commit();
+                return true;
+            default:
+                break;
+        }
+
+        return false;
     }
 
 }

@@ -4,10 +4,12 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/setting"
-            android:title="Setting" />
+            android:title="Setting"
+            android:checkable="false" />
         <item
             android:id="@+id/logout"
-            android:title="Logout" />
+            android:title="Logout"
+            android:checkable="false" />
     </group>
 
     <!--<group android:checkableBehavior="single">-->

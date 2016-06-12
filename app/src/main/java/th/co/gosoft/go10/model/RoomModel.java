@@ -2,10 +2,11 @@ package th.co.gosoft.go10.model;
 
 public class RoomModel {
 
-    private String _id = "";
-    private String _rev = "";
-    private String name = "";
-    private String desc = "";
+    private String _id;
+    private String _rev;
+    private String name;
+    private String desc;
+    private String type;
 
     public String get_id() {
         return _id;
@@ -30,5 +31,13 @@ public class RoomModel {
     }
     public void setDesc(String desc) {
         this.desc = desc;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

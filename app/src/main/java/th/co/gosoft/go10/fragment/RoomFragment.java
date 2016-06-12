@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,7 +46,7 @@ public class RoomFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(LOG_TAG, "Oncreate : RoomFragment");
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -65,25 +67,23 @@ public class RoomFragment extends Fragment {
         TextView txtRoomName = (TextView)  view.findViewById(R.id.txtRoomName);
         txtRoomName.setText(roomName);
 
-        Button button = (Button) view.findViewById(R.id.btnNewTopic);
-        button.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-//                Intent intent = new Intent(getActivity(), WritingTopicActivity.class);
-//                intent.setFlags(intent.getFlags() | Intent.FLAG_ACTIVITY_NO_HISTORY);
-//                intent.putExtra("room_id", room_id);
-//                startActivity(intent);
-            Bundle data = new Bundle();
-            data.putString("room_id", room_id);
-            Fragment fragment = new WritingTopicFragment();
-            fragment.setArguments(data);
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
+//        Button button = (Button) view.findViewById(R.id.btnNewTopic);
+//        button.setOnClickListener(new View.OnClickListener()
+//        {
+//            @Override
+//            public void onClick(View v)
+//            {
+//            Bundle data = new Bundle();
+//            data.putString("room_id", room_id);
+//            Fragment fragment = new WritingTopicFragment();
+//            fragment.setArguments(data);
+//            FragmentManager fragmentManager = getFragmentManager();
+//            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
+//
+//            }
+//        });
 
-            }
-        });
+
         return view;
     }
 
@@ -186,6 +186,32 @@ public class RoomFragment extends Fragment {
         alert.setMessage("Error Occurred!!!");
         alert.setCancelable(true);
         return alert;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.room_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btnNewTopic:
+                Log.i(LOG_TAG, "click new topic");
+                Bundle data = new Bundle();
+                data.putString("room_id", room_id);
+                Fragment fragment = new WritingTopicFragment();
+                fragment.setArguments(data);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
+                return true;
+
+            default:
+                break;
+        }
+
+        return false;
     }
 
 }
