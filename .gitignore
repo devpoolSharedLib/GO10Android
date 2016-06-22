@@ -9,3 +9,6 @@
 /.idea/.misc.xml
 /.idea/vcs.xml
 .idea/gradle.xml
+keystore.properties
+Key_Store/
+app/app-release.apk

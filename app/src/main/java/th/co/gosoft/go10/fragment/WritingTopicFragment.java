@@ -42,21 +42,24 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import jp.wasabeef.richeditor.RichEditor;
+import richeditor.classes.RichEditor;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.BitMapUtil;
-import th.co.gosoft.go10.util.GO10Application;
 
 public class WritingTopicFragment extends Fragment {
 
     private final String LOG_TAG = "WritingTopicFragmentTag";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+    //    private final String URL = "http://10.37.98.235:9080/GO10WebService/api/topic/post";
+    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+    //    private final String URL_POST_SERVLET = "http://10.37.98.235:9080/GO10WebService/UploadServlet";
+    private final String DOMAIN = "http://go10webservice.au-syd.mybluemix.net";
+    //    private final String DOMAIN = "http://10.37.98.235:9080";
     private final int RESULT_LOAD_IMAGE = 7;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 89;
     private ProgressDialog progress;
     private String room_id;
-    private Bundle profileBundle;
     private RichEditor mEditor;
     private EditText edtHostSubject;
 
@@ -78,7 +81,6 @@ public class WritingTopicFragment extends Fragment {
         mEditor.setEditorFontSize(22);
         mEditor.setPadding(10, 10, 10, 10);
 
-        profileBundle = ((GO10Application) getActivity().getApplication()).getBundle();
         Bundle bundle = getArguments();
         room_id = bundle.getString("room_id");
         Log.i(LOG_TAG, "room_id : " + room_id);
@@ -98,36 +100,6 @@ public class WritingTopicFragment extends Fragment {
         view.findViewById(R.id.action_redo).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
                 mEditor.redo();
-            }
-        });
-
-        view.findViewById(R.id.action_indent).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setIndent();
-            }
-        });
-
-        view.findViewById(R.id.action_outdent).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setOutdent();
-            }
-        });
-
-        view.findViewById(R.id.action_align_left).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setAlignLeft();
-            }
-        });
-
-        view.findViewById(R.id.action_align_center).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setAlignCenter();
-            }
-        });
-
-        view.findViewById(R.id.action_align_right).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setAlignRight();
             }
         });
 
@@ -166,7 +138,7 @@ public class WritingTopicFragment extends Fragment {
 
         view.findViewById(R.id.action_insert_link).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-                mEditor.insertLink("https://github.com/wasabeef", "wasabeef");
+            mEditor.insertLink();
             }
         });
 
@@ -275,7 +247,7 @@ public class WritingTopicFragment extends Fragment {
 
             try {
 
-                Bitmap bitmap = BitMapUtil.resizeBitmap(picturePath, 200, 200);
+                Bitmap bitmap = BitMapUtil.resizeBitmap(picturePath, BitMapUtil.resolution, BitMapUtil.resolution);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
@@ -288,7 +260,7 @@ public class WritingTopicFragment extends Fragment {
 
             AsyncHttpClient client = new AsyncHttpClient();
 
-            client.post("http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet", params, new AsyncHttpResponseHandler() {
+            client.post(URL_POST_SERVLET, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
@@ -299,8 +271,14 @@ public class WritingTopicFragment extends Fragment {
                         String imgURL =  new JSONObject(responseString).getString("imgUrl");
                         Log.i(LOG_TAG, "imgURL : "+imgURL);
 
-                        mEditor.insertImage("http://go10webservice.au-syd.mybluemix.net"+imgURL,
-                                "insertImageUrl");
+                        if(BitMapUtil.width > BitMapUtil.height){
+                            mEditor.insertImage(DOMAIN+imgURL, 295, 166, "insertImageUrl");
+                        } else if(BitMapUtil.width < BitMapUtil.height){
+                            mEditor.insertImage(DOMAIN+imgURL, 230, 408, "insertImageUrl");
+                        } else if(BitMapUtil.width == BitMapUtil.height){
+                            mEditor.insertImage(DOMAIN+imgURL, 295, 295, "insertImageUrl");
+                        }
+
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, e.getMessage(), e);
                     }

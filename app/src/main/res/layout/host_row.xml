@@ -27,7 +27,8 @@
         android:layout_gravity="start"
         android:layout_below="@+id/hostSubject"
         android:padding="10dp"
-        android:layout_marginBottom="10dp"/>
+        android:layout_marginBottom="10dp"
+        android:minHeight="80dp"/>
 
     <!--<TextView-->
         <!--android:id="@+id/hostContent"-->
@@ -36,7 +37,7 @@
         <!--android:text="@string/host_conetent"-->
         <!--android:layout_below="@+id/hostSubject"-->
         <!--android:layout_centerHorizontal="true"-->
-        <!--android:textColor="#ffffff"-->
+        <!--android:background="@color/colorBg"-->
         <!--android:minLines="4"-->
         <!--android:padding="10dp"-->
         <!--android:autoLink="web"-->

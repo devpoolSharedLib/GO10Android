@@ -1,11 +1,15 @@
 package th.co.gosoft.go10.adapter;
 
 import android.content.Context;
+import android.text.Html;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -80,6 +84,7 @@ public class TopicAdapter extends BaseAdapter {
                 convertView = layoutInflater.inflate(rowLayoutMap.get(0), null);
                 holder.subject = (TextView) convertView.findViewById(R.id.hostSubject);
                 holder.content = (WebView) convertView.findViewById(R.id.hostContent);
+//                holder.content = (TextView) convertView.findViewById(R.id.hostContent);
                 holder.user = (TextView) convertView.findViewById(R.id.hostUsername);
                 holder.date = (TextView) convertView.findViewById(R.id.hostTime);
                 holder.imageView =(ImageView) convertView.findViewById(R.id.hostImage);
@@ -88,6 +93,7 @@ public class TopicAdapter extends BaseAdapter {
             } else if(rowType == 1){
                 convertView = layoutInflater.inflate(rowLayoutMap.get(1), null);
                 holder.content = (WebView) convertView.findViewById(R.id.commentContent);
+//                holder.content = (TextView) convertView.findViewById(R.id.commentContent);
                 holder.user = (TextView) convertView.findViewById(R.id.commentUsername);
                 holder.date = (TextView) convertView.findViewById(R.id.commentTime);
                 holder.imageView =(ImageView) convertView.findViewById(R.id.commentImage);
@@ -102,33 +108,19 @@ public class TopicAdapter extends BaseAdapter {
 
         if (rowType == 0){
             holder.subject.setText(topicModel.getSubject());
+//            holder.content.setText(Html.fromHtml(topicModel.getContent()));
             holder.content.loadData(topicModel.getContent(), "text/html; charset=UTF-8", null);
             holder.user.setText(topicModel.getAvatarName());
             holder.date.setText(topicModel.getDate().toString());
+            holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic() , "drawable", context.getPackageName()));
 
-            if(topicModel.getAvatarName().equals("Cristiano Ronaldo")){
-                new DownloadImageTask(holder.imageView)
-                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
-            }else if(topicModel.getAvatarName().equals("Mon Nit Kannika")){
-                new DownloadImageTask(holder.imageView)
-                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
-            }else{
-                holder.imageView.setImageResource(R.drawable.avatar_woman2);
-            }
+
         } else if(rowType == 1){
+//            holder.content.setText(Html.fromHtml(topicModel.getContent()));
             holder.content.loadData(topicModel.getContent(), "text/html; charset=UTF-8", null);
             holder.user.setText(topicModel.getAvatarName());
             holder.date.setText(topicModel.getDate().toString());
-
-            if(topicModel.getAvatarName().equals("Cristiano Ronaldo") || topicModel.getAvatarName().equals("Thounsand Touching")||topicModel.getAvatarName().equals("Chiradechwiroj Jirapas")){
-                new DownloadImageTask(holder.imageView)
-                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_ronaldo.png");
-            }else if(topicModel.getAvatarName().equals("Mon Nit Kannika")||topicModel.getAvatarName().equals("Mary Jane")){
-                new DownloadImageTask(holder.imageView)
-                        .execute("http://go10webservice.au-syd.mybluemix.net/GO10WebService/images/Avatar/avatar_mary.png");
-            }else{
-                holder.imageView.setImageResource(R.drawable.avatar_man2);
-            }
+            holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic() , "drawable", context.getPackageName()));
         }
 
         return convertView;
@@ -137,6 +129,7 @@ public class TopicAdapter extends BaseAdapter {
     private static class ViewHolder {
         TextView subject;
         WebView content;
+//        TextView content;
         TextView user;
         TextView date;
         ImageView imageView;

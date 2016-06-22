@@ -4,8 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Base64;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -27,6 +31,7 @@ import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -55,44 +60,22 @@ public class LoadingActivity extends Activity {
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         try{
+
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "th.co.gosoft.go10",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.i("key_hash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+
             FacebookSdk.sdkInitialize(this.getApplicationContext());
             setContentView(R.layout.activity_loading);
             checkCurrentTokenFacebook();
             prepareGmailLoginSession();
             checkCurrentTokenGmail();
-//            if(IS_LOGIN_FACEBOOK || IS_SIGNIN_GOOGLE){
-//                if(!IS_REGISTER_ACCOUNT){
-//                    Log.i(LOG_TAG, "Have not registered account");
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Intent i = new Intent(LoadingActivity.this, RegisterActivity.class);
-//                            startActivity(i);
-//                            finish();
-//                        }
-//                    }, SPLASH_TIME_OUT);
-//                } else {
-//                    Log.i(LOG_TAG, "Have registered account");
-//                    new Handler().postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Intent i = new Intent(LoadingActivity.this, HomeActivity.class);
-//                            startActivity(i);
-//                            finish();
-//                        }
-//                    }, SPLASH_TIME_OUT);
-//                }
-//            }else{
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Intent i = new Intent(LoadingActivity.this, LoginActivity.class);
-//                        startActivity(i);
-//                        finish();
-//
-//                    }
-//                }, SPLASH_TIME_OUT);
-//            }
+
             if(!IS_LOGIN_FACEBOOK && !IS_SIGNIN_GOOGLE){
                 new Handler().postDelayed(new Runnable() {
                     @Override

@@ -45,7 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
     public void validateToken(View view){
         if(isEmpty(edtToken.getText().toString())){
             Log.i(LOG_TAG, "empty message");
-            Toast.makeText(this, "The token is empty. Please enter the activation token.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "The token is empty. Please enter the invitation code.", Toast.LENGTH_SHORT).show();
         } else {
             callWebService(edtToken.getText().toString());
         }
@@ -72,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity {
                         Log.i(LOG_TAG, "user modelList size : "+userModelList.size());
                         if(userModelList.isEmpty()){
                             Log.i(LOG_TAG, "Not have user model");
-                            Toast.makeText(getApplication(), "The token is not correct.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplication(), "The invitation code is invalid.", Toast.LENGTH_SHORT).show();
                         } else {
                             insertUserModelToSharedPreferences(userModelList.get(0));
                             gotoSettingAvatar();

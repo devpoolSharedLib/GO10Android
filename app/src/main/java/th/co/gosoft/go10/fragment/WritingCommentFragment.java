@@ -41,15 +41,21 @@ import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
-import jp.wasabeef.richeditor.RichEditor;
+import richeditor.classes.RichEditor;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
+
 import th.co.gosoft.go10.util.BitMapUtil;
 
 public class WritingCommentFragment extends Fragment {
 
     private final String LOG_TAG = "WritingCommentFragment";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+//    private final String URL = "http://10.37.98.235:9080/GO10WebService/api/topic/post";
+    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+//    private final String URL_POST_SERVLET = "http://10.37.98.235:9080/GO10WebService/UploadServlet";
+    private final String DOMAIN = "http://go10webservice.au-syd.mybluemix.net";
+//    private final String DOMAIN = "http://10.37.98.235:9080";
     private final int RESULT_LOAD_IMAGE = 8;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 88;
     private ProgressDialog progress;
@@ -94,36 +100,6 @@ public class WritingCommentFragment extends Fragment {
             }
         });
 
-        view.findViewById(R.id.action_indent).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setIndent();
-            }
-        });
-
-        view.findViewById(R.id.action_outdent).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setOutdent();
-            }
-        });
-
-        view.findViewById(R.id.action_align_left).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setAlignLeft();
-            }
-        });
-
-        view.findViewById(R.id.action_align_center).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setAlignCenter();
-            }
-        });
-
-        view.findViewById(R.id.action_align_right).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                mEditor.setAlignRight();
-            }
-        });
-
         view.findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
 
@@ -159,9 +135,7 @@ public class WritingCommentFragment extends Fragment {
 
         view.findViewById(R.id.action_insert_link).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
-
-                mEditor.insertLink(null, null);
-
+            mEditor.insertLink();
             }
         });
 
@@ -268,7 +242,7 @@ public class WritingCommentFragment extends Fragment {
 
             try {
 
-                Bitmap bitmap = BitMapUtil.resizeBitmap(picturePath, 200, 200);
+                Bitmap bitmap = BitMapUtil.resizeBitmap(picturePath, BitMapUtil.resolution, BitMapUtil.resolution);
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
@@ -281,7 +255,7 @@ public class WritingCommentFragment extends Fragment {
 
             AsyncHttpClient client = new AsyncHttpClient();
 
-            client.post("http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet", params, new AsyncHttpResponseHandler() {
+            client.post(URL_POST_SERVLET, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
@@ -292,8 +266,14 @@ public class WritingCommentFragment extends Fragment {
                         String imgURL =  new JSONObject(responseString).getString("imgUrl");
                         Log.i(LOG_TAG, "imgURL : "+imgURL);
 
-                        mEditor.insertImage("http://go10webservice.au-syd.mybluemix.net"+imgURL,
-                                "insertImageUrl");
+                        if(BitMapUtil.width > BitMapUtil.height){
+                            mEditor.insertImage(DOMAIN+imgURL, 295, 166, "insertImageUrl");
+                        } else if(BitMapUtil.width < BitMapUtil.height){
+                            mEditor.insertImage(DOMAIN+imgURL, 230, 408, "insertImageUrl");
+                        } else if(BitMapUtil.width == BitMapUtil.height){
+                            mEditor.insertImage(DOMAIN+imgURL, 295, 295, "insertImageUrl");
+                        }
+
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, e.getMessage(), e);
                     }

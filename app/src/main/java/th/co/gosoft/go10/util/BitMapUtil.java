@@ -8,6 +8,10 @@ import android.graphics.BitmapFactory;
  */
 public class BitMapUtil {
 
+    public static int height;
+    public static int width;
+    public static int resolution = 600;
+
     public static Bitmap resizeBitmap(String picturePath, int width, int height) {
         BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
         sizeOptions.inJustDecodeBounds = true;
@@ -23,8 +27,8 @@ public class BitMapUtil {
 
     public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
-        final int height = options.outHeight;
-        final int width = options.outWidth;
+        height = options.outHeight;
+        width = options.outWidth;
         int inSampleSize = 1;
 
         if (height > reqHeight || width > reqWidth) {
