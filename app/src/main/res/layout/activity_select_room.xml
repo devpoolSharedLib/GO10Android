@@ -50,9 +50,10 @@
 
             <GridView
                 android:id="@+id/gridViewRoom"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:numColumns="4"
+                android:scrollbars="horizontal"
+                android:numColumns="3"
                 android:layout_below="@+id/txtRoom" />
 
         </RelativeLayout>

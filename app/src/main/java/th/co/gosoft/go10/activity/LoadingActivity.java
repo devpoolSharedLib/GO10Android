@@ -59,17 +59,9 @@ public class LoadingActivity extends Activity {
 
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+
         try{
-
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "th.co.gosoft.go10",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.i("key_hash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-            }
-
+            logKeyHash();
             FacebookSdk.sdkInitialize(this.getApplicationContext());
             setContentView(R.layout.activity_loading);
             checkCurrentTokenFacebook();
@@ -92,6 +84,23 @@ public class LoadingActivity extends Activity {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
 
+    }
+
+    private void logKeyHash() {
+        try {
+            PackageInfo info = null;
+            info = getPackageManager().getPackageInfo(
+                    "th.co.gosoft.go10",
+                    PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = null;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.i("key_hash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+            }
+        }catch(Exception e){
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
 
     private void checkCurrentTokenFacebook() {
@@ -233,7 +242,7 @@ public class LoadingActivity extends Activity {
     private void insertUserModelToSharedPreferences(String accountId){
 
         Log.i(LOG_TAG, "account id : "+accountId);
-
+        clearSharedPreference();
         editor.putString("accountId",  accountId);
         if(!sharedPref.contains("empName")){
             editor.putString("empName",  "Employee Name");
@@ -252,7 +261,7 @@ public class LoadingActivity extends Activity {
 
     private void insertUserModelToSharedPreferences(UserModel userModel){
         Log.i(LOG_TAG, "AVATAR DATA : "+userModel.getAvatarPic()+" : "+userModel.getAvatarName());
-
+        clearSharedPreference();
         editor.putString("_id",  userModel.get_id());
         editor.putString("_rev",  userModel.get_rev());
         editor.putString("accountId",  userModel.getAccountId());
@@ -263,6 +272,11 @@ public class LoadingActivity extends Activity {
         editor.putString("token",  userModel.getToken());
         editor.putBoolean("activate",  userModel.isActivate());
         editor.putString("type", userModel.getType());
+        editor.commit();
+    }
+
+    private void clearSharedPreference() {
+        editor.clear();
         editor.commit();
     }
 

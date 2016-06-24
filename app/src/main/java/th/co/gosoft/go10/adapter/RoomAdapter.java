@@ -57,6 +57,8 @@ public class RoomAdapter extends ArrayAdapter<RoomModel> {
         imageIdMap.put("rm01", R.drawable.general);
         imageIdMap.put("rm02", R.drawable.it_knowledge);
         imageIdMap.put("rm03", R.drawable.sport);
+        imageIdMap.put("rm04", R.drawable.entertainment);
+        imageIdMap.put("rm05", R.drawable.train);
     }
 
 }
