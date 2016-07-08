@@ -12,6 +12,8 @@
     <TextView
         android:id="@+id/rowSubject"
         android:text="column1"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -20,7 +22,9 @@
         android:textColor="#0080ff"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/iconImage"
-        android:layout_toEndOf="@+id/iconImage" />
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:paddingRight="10dp" />
 
     <TextView
         android:id="@+id/rowUserName"

@@ -180,6 +180,7 @@ public class LoadingActivity extends Activity {
 
         try {
             AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Cache-Control", "no-cache");
             client.get(concatString, new BaseJsonHttpResponseHandler<List<UserModel>>() {
 
                 @Override

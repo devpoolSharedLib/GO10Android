@@ -66,6 +66,7 @@ public class BoardContentFragment extends Fragment {
 
         try {
             AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Cache-Control", "no-cache");
             client.get(concatString, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
 
                 @Override

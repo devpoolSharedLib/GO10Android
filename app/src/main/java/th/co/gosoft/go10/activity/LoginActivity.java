@@ -163,6 +163,7 @@ public class LoginActivity extends Activity implements
 
         try {
             AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Cache-Control", "no-cache");
             client.get(concatString, new BaseJsonHttpResponseHandler<List<UserModel>>() {
 
                 @Override

@@ -30,11 +30,12 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
+import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.TopicModel;
 
 public class RoomFragment extends Fragment {
 
-    private final String LOG_TAG = "RoomFragment_Tag";
+    private final String LOG_TAG = "RoomFragmenttag";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
     private ProgressDialog progress;
     private Map<String, Integer> imageIdMap = new HashMap<>();
@@ -101,6 +102,7 @@ public class RoomFragment extends Fragment {
         Log.i(LOG_TAG, "URL : " + concatString);
         try {
             AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Cache-Control", "no-cache");
             Log.i(LOG_TAG, "client");
             client.get(concatString, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
 
@@ -146,8 +148,8 @@ public class RoomFragment extends Fragment {
 
     private void generateListView() {
         ListView topicListView = (ListView)  getView().findViewById(R.id.listViewTopic);
-        HostTopicListAdapter hostTopicListAdapter = new HostTopicListAdapter(getActivity(), R.layout.hot_topic_row, topicModelList);
-        topicListView.setAdapter(hostTopicListAdapter);
+        RoomAdapter roomtAdapter = new RoomAdapter(getActivity(), R.layout.hot_topic_row, topicModelList);
+        topicListView.setAdapter(roomtAdapter);
 
         topicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -170,6 +172,8 @@ public class RoomFragment extends Fragment {
         imageIdMap.put("rm01", R.drawable.general);
         imageIdMap.put("rm02", R.drawable.it_knowledge);
         imageIdMap.put("rm03", R.drawable.sport);
+        imageIdMap.put("rm04", R.drawable.entertainment);
+        imageIdMap.put("rm05", R.drawable.training);
     }
 
     private void showLoadingDialog() {

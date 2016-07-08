@@ -57,6 +57,10 @@ public class HostTopicListAdapter extends ArrayAdapter<TopicModel> {
                 holder.imageView.setImageResource(R.drawable.it_knowledge);
             }else if(topicModel.getRoomId().equals("rm03")){
                 holder.imageView.setImageResource(R.drawable.sport);
+            }else if(topicModel.getRoomId().equals("rm04")){
+                holder.imageView.setImageResource(R.drawable.entertainment);
+            }else if(topicModel.getRoomId().equals("rm05")){
+                holder.imageView.setImageResource(R.drawable.training);
             }
             return convertView;
         } catch (Exception e){

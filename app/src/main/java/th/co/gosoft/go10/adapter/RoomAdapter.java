@@ -1,6 +1,7 @@
 package th.co.gosoft.go10.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,51 +15,63 @@ import java.util.Map;
 
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.RoomModel;
+import th.co.gosoft.go10.model.TopicModel;
 
-public class RoomAdapter extends ArrayAdapter<RoomModel> {
+/**
+ * Created by manitkan on 27/06/16.
+ */
+public class RoomAdapter  extends ArrayAdapter<TopicModel> {
 
-    private final String LOG_TAG = "RoomAdapter";
-    private Map<String, Integer> imageIdMap = new HashMap<>();
+    private final String LOG_TAG = "HostTopicListAdapter";
+    private Context context;
 
-    public RoomAdapter(Context context, int resource, List<RoomModel> items) {
+    public RoomAdapter(Context context, int resource, List<TopicModel> items) {
         super(context, resource, items);
-        generateImageToMap(imageIdMap);
+        this.context = context;
     }
 
-    @Override
-    public View getView(final int position, View convertView, ViewGroup parent) {
 
-        View view = convertView;
-        if (view == null) {
-            LayoutInflater inflater;
-            inflater = LayoutInflater.from(getContext());
-            view = inflater.inflate(R.layout.room_grid, null);
-        }
+    public View getView(int position, View convertView, ViewGroup parent) {
 
-        RoomModel room = getItem(position);
+        try{
+            ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new ViewHolder();
 
-        if (room != null) {
-            ImageView imgRoomIcon = (ImageView) view.findViewById(R.id.roomIcon);
-            TextView txtRoomName = (TextView) view.findViewById(R.id.roomName);
+                LayoutInflater inflater;
+                inflater = LayoutInflater.from(getContext());
+                convertView = inflater.inflate(R.layout.hot_topic_row, null);
 
-            if (imgRoomIcon != null) {
-                imgRoomIcon.setImageResource(imageIdMap.get(room.get_id()));
+                holder.txtRowSubject = (TextView) convertView.findViewById(R.id.rowSubject);
+                holder.txtRowUserName = (TextView) convertView.findViewById(R.id.rowUserName);
+                holder.txtRowDate = (TextView) convertView.findViewById(R.id.rowDate);
+                holder.imageView = (ImageView) convertView.findViewById(R.id.iconImage);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
-            if (txtRoomName != null) {
-                txtRoomName.setText(room.getName());
+            TopicModel topicModel = getItem(position);
+
+            if (topicModel != null) {
+                holder.txtRowSubject.setText(topicModel.getSubject());
+                holder.txtRowUserName.setText(topicModel.getAvatarName());
+                holder.txtRowDate.setText(topicModel.getDate());
+                holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic(), "drawable",
+                        context.getPackageName()));
             }
+
+            return convertView;
+        } catch (Exception e){
+            Log.e(LOG_TAG, e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
-
-        return view;
     }
 
-    private void generateImageToMap(Map<String, Integer> imageIdMap) {
-        imageIdMap.put("rm01", R.drawable.general);
-        imageIdMap.put("rm02", R.drawable.it_knowledge);
-        imageIdMap.put("rm03", R.drawable.sport);
-        imageIdMap.put("rm04", R.drawable.entertainment);
-        imageIdMap.put("rm05", R.drawable.train);
+    private static class ViewHolder {
+        TextView txtRowSubject;
+        TextView txtRowUserName;
+        TextView txtRowDate;
+        ImageView imageView;
     }
-
 }

@@ -5,13 +5,17 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -22,9 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
+
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
-import th.co.gosoft.go10.adapter.RoomAdapter;
+import th.co.gosoft.go10.adapter.RoomGridAdapter;
 import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.model.TopicModel;
 
@@ -37,8 +42,8 @@ public class SelectRoomFragment extends Fragment {
     private List<TopicModel> topicModelList = new ArrayList<>();
     private List<RoomModel> roomModelList = new ArrayList<>();
     private ListView hotTopicListView;
-    private GridView gridViewRoom;
-
+//    private GridView gridViewRoom;
+    private LinearLayout linearRoom;
     private boolean isLoadTopicDone = false;
     private boolean isLoadRoomDone = false;
 
@@ -50,14 +55,21 @@ public class SelectRoomFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.i(LOG_TAG, "onCreateView()");
         return inflater.inflate(R.layout.activity_select_room, container, false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        hotTopicListView = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
-        gridViewRoom = (GridView)  getView().findViewById(R.id.gridViewRoom);
+        try{
+            hotTopicListView = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
+//            gridViewRoom = (GridView)  getView().findViewById(R.id.roomGridView);
+            linearRoom = (LinearLayout) getView().findViewById(R.id.linearRoom);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
     }
 
     @Override
@@ -70,6 +82,7 @@ public class SelectRoomFragment extends Fragment {
     private void callGetWebService(){
         try {
             AsyncHttpClient client = new AsyncHttpClient();
+            client.addHeader("Cache-Control", "no-cache");
             showLoadingDialog();
             client.get(URL_HOT, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
 
@@ -153,7 +166,6 @@ public class SelectRoomFragment extends Fragment {
     private void generateListView() {
         HostTopicListAdapter hostTopicListAdapter = new HostTopicListAdapter(getActivity(), R.layout.hot_topic_row, topicModelList);
         hotTopicListView.setAdapter(hostTopicListAdapter);
-
         hotTopicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
@@ -163,18 +175,25 @@ public class SelectRoomFragment extends Fragment {
     }
 
     private void generateGridView() {
-        RoomAdapter roomAdapter = new RoomAdapter(getActivity(), R.layout.room_grid, roomModelList);
-        gridViewRoom.setAdapter(roomAdapter);
-        gridViewRoom.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. position : "+position);
-                goRoomActivity(position);
+        try{
+            Log.i(LOG_TAG, "Generate Grid View");
+            RoomGridAdapter roomAdapter = new RoomGridAdapter(getActivity(), R.layout.room_grid, roomModelList);
+            for (int i = 0; i < roomModelList.size(); i++) {
+                View view = roomAdapter.getView(i, null, null);
+                final int index = i;
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        goRoomActivity(index);
+                    }
+                });
+                linearRoom.addView(view);
             }
-        });
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
+        }
     }
-
 
     private void goBoardContentActivity(int position) {
         try{
@@ -190,7 +209,6 @@ public class SelectRoomFragment extends Fragment {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-
 
     private void goRoomActivity(int position) {
         Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. goRoomActivity");
