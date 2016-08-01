@@ -22,8 +22,10 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -50,12 +52,9 @@ import th.co.gosoft.go10.util.BitMapUtil;
 public class WritingCommentFragment extends Fragment {
 
     private final String LOG_TAG = "WritingCommentFragment";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
-    private final String URL = "http://10.37.43.125:9080/GO10WebService/api/topic/post";
-//    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
-    private final String URL_POST_SERVLET = "http://10.37.43.125:9080/GO10WebService/UploadServlet";
-//    private final String DOMAIN = "http://go10webservice.au-syd.mybluemix.net";
-    private final String DOMAIN = "http://10.37.43.125:9080";
+    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+    private final String DOMAIN = "http://go10webservice.au-syd.mybluemix.net";
     private final int RESULT_LOAD_IMAGE = 8;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 88;
     private ProgressDialog progress;
@@ -77,6 +76,7 @@ public class WritingCommentFragment extends Fragment {
         mEditor = (RichEditor) view.findViewById(R.id.richCommentContent);
         mEditor.setEditorFontSize(22);
         mEditor.setPadding(10, 10, 10, 10);
+        mEditor.setPlaceholder("Write something ...");
 
         Bundle bundle = getArguments();
         _id = bundle.getString("_id");
@@ -254,7 +254,7 @@ public class WritingCommentFragment extends Fragment {
             }
 
             AsyncHttpClient client = new AsyncHttpClient();
-
+            client.setTimeout(AsyncHttpClient.DEFAULT_SOCKET_TIMEOUT*3);
             client.post(URL_POST_SERVLET, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

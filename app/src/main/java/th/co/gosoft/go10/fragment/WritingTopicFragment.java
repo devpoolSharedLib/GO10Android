@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,18 +52,14 @@ public class WritingTopicFragment extends Fragment {
 
     private final String LOG_TAG = "WritingTopicFragmentTag";
     private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
-    //    private final String URL = "http://10.37.98.235:9080/GO10WebService/api/topic/post";
     private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
-    //    private final String URL_POST_SERVLET = "http://10.37.98.235:9080/GO10WebService/UploadServlet";
     private final String DOMAIN = "http://go10webservice.au-syd.mybluemix.net";
-    //    private final String DOMAIN = "http://10.37.98.235:9080";
     private final int RESULT_LOAD_IMAGE = 7;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 89;
     private ProgressDialog progress;
     private String room_id;
     private RichEditor mEditor;
     private EditText edtHostSubject;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,6 +77,7 @@ public class WritingTopicFragment extends Fragment {
         mEditor = (RichEditor) view.findViewById(R.id.richHostContent);
         mEditor.setEditorFontSize(22);
         mEditor.setPadding(10, 10, 10, 10);
+        mEditor.setPlaceholder("Write something ...");
 
         Bundle bundle = getArguments();
         room_id = bundle.getString("room_id");

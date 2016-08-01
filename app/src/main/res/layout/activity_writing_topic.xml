@@ -10,16 +10,18 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:id="@+id/txtHostSubject"
-        android:hint="Subject"
+        android:hint="Title"
         style="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
         android:padding="10dp"
+        android:layout_marginTop="10dp"
         android:gravity="start"
-        android:minLines="2" />
+        android:minLines="1" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_orange_dark"
+        android:background="@android:color/holo_blue_dark"
+        android:id="@+id/tool_scrollview"
         >
 
         <LinearLayout
