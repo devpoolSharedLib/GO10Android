@@ -38,7 +38,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.FacebookGoogleLoginActivity"
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -55,14 +55,21 @@
 
         <activity
             android:name=".activity.SettingAvatar"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.SettingAvatarName"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".activity.SelectAvatarPic"
             android:theme="@style/AppTheme" />
-        <activity android:name=".activity.RegisterActivity"></activity>
+        <activity android:name=".activity.RegisterActivity" />
+        <activity android:name=".activity.LoginActivity">
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+            <!--</intent-filter>-->
+        </activity>
     </application>
 
 </manifest>

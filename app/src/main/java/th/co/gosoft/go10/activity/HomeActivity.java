@@ -32,7 +32,6 @@ import com.google.android.gms.common.api.Status;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.fragment.SelectRoomFragment;
-import th.co.gosoft.go10.util.GO10Application;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -155,33 +154,37 @@ public class HomeActivity extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.logout) {
 
-            if(checkCurrentTokenFacebook()){
-                try{
-                    Log.i(LOG_TAG, "Logging out Facebook");
-                    LoginManager.getInstance().logOut();
-                    goToLoginActivity();
-
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, e.getMessage(), e);
-                    throw new RuntimeException(e.getMessage(), e);
-                }
-            } else if(checkCurrentTokenGmail()){
-                Log.i(LOG_TAG, "Logging out Gmail");
-                try{
-                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-                        new ResultCallback<Status>() {
-                            @Override
-                            public void onResult(Status status) {
-                                goToLoginActivity();
-                            }
-                        });
-                    goToLoginActivity();
-
-                } catch (Exception e) {
-                    Log.e(LOG_TAG, e.getMessage(), e);
-                    throw new RuntimeException(e.getMessage(), e);
-                }
-            }
+//            if(checkCurrentTokenFacebook()){
+//                try{
+//                    Log.i(LOG_TAG, "Logging out Facebook");
+//                    LoginManager.getInstance().logOut();
+//                    goToLoginActivity();
+//
+//                } catch (Exception e) {
+//                    Log.e(LOG_TAG, e.getMessage(), e);
+//                    throw new RuntimeException(e.getMessage(), e);
+//                }
+//            } else if(checkCurrentTokenGmail()){
+//                Log.i(LOG_TAG, "Logging out Gmail");
+//                try{
+//                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
+//                        new ResultCallback<Status>() {
+//                            @Override
+//                            public void onResult(Status status) {
+//                                goToLoginActivity();
+//                            }
+//                        });
+//                    goToLoginActivity();
+//
+//                } catch (Exception e) {
+//                    Log.e(LOG_TAG, e.getMessage(), e);
+//                    throw new RuntimeException(e.getMessage(), e);
+//                }
+//            }
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putBoolean("hasLoggedIn", false);
+            editor.commit();
+            goToLoginActivity();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

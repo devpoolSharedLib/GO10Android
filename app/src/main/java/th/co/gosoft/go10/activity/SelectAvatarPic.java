@@ -156,6 +156,7 @@ public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
         userModel.setType(sharedPref.getString("type", null));
         userModel.setAvatarPic(sharedPref.getString("avatarPic", null));
         userModel.setAvatarName(sharedPref.getString("avatarName", null));
+        userModel.setBirthday(sharedPref.getString("birthday", null));
         return userModel;
     }
 

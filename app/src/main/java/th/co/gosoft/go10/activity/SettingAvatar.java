@@ -141,11 +141,11 @@ public class SettingAvatar extends AppCompatActivity {
         userModel.setAccountId(sharedPref.getString("accountId", null));
         userModel.setEmpName(sharedPref.getString("empName", null));
         userModel.setEmpEmail(sharedPref.getString("empEmail", null));
-        userModel.setToken(sharedPref.getString("token", null));
         userModel.setActivate(sharedPref.getBoolean("activate", false));
         userModel.setType(sharedPref.getString("type", null));
         userModel.setAvatarPic(sharedPref.getString("avatarPic", null));
         userModel.setAvatarName(sharedPref.getString("avatarName", null));
+        userModel.setBirthday(sharedPref.getString("birthday", null));
         return userModel;
     }
 

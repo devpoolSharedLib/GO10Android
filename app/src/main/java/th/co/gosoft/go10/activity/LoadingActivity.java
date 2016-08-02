@@ -4,17 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
@@ -31,7 +26,6 @@ import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
@@ -56,51 +50,67 @@ public class LoadingActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        setContentView(R.layout.activity_loading);
 
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
         try{
-            logKeyHash();
-            FacebookSdk.sdkInitialize(this.getApplicationContext());
-            setContentView(R.layout.activity_loading);
-            checkCurrentTokenFacebook();
-            prepareGmailLoginSession();
-            checkCurrentTokenGmail();
-
-            if(!IS_LOGIN_FACEBOOK && !IS_SIGNIN_GOOGLE){
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        Intent i = new Intent(LoadingActivity.this, LoginActivity.class);
-                        startActivity(i);
-                        finish();
-
-                    }
-                }, SPLASH_TIME_OUT);
+//            FacebookSdk.sdkInitialize(this.getApplicationContext());
+//            setContentView(R.layout.activity_loading);
+//            checkCurrentTokenFacebook();
+//            prepareGmailLoginSession();
+//            checkCurrentTokenGmail();
+//
+//            if(!IS_LOGIN_FACEBOOK && !IS_SIGNIN_GOOGLE){
+//                new Handler().postDelayed(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Intent i = new Intent(LoadingActivity.this, FacebookGoogleLoginActivity.class);
+//                        startActivity(i);
+//                        finish();
+//
+//                    }
+//                }, SPLASH_TIME_OUT);
+//            }
+            if(hasUserLoggedIn()){
+                Log.i(LOG_TAG, "User Logged In");
+                gotoHomeActivity();
+            } else {
+                Log.i(LOG_TAG, "User Not Logged In");
+                gotoLoginActivity();
             }
         } catch (Exception e) {
-            e.printStackTrace();
             Log.e(LOG_TAG, e.getMessage(), e);
         }
+    }
+
+    private void gotoHomeActivity() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(LoadingActivity.this, HomeActivity.class);
+                startActivity(i);
+                finish();
+
+            }
+        }, SPLASH_TIME_OUT);
 
     }
 
-    private void logKeyHash() {
-        try {
-            PackageInfo info = null;
-            info = getPackageManager().getPackageInfo(
-                    "th.co.gosoft.go10",
-                    PackageManager.GET_SIGNATURES);
-            for (Signature signature : info.signatures) {
-                MessageDigest md = null;
-                md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.i("key_hash", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+    private void gotoLoginActivity() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent i = new Intent(LoadingActivity.this, LoginActivity.class);
+                startActivity(i);
+                finish();
             }
-        }catch(Exception e){
-            throw new RuntimeException(e.getMessage(), e);
-        }
+        }, SPLASH_TIME_OUT);
+    }
+
+    private boolean hasUserLoggedIn() {
+         return sharedPref.getBoolean("hasLoggedIn", false);
     }
 
     private void checkCurrentTokenFacebook() {

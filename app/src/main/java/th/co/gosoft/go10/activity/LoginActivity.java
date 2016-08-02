@@ -1,189 +1,99 @@
 package th.co.gosoft.go10.activity;
 
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.android.gms.auth.api.Auth;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Arrays;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.UserModel;
 
-public class LoginActivity extends Activity implements
-        GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
+public class LoginActivity extends AppCompatActivity {
 
-    private final String LOG_TAG = "LoginActivityTag";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
+    private final String LOG_TAG = "LoginActivity";
+    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByUserPassword";
 
-    private static final int RC_SIGN_IN = 9001;
-    private boolean IS_REGISTER_ACCOUNT = false;
+    private EditText txtEmail;
+    private EditText txtPassword;
+    private Button btnLogin;
+    private TextView txtForgotYourPassword;
+    private ProgressDialog progress;
 
-    private CallbackManager callbackManager;
-    private GoogleApiClient mGoogleApiClient;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        txtEmail = (EditText) findViewById(R.id.txtEmail);
+        txtPassword = (EditText) findViewById(R.id.txtPassword);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+        txtForgotYourPassword = (TextView) findViewById(R.id.txtForgotYourPassword);
+
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-
-        try{
-            FacebookSdk.sdkInitialize(getApplicationContext());
-            prepareFacebookLoginSession();
-            prepareGmailLoginSession();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG, e.getMessage(), e);
-        }
     }
 
-    private void prepareFacebookLoginSession(){
-        try{
-            callbackManager = CallbackManager.Factory.create();
-            LoginButton loginButton = (LoginButton) findViewById(R.id.login_button);
-            List < String > permissionNeeds = Arrays.asList("public_profile");
-            loginButton.setReadPermissions(permissionNeeds);
-
-            loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-                @Override
-                public void onSuccess(LoginResult loginResult) {
-                    Log.i(LOG_TAG, "success : "+loginResult);
-
-                    GraphRequest request = GraphRequest.newMeRequest(
-                        loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                            @Override
-                            public void onCompleted(JSONObject object, GraphResponse response) {
-                                Log.i("LoginActivity", response.toString());
-                                try {
-                                    getUserDataFromServer(object.getString("id"));
-                                } catch (JSONException e) {
-                                    Log.e(LOG_TAG, e.getMessage(), e);
-                                }
-                            }
-                        });
-                    Bundle parameters = new Bundle();
-                    parameters.putString("fields","id, name");
-                    request.setParameters(parameters);
-                    request.executeAsync();
-
-                }
-
-                @Override
-                public void onCancel() {
-                    Log.i(LOG_TAG, "cancel");
-                }
-
-                @Override
-                public void onError(FacebookException exception) {
-                    Log.e(LOG_TAG, exception.getMessage(), exception);
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG, e.getMessage(), e);
-        }
-    }
-
-    private void prepareGmailLoginSession() {
-        findViewById(R.id.sign_in_button).setOnClickListener(this);
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestEmail()
-                .build();
-
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
-                .build();
-
-        Log.i(LOG_TAG, "prepareGmailLoginSession()");
-    }
-
-    public void signIn(){
-        Log.i(LOG_TAG, "callGoogleSignInActivity()");
-        Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int responseCode, Intent data) {
-        super.onActivityResult(requestCode, responseCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleSignInResult(result);
+    public void login(View view){
+        if(isInputsEmpty()){
+            Toast.makeText(this, "Please enter your E-mail and Password.", Toast.LENGTH_SHORT).show();
         } else {
-            callbackManager.onActivityResult(requestCode, responseCode, data);
+            callWebService(txtEmail.getText().toString(), txtPassword.getText().toString());
         }
     }
 
-    private void handleSignInResult(GoogleSignInResult result) {
-        Log.d(LOG_TAG, "handleSignInResult:" + result.isSuccess());
-        if (result.isSuccess()) {
-            GoogleSignInAccount acct = result.getSignInAccount();
-            getUserDataFromServer(acct.getId());
-        } else {
-            Log.i(LOG_TAG, "Cannot Login GMAIL Accout !!!");
-        }
-    }
-
-    private void getUserDataFromServer(final String accountId){
-        String concatString = URL+"?accountId="+accountId;
+    private void callWebService(String email, String password){
+        String concatString = URL+"?email="+email+"&password="+password;
 
         try {
             AsyncHttpClient client = new AsyncHttpClient();
-            client.addHeader("Cache-Control", "no-cache");
             client.get(concatString, new BaseJsonHttpResponseHandler<List<UserModel>>() {
 
                 @Override
                 public void onStart() {
                     super.onStart();
+                    showLoadingDialog();
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<UserModel> response) {
                     try {
+                        closeLoadingDialog();
                         List<UserModel> userModelList = response;
                         Log.i(LOG_TAG, "user modelList size : "+userModelList.size());
                         if(userModelList.isEmpty()){
                             Log.i(LOG_TAG, "Not have user model");
-                            insertUserModelToSharedPreferences(accountId);
-                            gotoRegisterActivity();
+                            Toast.makeText(getApplication(), "The e-mail or password is incorrect.\\n\\nPlease try again.", Toast.LENGTH_SHORT).show();
                         } else {
+                            if(isActivate(userModelList)){
+                                Toast.makeText(getApplication(), "Please activate your e-mail.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                insertUserModelToSharedPreferences(userModelList.get(0));
+                                if(hasNotSettingAvatar(userModelList)){
+                                    gotoSettingAvatarActivity();
+                                } else {
+                                    gotoHomeActivity();
+                                }
+                            }
                             Log.i(LOG_TAG, "have user model");
-                            insertUserModelToSharedPreferences(userModelList.get(0));
-                            gotoHomeActivity();
                         }
 
                     } catch (Throwable e) {
@@ -195,6 +105,7 @@ public class LoginActivity extends Activity implements
                 @Override
                 public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<UserModel> errorResponse) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
+                    closeLoadingDialog();
                 }
 
                 @Override
@@ -206,66 +117,59 @@ public class LoginActivity extends Activity implements
             });
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+            closeLoadingDialog();
         }
     }
 
-    private void gotoHomeActivity() {
-        Intent i = new Intent(LoginActivity.this, HomeActivity.class);
-        startActivity(i);
-        finish();
+    private boolean hasNotSettingAvatar(List<UserModel> userModelList) {
+        return "Avatar Name".equals(userModelList.get(0).getAvatarName()) || "default_avatar".equals(userModelList.get(0).getAvatarPic());
     }
 
-    private void gotoRegisterActivity() {
-        Intent i = new Intent(LoginActivity.this, RegisterActivity.class);
-        startActivity(i);
-        finish();
+    private boolean isActivate(List<UserModel> userModelList) {
+        return !userModelList.get(0).isActivate();
     }
 
-    private void insertUserModelToSharedPreferences(String accountId){
-
-        Log.i(LOG_TAG, "account id : "+accountId);
-
-        editor.putString("accountId",  accountId);
-        if(!sharedPref.contains("empName")){
-            editor.putString("empName",  "Employee Name");
-        }
-        if(!sharedPref.contains("empEmail")){
-            editor.putString("empEmail",  "email@gosoft.com");
-        }
-        if(!sharedPref.contains("avatarName")){
-            editor.putString("avatarName",  "Avatar Name");
-        }
-        if(!sharedPref.contains("avatarPic")) {
-            editor.putString("avatarPic", "default_avatar");
-        }
-        editor.commit();
-    }
-
-    private void insertUserModelToSharedPreferences(UserModel userModel){
+    private void insertUserModelToSharedPreferences(UserModel userModel) {
         editor.putString("_id",  userModel.get_id());
         editor.putString("_rev",  userModel.get_rev());
-        editor.putString("accountId",  userModel.getAccountId());
         editor.putString("empName",  userModel.getEmpName());
         editor.putString("empEmail",  userModel.getEmpEmail());
         editor.putString("avatarName",  userModel.getAvatarName());
-        editor.putString("avatarPic", userModel.getAvatarPic());
-        editor.putString("token",  userModel.getToken());
+        editor.putString("avatarPic",  userModel.getAvatarPic());
+        editor.putString("birthday",  userModel.getBirthday());
         editor.putBoolean("activate",  userModel.isActivate());
         editor.putString("type", userModel.getType());
+        editor.putString("accountId", userModel.getAccountId());
+        editor.putBoolean("hasLoggedIn", true);
         editor.commit();
     }
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(LOG_TAG, "onConnectionFailed:" + connectionResult);
+    private void gotoSettingAvatarActivity(){
+        Intent intent = new Intent(this, SettingAvatar.class);
+        intent.putExtra("state", "register");
+        startActivity(intent);
+        finish();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.sign_in_button:
-                signIn();
-                break;
-        }
+    private void gotoHomeActivity() {
+        Intent i = new Intent(this, HomeActivity.class);
+        startActivity(i);
+        finish();
+    }
+
+    private boolean isInputsEmpty() {
+        return isEmpty(txtEmail) || isEmpty(txtPassword);
+    }
+
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
+    }
+
+    private void showLoadingDialog() {
+        progress = ProgressDialog.show(this, null, "Processing", true);
+    }
+
+    private void closeLoadingDialog(){
+        progress.dismiss();
     }
 }

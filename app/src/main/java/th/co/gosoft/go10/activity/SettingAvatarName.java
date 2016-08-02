@@ -99,6 +99,7 @@ public class SettingAvatarName extends AppCompatActivity {
         userModel.setType(sharedPref.getString("type", null));
         userModel.setAvatarPic(sharedPref.getString("avatarPic", null));
         userModel.setAvatarName(sharedPref.getString("avatarName", null));
+        userModel.setBirthday(sharedPref.getString("birthday", null));
         return userModel;
     }
 
