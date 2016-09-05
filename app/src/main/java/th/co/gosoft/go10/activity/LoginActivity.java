@@ -81,10 +81,10 @@ public class LoginActivity extends AppCompatActivity {
                         Log.i(LOG_TAG, "user modelList size : "+userModelList.size());
                         if(userModelList.isEmpty()){
                             Log.i(LOG_TAG, "Not have user model");
-                            Toast.makeText(getApplication(), "The e-mail or password is incorrect.\\n\\nPlease try again.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplication(), "The e-mail or password is incorrect.\nPlease try again.", Toast.LENGTH_SHORT).show();
                         } else {
                             if(isActivate(userModelList)){
-                                Toast.makeText(getApplication(), "Please activate your e-mail.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplication(), "The e-mail or password is incorrect.\nPlease try again.", Toast.LENGTH_SHORT).show();
                             } else {
                                 insertUserModelToSharedPreferences(userModelList.get(0));
                                 if(hasNotSettingAvatar(userModelList)){
@@ -155,6 +155,11 @@ public class LoginActivity extends AppCompatActivity {
         Intent i = new Intent(this, HomeActivity.class);
         startActivity(i);
         finish();
+    }
+
+    public void gotoForgetPasswordActivity(View view){
+        Intent intent = new Intent(this, ForgetPasswordActivity.class);
+        startActivity(intent);
     }
 
     private boolean isInputsEmpty() {

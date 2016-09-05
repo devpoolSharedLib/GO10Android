@@ -32,4 +32,6 @@
     <string name="action_comment">Comment</string>
     <string name="preference_key">gosoft.devpool.go10</string>
     <string name="activation_token">Please enter the invitation code.</string>
+    <string name="forget_pass">Forget Password</string>
+    <string name="forget_pass_description">Please insert e-mail for reset password.</string>
 </resources>

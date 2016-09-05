@@ -5,17 +5,13 @@ import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
-
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomGridAdapter;
@@ -36,8 +31,9 @@ import th.co.gosoft.go10.model.TopicModel;
 public class SelectRoomFragment extends Fragment {
 
     private final String LOG_TAG = "SelectRoomFragmentTag";
-    private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
-    private final String URL_ROOM = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
+    private final String URL_HOT = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
+    private final String URL_ROOM = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
+
     private ProgressDialog progress;
     private List<TopicModel> topicModelList = new ArrayList<>();
     private List<RoomModel> roomModelList = new ArrayList<>();
@@ -177,6 +173,7 @@ public class SelectRoomFragment extends Fragment {
     private void generateGridView() {
         try{
             Log.i(LOG_TAG, "Generate Grid View");
+            linearRoom.removeAllViews();
             RoomGridAdapter roomAdapter = new RoomGridAdapter(getActivity(), R.layout.room_grid, roomModelList);
             for (int i = 0; i < roomModelList.size(); i++) {
                 View view = roomAdapter.getView(i, null, null);

@@ -36,7 +36,7 @@ import th.co.gosoft.go10.model.UserModel;
 public class LoadingActivity extends Activity {
 
     private final String LOG_TAG = "LoadingActivityTag";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
+    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
 
     private final long SPLASH_TIME_OUT = 1000L;
     private boolean IS_LOGIN_FACEBOOK = false;

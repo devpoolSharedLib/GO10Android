@@ -52,9 +52,8 @@ import th.co.gosoft.go10.util.BitMapUtil;
 public class WritingCommentFragment extends Fragment {
 
     private final String LOG_TAG = "WritingCommentFragment";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
-    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
-    private final String DOMAIN = "http://go10webservice.au-syd.mybluemix.net";
+    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+    private final String URL_POST_SERVLET = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
     private final int RESULT_LOAD_IMAGE = 8;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 88;
     private ProgressDialog progress;
@@ -267,11 +266,11 @@ public class WritingCommentFragment extends Fragment {
                         Log.i(LOG_TAG, "imgURL : "+imgURL);
 
                         if(BitMapUtil.width > BitMapUtil.height){
-                            mEditor.insertImage(DOMAIN+imgURL, 295, 166, "insertImageUrl");
+                            mEditor.insertImage(imgURL, 295, 166, "insertImageUrl");
                         } else if(BitMapUtil.width < BitMapUtil.height){
-                            mEditor.insertImage(DOMAIN+imgURL, 230, 408, "insertImageUrl");
+                            mEditor.insertImage(imgURL, 230, 408, "insertImageUrl");
                         } else if(BitMapUtil.width == BitMapUtil.height){
-                            mEditor.insertImage(DOMAIN+imgURL, 295, 295, "insertImageUrl");
+                            mEditor.insertImage(imgURL, 295, 295, "insertImageUrl");
                         }
 
                     } catch (JSONException e) {

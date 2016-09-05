@@ -30,6 +30,7 @@ public class RoomGridAdapter extends ArrayAdapter<RoomModel> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         try{
+            Log.i(LOG_TAG, "position : "+position);
             View view = convertView;
             if (view == null) {
                 LayoutInflater inflater;
@@ -51,9 +52,6 @@ public class RoomGridAdapter extends ArrayAdapter<RoomModel> {
                     txtRoomName.setText(room.getName());
                 }
             }
-//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)view .getLayoutParams();
-//            params.width = 130;
-//            view.setLayoutParams(params);
             return view;
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
