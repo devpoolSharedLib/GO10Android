@@ -9,7 +9,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
@@ -17,9 +19,11 @@ import th.co.gosoft.go10.model.TopicModel;
 public class HostTopicListAdapter extends ArrayAdapter<TopicModel> {
 
     private final String LOG_TAG = "HostTopicListAdapter";
+    private Map<String, Integer> imageIdMap = new HashMap<>();
 
     public HostTopicListAdapter(Context context, int resource, List<TopicModel> items) {
         super(context, resource, items);
+        generateImageToMap(imageIdMap);
     }
 
 
@@ -51,17 +55,7 @@ public class HostTopicListAdapter extends ArrayAdapter<TopicModel> {
                 holder.txtRowDate.setText(topicModel.getDate());
             }
 
-            if(topicModel.getRoomId().equals("rm01")){
-                holder.imageView.setImageResource(R.drawable.general);
-            }else if(topicModel.getRoomId().equals("rm02")){
-                holder.imageView.setImageResource(R.drawable.it_knowledge);
-            }else if(topicModel.getRoomId().equals("rm03")){
-                holder.imageView.setImageResource(R.drawable.sport);
-            }else if(topicModel.getRoomId().equals("rm04")){
-                holder.imageView.setImageResource(R.drawable.entertainment);
-            }else if(topicModel.getRoomId().equals("rm05")){
-                holder.imageView.setImageResource(R.drawable.training);
-            }
+            holder.imageView.setImageResource(imageIdMap.get(topicModel.getRoomId()));
             return convertView;
         } catch (Exception e){
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -74,6 +68,19 @@ public class HostTopicListAdapter extends ArrayAdapter<TopicModel> {
         TextView txtRowUserName;
         TextView txtRowDate;
         ImageView imageView;
+    }
+
+    private void generateImageToMap(Map<String, Integer> imageIdMap) {
+        imageIdMap.put("rm01", R.drawable.general);
+        imageIdMap.put("rm02", R.drawable.tell);
+        imageIdMap.put("rm03", R.drawable.game);
+        imageIdMap.put("rm04", R.drawable.food);
+        imageIdMap.put("rm05", R.drawable.stock);
+        imageIdMap.put("rm06", R.drawable.travel);
+        imageIdMap.put("rm07", R.drawable.it);
+        imageIdMap.put("rm08", R.drawable.sport);
+        imageIdMap.put("rm09", R.drawable.newbie);
+        imageIdMap.put("rm10", R.drawable.talktoadmin);
     }
 
 }

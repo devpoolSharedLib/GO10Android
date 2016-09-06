@@ -170,10 +170,15 @@ public class RoomFragment extends Fragment {
 
     private void generateImageToMap(Map<String, Integer> imageIdMap) {
         imageIdMap.put("rm01", R.drawable.general);
-        imageIdMap.put("rm02", R.drawable.it_knowledge);
-        imageIdMap.put("rm03", R.drawable.sport);
-        imageIdMap.put("rm04", R.drawable.entertainment);
-        imageIdMap.put("rm05", R.drawable.training);
+        imageIdMap.put("rm02", R.drawable.tell);
+        imageIdMap.put("rm03", R.drawable.game);
+        imageIdMap.put("rm04", R.drawable.food);
+        imageIdMap.put("rm05", R.drawable.stock);
+        imageIdMap.put("rm06", R.drawable.travel);
+        imageIdMap.put("rm07", R.drawable.it);
+        imageIdMap.put("rm08", R.drawable.sport);
+        imageIdMap.put("rm09", R.drawable.newbie);
+        imageIdMap.put("rm10", R.drawable.talktoadmin);
     }
 
     private void showLoadingDialog() {

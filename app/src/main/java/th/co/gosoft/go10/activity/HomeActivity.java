@@ -106,6 +106,7 @@ public class HomeActivity extends AppCompatActivity
     }
 
     private void initialUserProfile() {
+        Log.i(LOG_TAG, "empEmail : "+sharedPref.getString("empEmail", null));
         String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
         profileImageView.setImageResource(getResources().getIdentifier(avatarPicName , "drawable", getPackageName()));
         String avatarName = sharedPref.getString("avatarName", "Avatar Name");

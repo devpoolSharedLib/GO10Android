@@ -30,41 +30,51 @@ public class RoomGridAdapter extends ArrayAdapter<RoomModel> {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         try{
-            Log.i(LOG_TAG, "position : "+position);
-            View view = convertView;
-            if (view == null) {
+            ViewHolder holder = null;
+            if (convertView == null) {
+                holder = new ViewHolder();
+
                 LayoutInflater inflater;
                 inflater = LayoutInflater.from(getContext());
-                view = inflater.inflate(R.layout.room_grid, null);
+                convertView = inflater.inflate(R.layout.room_grid, null);
+
+                holder.imgRoomIcon = (ImageView) convertView.findViewById(R.id.roomIcon);
+                holder.txtRoomName = (TextView) convertView.findViewById(R.id.roomName);
+                convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
             RoomModel room = getItem(position);
 
             if (room != null) {
-                ImageView imgRoomIcon = (ImageView) view.findViewById(R.id.roomIcon);
-                TextView txtRoomName = (TextView) view.findViewById(R.id.roomName);
-
-                if (imgRoomIcon != null) {
-                    imgRoomIcon.setImageResource(imageIdMap.get(room.get_id()));
-                }
-
-                if (txtRoomName != null) {
-                    txtRoomName.setText(room.getName());
-                }
+                holder.imgRoomIcon.setImageResource(imageIdMap.get(room.get_id()));
+                holder.txtRoomName.setText(room.getName());
             }
-            return view;
+
+            return convertView;
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
     }
 
+    private static class ViewHolder {
+        ImageView imgRoomIcon;
+        TextView txtRoomName;
+    }
+
     private void generateImageToMap(Map<String, Integer> imageIdMap) {
         imageIdMap.put("rm01", R.drawable.general);
-        imageIdMap.put("rm02", R.drawable.it_knowledge);
-        imageIdMap.put("rm03", R.drawable.sport);
-        imageIdMap.put("rm04", R.drawable.entertainment);
-        imageIdMap.put("rm05", R.drawable.training);
+        imageIdMap.put("rm02", R.drawable.tell);
+        imageIdMap.put("rm03", R.drawable.game);
+        imageIdMap.put("rm04", R.drawable.food);
+        imageIdMap.put("rm05", R.drawable.stock);
+        imageIdMap.put("rm06", R.drawable.travel);
+        imageIdMap.put("rm07", R.drawable.it);
+        imageIdMap.put("rm08", R.drawable.sport);
+        imageIdMap.put("rm09", R.drawable.newbie);
+        imageIdMap.put("rm10", R.drawable.talktoadmin);
     }
 
 }

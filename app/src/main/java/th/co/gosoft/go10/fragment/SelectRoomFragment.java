@@ -211,10 +211,11 @@ public class SelectRoomFragment extends Fragment {
         Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. goRoomActivity");
         try{
             Bundle data = new Bundle();
-            data.putString("room_id", roomModelList.get(position).get_id());
             Log.i(LOG_TAG, ">>>>>>>>> room_id " +data.getString("room_id"));
-            data.putString("roomName", roomModelList.get(position).getName());
             Log.i(LOG_TAG, ">>>>>>>>> roomName " +data.getString("roomName"));
+
+            data.putString("room_id", roomModelList.get(position).get_id());
+            data.putString("roomName", roomModelList.get(position).getName());
             Fragment fragment = new RoomFragment();
             fragment.setArguments(data);
             FragmentManager fragmentManager = getFragmentManager();

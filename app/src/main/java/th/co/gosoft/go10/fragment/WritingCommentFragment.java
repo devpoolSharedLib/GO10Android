@@ -310,8 +310,9 @@ public class WritingCommentFragment extends Fragment {
                     TopicModel topicModel = new TopicModel();
                     topicModel.setTopicId(_id);
                     topicModel.setContent(commentContentString);
-                    topicModel.setAvatarName(sharedPref.getString("avatarName", "Avatar Name"));
-                    topicModel.setAvatarPic(sharedPref.getString("avatarPic", "default_avatar"));
+                    topicModel.setEmpEmail(sharedPref.getString("empEmail", null));
+                    topicModel.setAvatarName(sharedPref.getString("avatarName", null));
+                    topicModel.setAvatarPic(sharedPref.getString("avatarPic", null));
                     topicModel.setType("comment");
                     topicModel.setRoomId(room_id);
                     callPostWebService(topicModel);
