@@ -23,7 +23,7 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.adapter.HostTopicListAdapter;
+import th.co.gosoft.go10.adapter.HotTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomGridAdapter;
 import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.model.TopicModel;
@@ -160,7 +160,7 @@ public class SelectRoomFragment extends Fragment {
     }
 
     private void generateListView() {
-        HostTopicListAdapter hostTopicListAdapter = new HostTopicListAdapter(getActivity(), R.layout.hot_topic_row, topicModelList);
+        HotTopicListAdapter hostTopicListAdapter = new HotTopicListAdapter(getActivity(), R.layout.hot_topic_row, topicModelList);
         hotTopicListView.setAdapter(hostTopicListAdapter);
         hotTopicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -16,12 +16,12 @@ import java.util.Map;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
 
-public class HostTopicListAdapter extends ArrayAdapter<TopicModel> {
+public class HotTopicListAdapter extends ArrayAdapter<TopicModel> {
 
-    private final String LOG_TAG = "HostTopicListAdapter";
+    private final String LOG_TAG = "HotTopicListAdapter";
     private Map<String, Integer> imageIdMap = new HashMap<>();
 
-    public HostTopicListAdapter(Context context, int resource, List<TopicModel> items) {
+    public HotTopicListAdapter(Context context, int resource, List<TopicModel> items) {
         super(context, resource, items);
         generateImageToMap(imageIdMap);
     }

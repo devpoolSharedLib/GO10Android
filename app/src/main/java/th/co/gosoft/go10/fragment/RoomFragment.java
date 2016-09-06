@@ -29,7 +29,6 @@ import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.adapter.HostTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.TopicModel;
 

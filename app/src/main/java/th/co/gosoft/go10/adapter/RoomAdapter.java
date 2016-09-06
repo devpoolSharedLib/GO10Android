@@ -22,7 +22,7 @@ import th.co.gosoft.go10.model.TopicModel;
  */
 public class RoomAdapter  extends ArrayAdapter<TopicModel> {
 
-    private final String LOG_TAG = "HostTopicListAdapter";
+    private final String LOG_TAG = "HotTopicListAdapter";
     private Context context;
 
     public RoomAdapter(Context context, int resource, List<TopicModel> items) {
