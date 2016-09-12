@@ -31,14 +31,13 @@ import th.co.gosoft.go10.model.TopicModel;
 public class SelectRoomFragment extends Fragment {
 
     private final String LOG_TAG = "SelectRoomFragmentTag";
-    private final String URL_HOT = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
-    private final String URL_ROOM = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
+    private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
+    private final String URL_ROOM = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
 
     private ProgressDialog progress;
     private List<TopicModel> topicModelList = new ArrayList<>();
     private List<RoomModel> roomModelList = new ArrayList<>();
     private ListView hotTopicListView;
-//    private GridView gridViewRoom;
     private LinearLayout linearRoom;
     private boolean isLoadTopicDone = false;
     private boolean isLoadRoomDone = false;
@@ -60,7 +59,6 @@ public class SelectRoomFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         try{
             hotTopicListView = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
-//            gridViewRoom = (GridView)  getView().findViewById(R.id.roomGridView);
             linearRoom = (LinearLayout) getView().findViewById(R.id.linearRoom);
         } catch (Exception e) {
             e.printStackTrace();
@@ -72,6 +70,7 @@ public class SelectRoomFragment extends Fragment {
     public void onStart() {
         super.onStart();
         Log.i(LOG_TAG, "onResume");
+        hotTopicListView.setAdapter(null);
         callGetWebService();
     }
 

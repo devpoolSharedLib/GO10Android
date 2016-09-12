@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorBg">#ffffff</color>
-    <color name="colorBorder">#000000</color>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#ff4081</color>
+    <color name="colorBorder">#33000000</color>
+    <color name="colorTopicSpace">#20000000</color>
+    <color name="colorPrimary">#F44336</color>
+    <color name="colorPrimaryDark">#C62828</color>
+    <color name="colorAccent">#FF5252</color>
     <color name="colorDarkGreen">#197319</color>
+
+    <color name="colorButton">#8c000000</color>
+    <color name="colorLikeButton">#0080ff</color>
 </resources>

@@ -128,7 +128,7 @@ public class HomeActivity extends AppCompatActivity
                 String str="";
                 Log.i(LOG_TAG,"backStackName "+this.getFragmentManager().getBackStackEntryCount());
                 FragmentManager.BackStackEntry backEntry = getFragmentManager().getBackStackEntryAt(this.getFragmentManager().getBackStackEntryCount()-1);
-                str=backEntry.getName();
+                str = backEntry.getName();
 
                 Log.i(LOG_TAG,"backStackName "+str);
                 if(str == "tag"){
@@ -151,34 +151,6 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(HomeActivity.this, SettingAvatar.class);
             startActivity(intent);
         } else if (id == R.id.logout) {
-
-//            if(checkCurrentTokenFacebook()){
-//                try{
-//                    Log.i(LOG_TAG, "Logging out Facebook");
-//                    LoginManager.getInstance().logOut();
-//                    goToLoginActivity();
-//
-//                } catch (Exception e) {
-//                    Log.e(LOG_TAG, e.getMessage(), e);
-//                    throw new RuntimeException(e.getMessage(), e);
-//                }
-//            } else if(checkCurrentTokenGmail()){
-//                Log.i(LOG_TAG, "Logging out Gmail");
-//                try{
-//                    Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(
-//                        new ResultCallback<Status>() {
-//                            @Override
-//                            public void onResult(Status status) {
-//                                goToLoginActivity();
-//                            }
-//                        });
-//                    goToLoginActivity();
-//
-//                } catch (Exception e) {
-//                    Log.e(LOG_TAG, e.getMessage(), e);
-//                    throw new RuntimeException(e.getMessage(), e);
-//                }
-//            }
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("hasLoggedIn", false);
             editor.commit();

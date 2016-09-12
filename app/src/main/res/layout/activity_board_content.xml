@@ -11,9 +11,8 @@
         android:layout_weight="1"
         android:id="@+id/commentListView"
         android:smoothScrollbar="true"
-        android:scrollingCache="false"
-        android:animationCache="false"
-        />
+        android:divider="@color/colorTopicSpace"
+        android:dividerHeight="20.0sp"/>
 
 
 </LinearLayout>

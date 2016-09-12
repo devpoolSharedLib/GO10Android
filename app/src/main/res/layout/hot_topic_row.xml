@@ -1,13 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/hotTopicRelativeLayout"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" >
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp">
 
     <ImageView
         android:id="@+id/iconImage"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:paddingLeft="5dp"/>
+        android:layout_margin="5dp" />
 
     <TextView
         android:id="@+id/rowSubject"
@@ -18,13 +19,14 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:paddingLeft="10dp"
-        android:textSize="18dp"
+        android:textSize="20sp"
         android:textColor="#0080ff"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/iconImage"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:paddingRight="10dp" />
+        android:paddingRight="10dp"
+        android:layout_marginTop="5dp" />
 
     <TextView
         android:id="@+id/rowUserName"
@@ -33,10 +35,10 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:paddingLeft="10dp"
-        android:textSize="10dp"
+        android:textSize="12sp"
         android:textColor="#4c4c4c"
         android:maxLines="1"
-        android:layout_below="@+id/rowSubject"
+        android:layout_alignBottom="@+id/iconImage"
         android:layout_toRightOf="@+id/iconImage"
         android:layout_toEndOf="@+id/iconImage" />
 
@@ -47,10 +49,9 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
         android:textColor="#b3b3b3"
-        android:textSize="10dp"
-        android:paddingRight="10dp"
-        android:layout_alignTop="@+id/rowUserName"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:textSize="12sp"
+        android:layout_alignBottom="@+id/iconImage"
+        android:layout_alignRight="@+id/rowSubject"
+        android:layout_alignEnd="@+id/rowSubject" />
 
 </RelativeLayout>

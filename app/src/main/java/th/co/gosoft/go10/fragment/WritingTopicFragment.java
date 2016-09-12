@@ -51,8 +51,8 @@ import th.co.gosoft.go10.util.BitMapUtil;
 public class WritingTopicFragment extends Fragment {
 
     private final String LOG_TAG = "WritingTopicFragmentTag";
-    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
-    private final String URL_POST_SERVLET = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
     private final int RESULT_LOAD_IMAGE = 7;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 89;
     private ProgressDialog progress;
@@ -102,6 +102,8 @@ public class WritingTopicFragment extends Fragment {
 
         view.findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
+
+                mEditor.focusEditor();
 
                 if (Build.VERSION.SDK_INT >= 23){
                     if (ContextCompat.checkSelfPermission(getActivity(),

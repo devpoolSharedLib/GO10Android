@@ -1,59 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="50dp"
+    android:layout_height="match_parent"
     android:background="@drawable/host_content">
 
-    <TextView
-        android:id="@+id/hostSubject"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/host_topic"
-        android:textStyle="bold"
-        android:textColor="#ffffff"
-        android:paddingLeft="10dp"
-        android:textAlignment="gravity"
-        android:gravity="center_vertical"
-        android:textSize="18dp"
-        android:background="@drawable/host_topic"
-        android:minLines="2" />
-
-    <WebView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/hostContent"
-        android:textAlignment="textStart"
-        android:layout_gravity="start"
-        android:layout_below="@+id/hostSubject"
-        android:padding="10dp"
-        android:layout_marginBottom="10dp"
-        android:minHeight="80dp"/>
-
-    <!--<TextView-->
-        <!--android:id="@+id/hostContent"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:text="@string/host_conetent"-->
-        <!--android:layout_below="@+id/hostSubject"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:background="@color/colorBg"-->
-        <!--android:minLines="4"-->
-        <!--android:padding="10dp"-->
-        <!--android:autoLink="web"-->
-        <!--android:layout_marginBottom="10dp" />-->
-
     <ImageView
-        android:layout_width="@dimen/comment_icon_size"
-        android:layout_height="@dimen/comment_icon_size"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
         android:id="@+id/hostImage"
         android:src="@drawable/no_avatar"
-        android:layout_alignTop="@+id/hostUsername"
+        android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" />
+        android:layout_margin="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -62,11 +21,10 @@
         android:textAlignment="gravity"
         android:gravity="bottom"
         android:id="@+id/hostUsername"
-        android:layout_below="@+id/hostContent"
-        android:layout_toRightOf="@+id/hostImage"
-        android:layout_toEndOf="@+id/hostImage"
-        android:textSize="10dp"
-        android:textColor="#ffffff" />
+        android:textSize="12sp"
+        android:layout_above="@+id/hostTime"
+        android:layout_alignLeft="@+id/hostTime"
+        android:layout_alignStart="@+id/hostTime" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -76,10 +34,100 @@
         android:textAlignment="gravity"
         android:gravity="bottom"
         android:id="@+id/hostTime"
+        android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/hostImage"
         android:layout_toRightOf="@+id/hostImage"
         android:layout_toEndOf="@+id/hostImage"
-        android:textSize="10dp"
-        android:textColor="#ffffff" />
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/hostSubject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/host_topic"
+        android:paddingLeft="10dp"
+        android:textAlignment="gravity"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:textColor="#0080ff"
+        android:minLines="2"
+        android:layout_below="@+id/hostImage"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/hostContent"
+        android:autoLink="web"
+        android:textSize="18sp"
+        android:minLines="2"
+        android:lineSpacingExtra="10sp"
+        android:layout_gravity="start"
+        android:layout_below="@+id/hostSubject"
+        android:padding="10dp"
+        android:minHeight="80dp" />
+
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:id="@+id/imgLike"
+        android:src="@drawable/like"
+        android:layout_below="@+id/hostContent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginBottom="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="0"
+        android:id="@+id/txtLikeCount"
+        android:layout_marginLeft="5dp"
+        android:gravity="center_vertical"
+        android:layout_below="@+id/hostContent"
+        android:layout_toRightOf="@+id/imgLike"
+        android:layout_alignBottom="@+id/imgLike" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imgLike"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:background="@drawable/host_topic"
+        android:id="@+id/linearLayout">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:id="@+id/btnLike"
+            android:text="LIKE"
+            android:textColor="@color/colorButton"
+            android:scaleType="fitCenter"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:text="COMMENT"
+            android:textColor="@color/colorButton"
+            android:id="@+id/btnComment"
+            android:scaleType="fitCenter"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

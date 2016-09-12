@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -57,7 +58,9 @@ public class SettingAvatar extends AppCompatActivity {
 
         if(extras == null) {
             isSeparateUpdate = true;
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle(R.string.setting_avatar);
         } else if(isComeFromRegisterActivity(extras)){
             isSeparateUpdate = false;
             btnStart = (Button) findViewById(R.id.btnStart);

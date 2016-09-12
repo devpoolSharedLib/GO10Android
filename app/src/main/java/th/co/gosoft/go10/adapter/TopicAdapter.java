@@ -1,16 +1,16 @@
 package th.co.gosoft.go10.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,21 +20,29 @@ import java.util.Map;
 
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
-import th.co.gosoft.go10.util.DownloadImageTask;
+import th.co.gosoft.go10.util.LikeButtonOnClick;
+import th.co.gosoft.go10.util.LikeModel;
+import th.co.gosoft.go10.util.OnDataPass;
+import th.co.gosoft.go10.util.URLImageParser;
 
 public class TopicAdapter extends BaseAdapter {
 
     private final String LOG_TAG = "TopicAdapter";
     private final String TYPE_HOST = "host";
-    private final String TYPE_COMMENT = "comment";
-    private Context context;
 
+    private Context context;
     private Map<Integer,Integer> rowLayoutMap;
     private List<TopicModel> topicModelList;
+    private LikeModel likeModel;
+    private boolean isClick = false;
+    private ViewHolder holder = null;
+    private OnDataPass onDataPass;
 
-    public TopicAdapter(Context  context, List<TopicModel> topicModelList) {
+    public TopicAdapter(Context context,  OnDataPass onDataPass, List<TopicModel> topicModelList, LikeModel likeModel) {
         this.topicModelList = topicModelList;
         this.context = context;
+        this.likeModel = likeModel;
+        this.onDataPass = onDataPass;
         rowLayoutMap = new HashMap<>();
         rowLayoutMap.put(0, R.layout.host_row);
         rowLayoutMap.put(1, R.layout.comment_row);
@@ -74,26 +82,24 @@ public class TopicAdapter extends BaseAdapter {
         TopicModel topicModel = (TopicModel) getItem(position);
         Log.i(LOG_TAG, "Item Type : "+topicModel.getType());
 
-        ViewHolder holder = null;
         int rowType = getItemViewType(position);
 
         if (convertView == null) {
             holder = new ViewHolder();
 
-            if(rowType == 0){
+            if(rowType == 0) {
                 convertView = layoutInflater.inflate(rowLayoutMap.get(0), null);
                 holder.subject = (TextView) convertView.findViewById(R.id.hostSubject);
-                holder.content = (WebView) convertView.findViewById(R.id.hostContent);
-//                holder.content = (TextView) convertView.findViewById(R.id.hostContent);
+                holder.content = (TextView) convertView.findViewById(R.id.hostContent);
                 holder.user = (TextView) convertView.findViewById(R.id.hostUsername);
                 holder.date = (TextView) convertView.findViewById(R.id.hostTime);
+                holder.likeCount = (TextView) convertView.findViewById(R.id.txtLikeCount);
                 holder.imageView =(ImageView) convertView.findViewById(R.id.hostImage);
-
-
-            } else if(rowType == 1){
+                holder.btnLike = (Button) convertView.findViewById(R.id.btnLike);
+                holder.btnComment = (Button) convertView.findViewById(R.id.btnComment);
+            } else if(rowType == 1) {
                 convertView = layoutInflater.inflate(rowLayoutMap.get(1), null);
-                holder.content = (WebView) convertView.findViewById(R.id.commentContent);
-//                holder.content = (TextView) convertView.findViewById(R.id.commentContent);
+                holder.content = (TextView) convertView.findViewById(R.id.commentContent);
                 holder.user = (TextView) convertView.findViewById(R.id.commentUsername);
                 holder.date = (TextView) convertView.findViewById(R.id.commentTime);
                 holder.imageView =(ImageView) convertView.findViewById(R.id.commentImage);
@@ -102,37 +108,53 @@ public class TopicAdapter extends BaseAdapter {
             convertView.setTag(holder);
 
         } else {
-            Log.i(LOG_TAG, "else : "+position);
             holder = (ViewHolder) convertView.getTag();
         }
-
-        if (rowType == 0){
-            holder.subject.setText(topicModel.getSubject());
-//            holder.content.setText(Html.fromHtml(topicModel.getContent()));
-            holder.content.loadData(topicModel.getContent(), "text/html; charset=UTF-8", null);
-            holder.user.setText(topicModel.getAvatarName());
-            holder.date.setText(topicModel.getDate().toString());
-            holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic() , "drawable", context.getPackageName()));
-
-
-        } else if(rowType == 1){
-//            holder.content.setText(Html.fromHtml(topicModel.getContent()));
-            holder.content.loadData(topicModel.getContent(), "text/html; charset=UTF-8", null);
-            holder.user.setText(topicModel.getAvatarName());
-            holder.date.setText(topicModel.getDate().toString());
-            holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic() , "drawable", context.getPackageName()));
+        try {
+            if (rowType == 0) {
+                holder.subject.setText(topicModel.getSubject());
+                URLImageParser urlImageParser = new URLImageParser(holder.content, this.context);
+                Spanned htmlSpan = Html.fromHtml(topicModel.getContent(), urlImageParser, null);
+                holder.content.setText(htmlSpan);
+                holder.user.setText(topicModel.getAvatarName());
+                holder.date.setText(topicModel.getDate().toString());
+                holder.likeCount.setText(String.valueOf(topicModel.getCountLike()));
+                holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic() , "drawable", context.getPackageName()));
+                if(likeModel != null && likeModel.isStatusLike()){
+                    holder.btnLike.setTextColor(this.context.getResources().getColor(R.color.colorLikeButton));
+                    isClick = true;
+                }
+                holder.btnLike.setOnClickListener(new LikeButtonOnClick(this.context, holder.btnLike, holder.likeCount, isClick));
+                holder.btnComment.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onDataPass.onDataPass(null);
+                    }
+                });
+            } else if(rowType == 1) {
+                URLImageParser urlImageParser = new URLImageParser(holder.content, this.context);
+                Spanned htmlSpan = Html.fromHtml(topicModel.getContent(), urlImageParser, null);
+                holder.content.setText(htmlSpan);
+                holder.user.setText(topicModel.getAvatarName());
+                holder.date.setText(topicModel.getDate().toString());
+                holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic() , "drawable", context.getPackageName()));
+            }
+            return convertView;
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage() + e);
+            throw new RuntimeException(e.getMessage(), e);
         }
-
-        return convertView;
     }
 
     private static class ViewHolder {
         TextView subject;
-        WebView content;
-//        TextView content;
+        TextView content;
         TextView user;
         TextView date;
+        TextView likeCount;
         ImageView imageView;
+        Button btnLike;
+        Button btnComment;
     }
 
 }
