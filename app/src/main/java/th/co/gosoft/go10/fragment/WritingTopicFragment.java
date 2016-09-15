@@ -24,8 +24,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.HorizontalScrollView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -51,8 +51,11 @@ import th.co.gosoft.go10.util.BitMapUtil;
 public class WritingTopicFragment extends Fragment {
 
     private final String LOG_TAG = "WritingTopicFragmentTag";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
-    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+//    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+    private final String URL_POST_SERVLET = "http://go10.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+
     private final int RESULT_LOAD_IMAGE = 7;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 89;
     private ProgressDialog progress;
@@ -301,17 +304,18 @@ public class WritingTopicFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        hideKeyboard();
         switch (item.getItemId()) {
             case R.id.btnPost:
                 Log.i(LOG_TAG, "click post");
                 String hostSubjectString = edtHostSubject.getText().toString();
                 String hostContentString = mEditor.getHtml();
-                Log.i(LOG_TAG, "Subject : " + hostSubjectString);
+                Log.i(LOG_TAG, "title : " + hostSubjectString);
                 Log.i(LOG_TAG, "Content : " + hostContentString);
 
                 if(hostSubjectString == null || isEmpty(hostSubjectString) || hostContentString == null || isEmpty(hostContentString)){
-                    Log.i(LOG_TAG, "empty subject & message");
-                    Toast.makeText(getActivity(), "Please enter your subject and comment message.", Toast.LENGTH_SHORT).show();
+                    Log.i(LOG_TAG, "empty title & message");
+                    Toast.makeText(getActivity(), "Please enter your Title and Comment message.", Toast.LENGTH_SHORT).show();
                 } else {
                     SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
                     TopicModel topicModel = new TopicModel();
@@ -336,4 +340,12 @@ public class WritingTopicFragment extends Fragment {
         return string.trim().length() == 0;
     }
 
+    private void hideKeyboard(){
+        View view = this.getActivity().getCurrentFocus();
+        if (view != null) {
+            Log.i(LOG_TAG, "view null hide keyboard");
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 }

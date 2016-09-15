@@ -27,7 +27,8 @@ import th.co.gosoft.go10.model.UserModel;
 public class LoginActivity extends AppCompatActivity {
 
     private final String LOG_TAG = "LoginActivity";
-    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByUserPassword";
+//    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByUserPassword";
+    private final String URL = "https://go10.au-syd.mybluemix.net/GO10WebService/api/user/getUserByUserPassword";
 
     private EditText txtEmail;
     private EditText txtPassword;

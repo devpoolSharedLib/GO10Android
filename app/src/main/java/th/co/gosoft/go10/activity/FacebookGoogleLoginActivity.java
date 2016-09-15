@@ -41,7 +41,8 @@ public class FacebookGoogleLoginActivity extends Activity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
 
     private final String LOG_TAG = "LoginActivityTag";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
+//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
+    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
 
     private static final int RC_SIGN_IN = 9001;
     private boolean IS_REGISTER_ACCOUNT = false;

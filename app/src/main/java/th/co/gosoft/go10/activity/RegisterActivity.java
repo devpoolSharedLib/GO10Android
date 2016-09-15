@@ -25,7 +25,8 @@ import th.co.gosoft.go10.model.UserModel;
 public class RegisterActivity extends AppCompatActivity {
 
     private final String LOG_TAG = "RegisterActivity";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByToken";
+//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByToken";
+    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/getUserByToken";
 
     private EditText edtToken;
     private SharedPreferences sharedPref;

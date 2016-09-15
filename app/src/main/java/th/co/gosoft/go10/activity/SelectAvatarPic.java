@@ -38,7 +38,8 @@ import th.co.gosoft.go10.util.OnDataPass;
 public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
 
     private final String LOG_TAG = "SelectAvatarPic";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
+//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
+    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
 
     private TabLayout tabLayout;
     private ViewPager viewPager;

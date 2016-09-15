@@ -30,7 +30,8 @@ import th.co.gosoft.go10.model.UserModel;
 public class SettingAvatarName extends AppCompatActivity {
 
     private final String LOG_TAG = "SettingAvatarName";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
+//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
+    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
 
     private static final int MAX_LENGTH = 20;
     private EditText edtAvatarName;

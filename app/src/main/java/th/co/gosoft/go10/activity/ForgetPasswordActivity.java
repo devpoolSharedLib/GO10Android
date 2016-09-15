@@ -29,7 +29,8 @@ import th.co.gosoft.go10.model.UserModel;
 public class ForgetPasswordActivity extends AppCompatActivity {
 
     private final String LOG_TAG = "ForgetPasswordActivity";
-    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/resetPasswordByEmail";
+//    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/resetPasswordByEmail";
+    private final String URL = "https://go10.au-syd.mybluemix.net/GO10WebService/api/user/resetPasswordByEmail";
 
     private ProgressDialog progress;
     private EditText txtForgotEmail;

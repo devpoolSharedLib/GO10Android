@@ -35,7 +35,9 @@ import th.co.gosoft.go10.model.TopicModel;
 public class RoomFragment extends Fragment {
 
     private final String LOG_TAG = "RoomFragmenttag";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
+//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
+    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
+
     private ProgressDialog progress;
     private Map<String, Integer> imageIdMap = new HashMap<>();
     private List<TopicModel> topicModelList = new ArrayList<>();

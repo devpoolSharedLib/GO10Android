@@ -43,7 +43,8 @@
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
-            android:name=".activity.HomeActivity" />
+            android:name=".activity.HomeActivity"
+            android:configChanges="orientation|screenSize" />
 
         <meta-data
             android:name="io.fabric.ApiKey"

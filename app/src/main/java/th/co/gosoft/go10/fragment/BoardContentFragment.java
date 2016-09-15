@@ -14,6 +14,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -38,9 +39,14 @@ import th.co.gosoft.go10.util.OnDataPass;
 public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private final String LOG_TAG = "BoardContentFragmentTag";
-    private final String GET_TOPIC_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopicbyid";
-    private final String CHECK_LIKE_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/checkLikeTopic";
-    private final String LIKE_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/";
+//    private final String GET_TOPIC_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopicbyid";
+//    private final String CHECK_LIKE_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/checkLikeTopic";
+//    private final String LIKE_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/";
+
+    private final String GET_TOPIC_URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/gettopicbyid";
+    private final String CHECK_LIKE_URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/checkLikeTopic";
+    private final String LIKE_URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/";
+
     private ProgressDialog progress;
     private String _id ;
     private String empEmail;

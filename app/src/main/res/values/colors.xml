@@ -2,7 +2,9 @@
 <resources>
     <color name="colorBg">#ffffff</color>
     <color name="colorBorder">#33000000</color>
-    <color name="colorTopicSpace">#20000000</color>
+    <color name="colorTopicSpace">#00000000</color>
+    <color name="colorLayoutBg">#20000000</color>
+    <color name="colorTextTitle">#30000000</color>
     <color name="colorPrimary">#F44336</color>
     <color name="colorPrimaryDark">#C62828</color>
     <color name="colorAccent">#FF5252</color>

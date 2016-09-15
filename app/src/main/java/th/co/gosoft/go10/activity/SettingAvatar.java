@@ -34,8 +34,8 @@ import th.co.gosoft.go10.model.UserModel;
 public class SettingAvatar extends AppCompatActivity {
 
     private final String LOG_TAG = "SettingAvatar";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
-//    private final String URL = "http://192.168.43.161:9080/GO10WebService/api/user/updateUser";
+//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
+    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
 
     private ImageView avatarPic;
     private ListView settingListView;

@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.HorizontalScrollView;
 import android.widget.Toast;
 
@@ -52,8 +53,11 @@ import th.co.gosoft.go10.util.BitMapUtil;
 public class WritingCommentFragment extends Fragment {
 
     private final String LOG_TAG = "WritingCommentFragment";
-    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
-    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+//    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/post";
+    private final String URL_POST_SERVLET = "http://go10.au-syd.mybluemix.net/GO10WebService/UploadServlet";
+
     private final int RESULT_LOAD_IMAGE = 8;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 88;
     private ProgressDialog progress;
@@ -300,6 +304,7 @@ public class WritingCommentFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        hideKeyboard();
         switch (item.getItemId()) {
             case R.id.btnPost:
                 Log.i(LOG_TAG, "click post");
@@ -308,7 +313,7 @@ public class WritingCommentFragment extends Fragment {
 
                 if(commentContentString == null || isEmpty(commentContentString)){
                     Log.i(LOG_TAG, "empty message");
-                    Toast.makeText(getActivity(), "Please enter your comment message.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Please enter your Comment message.", Toast.LENGTH_SHORT).show();
                 } else {
                     SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
                     TopicModel topicModel = new TopicModel();
@@ -331,5 +336,14 @@ public class WritingCommentFragment extends Fragment {
 
     private boolean isEmpty(String string) {
         return string.trim().length() == 0;
+    }
+
+    private void hideKeyboard(){
+        View view = this.getActivity().getCurrentFocus();
+        if (view != null) {
+            Log.i(LOG_TAG, "view null hide keyboard");
+            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }
