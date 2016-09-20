@@ -248,14 +248,14 @@ public class WritingCommentFragment extends Fragment {
             RequestParams params = new RequestParams();
 
             try {
-
                 Bitmap bitmap = BitMapUtil.resizeBitmap(picturePath, BitMapUtil.resolution, BitMapUtil.resolution);
+                Log.i(LOG_TAG, "resolution : "+bitmap.getWidth()+", "+bitmap.getHeight());
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
                 byte[] myByteArray = stream.toByteArray();
+                Log.i(LOG_TAG, "Done parse to byteArray");
                 params.put("imageFile", new ByteArrayInputStream(myByteArray));
-
             } catch(Exception e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }

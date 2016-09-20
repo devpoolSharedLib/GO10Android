@@ -17,7 +17,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activity.LoadingActivity">
+        <activity android:name=".activity.LoadingActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,7 +45,7 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".activity.HomeActivity"
-            android:configChanges="orientation|screenSize" />
+            android:configChanges="orientation|screenSize"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -60,7 +61,8 @@
             android:name=".activity.SelectAvatarPic"
             android:theme="@style/AppTheme" />
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.LoginActivity"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.ForgetPasswordActivity"
             android:theme="@style/AppTheme" ></activity>
     </application>
