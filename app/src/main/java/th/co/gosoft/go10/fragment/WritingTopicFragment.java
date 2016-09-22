@@ -47,17 +47,16 @@ import richeditor.classes.RichEditor;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.BitMapUtil;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class WritingTopicFragment extends Fragment {
 
     private final String LOG_TAG = "WritingTopicFragmentTag";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/post";
-//    private final String URL_POST_SERVLET = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/UploadServlet";
-    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/post";
-    private final String URL_POST_SERVLET = "http://go10.au-syd.mybluemix.net/GO10WebService/UploadServlet";
-
     private final int RESULT_LOAD_IMAGE = 7;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 89;
+
+    private String URL;
+    private String URL_POST_SERVLET;
     private ProgressDialog progress;
     private String room_id;
     private RichEditor mEditor;
@@ -67,6 +66,9 @@ public class WritingTopicFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/post";
+        URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/UploadServlet";
     }
 
     @Override
@@ -188,12 +190,12 @@ public class WritingTopicFragment extends Fragment {
                         Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                         Log.i(LOG_TAG, "new id : "+new String(response));
                         closeLoadingDialog();
-
                         callNextActivity(new String(response));
                     }
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        closeLoadingDialog();
                         Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                         Log.e(LOG_TAG, "AsyncHttpClient returned error", e);
                     }
@@ -226,7 +228,7 @@ public class WritingTopicFragment extends Fragment {
 
     private AlertDialog.Builder showErrorDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setMessage("Error Occurred!!!");
+        alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
     }
@@ -263,6 +265,12 @@ public class WritingTopicFragment extends Fragment {
             AsyncHttpClient client = new AsyncHttpClient();
 
             client.post(URL_POST_SERVLET, params, new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onStart() {
+                    showLoadingDialog();
+                }
+
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
@@ -280,7 +288,7 @@ public class WritingTopicFragment extends Fragment {
                         } else if(BitMapUtil.width == BitMapUtil.height){
                             mEditor.insertImage(imgURL, 295, 295, "insertImageUrl");
                         }
-
+                        closeLoadingDialog();
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, e.getMessage(), e);
                     }
@@ -288,6 +296,8 @@ public class WritingTopicFragment extends Fragment {
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable e) {
+                    closeLoadingDialog();
+                    alertMessage("Error while uploading image");
                     Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                     Log.e(LOG_TAG, e.getMessage(), e);
                     Log.e(LOG_TAG, "response body : "+new String(responseBody));
@@ -315,7 +325,7 @@ public class WritingTopicFragment extends Fragment {
 
                 if(hostSubjectString == null || isEmpty(hostSubjectString) || hostContentString == null || isEmpty(hostContentString)){
                     Log.i(LOG_TAG, "empty title & message");
-                    Toast.makeText(getActivity(), "Please enter your Title and Comment message.", Toast.LENGTH_SHORT).show();
+                    alertMessage("Please enter your Title and Comment message.");
                 } else {
                     SharedPreferences sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
                     TopicModel topicModel = new TopicModel();
@@ -334,6 +344,10 @@ public class WritingTopicFragment extends Fragment {
         }
 
         return false;
+    }
+
+    private void alertMessage(String message) {
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     private boolean isEmpty(String string) {

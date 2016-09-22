@@ -13,11 +13,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imgLogoLogin"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="140dp"
-        android:layout_marginBottom="20dp"
-        android:src="@drawable/go10_logo"/>
+        android:src="@drawable/go10_logo"
+        android:layout_marginBottom="74dp"
+        android:layout_above="@+id/txtEmail"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="match_parent"

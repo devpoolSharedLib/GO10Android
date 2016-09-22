@@ -30,13 +30,14 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.SettingAvatarAdapter;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class SettingAvatar extends AppCompatActivity {
 
     private final String LOG_TAG = "SettingAvatar";
 //    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
-    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
 
+    private String URL;
     private ImageView avatarPic;
     private ListView settingListView;
     private Button btnStart;
@@ -52,6 +53,7 @@ public class SettingAvatar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_avatar);
 
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
         sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         Bundle extras = getIntent().getExtras();
@@ -200,7 +202,7 @@ public class SettingAvatar extends AppCompatActivity {
 
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage("Error Occurred!!!");
+        alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
     }

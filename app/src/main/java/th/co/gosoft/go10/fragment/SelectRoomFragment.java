@@ -27,6 +27,7 @@ import th.co.gosoft.go10.adapter.HotTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomGridAdapter;
 import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.model.TopicModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class SelectRoomFragment extends Fragment {
 
@@ -34,9 +35,8 @@ public class SelectRoomFragment extends Fragment {
 //    private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
 //    private final String URL_ROOM = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
 
-    private final String URL_HOT = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
-    private final String URL_ROOM = "http://go10.au-syd.mybluemix.net/GO10WebService/api/room/get";
-
+    private String URL_HOT;
+    private String URL_ROOM;
     private ProgressDialog progress;
     private List<TopicModel> topicModelList;
     private List<RoomModel> roomModelList;
@@ -49,6 +49,9 @@ public class SelectRoomFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "onCreate()");
+
+        URL_HOT = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/gethottopiclist";
+        URL_ROOM = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/room/get";
     }
 
     @Override
@@ -242,7 +245,7 @@ public class SelectRoomFragment extends Fragment {
 
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setMessage("Error Occurred!!!");
+        alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
     }

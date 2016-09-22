@@ -36,14 +36,14 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class FacebookGoogleLoginActivity extends Activity implements
         GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
 
     private final String LOG_TAG = "LoginActivityTag";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
-    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
 
+    private String URL;
     private static final int RC_SIGN_IN = 9001;
     private boolean IS_REGISTER_ACCOUNT = false;
 
@@ -57,6 +57,7 @@ public class FacebookGoogleLoginActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facebook_google_login);
 
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/getUserByAccountId";
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 

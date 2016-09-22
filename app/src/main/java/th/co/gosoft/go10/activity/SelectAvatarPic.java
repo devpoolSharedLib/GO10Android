@@ -34,13 +34,13 @@ import th.co.gosoft.go10.fragment.ManAvatarFragment;
 import th.co.gosoft.go10.fragment.WomanAvatarFragment;
 import th.co.gosoft.go10.model.UserModel;
 import th.co.gosoft.go10.util.OnDataPass;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
 
     private final String LOG_TAG = "SelectAvatarPic";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
-    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
 
+    private String URL;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private String avatarName;
@@ -54,6 +54,7 @@ public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_avatar_pic);
 
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.select_avatar);
 
@@ -217,7 +218,7 @@ public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
 
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage("Error Occurred!!!");
+        alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
     }

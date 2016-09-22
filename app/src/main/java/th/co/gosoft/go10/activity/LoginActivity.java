@@ -23,13 +23,13 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class LoginActivity extends AppCompatActivity {
 
     private final String LOG_TAG = "LoginActivity";
-//    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByUserPassword";
-    private final String URL = "https://go10.au-syd.mybluemix.net/GO10WebService/api/user/getUserByUserPassword";
 
+    private String URL;
     private EditText txtEmail;
     private EditText txtPassword;
     private Button btnLogin;
@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/user/getUserByUserPassword";
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);

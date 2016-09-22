@@ -35,6 +35,7 @@ import th.co.gosoft.go10.adapter.TopicAdapter;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.LikeModel;
 import th.co.gosoft.go10.util.OnDataPass;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class BoardContentFragment extends Fragment implements OnDataPass {
 
@@ -43,10 +44,9 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 //    private final String CHECK_LIKE_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/checkLikeTopic";
 //    private final String LIKE_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/";
 
-    private final String GET_TOPIC_URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/gettopicbyid";
-    private final String CHECK_LIKE_URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/checkLikeTopic";
-    private final String LIKE_URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/";
-
+    private String GET_TOPIC_URL;
+    private String CHECK_LIKE_URL;
+    private String LIKE_URL;
     private ProgressDialog progress;
     private String _id ;
     private String empEmail;
@@ -59,11 +59,15 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private List<TopicModel> topicModelList;
     private LikeModel likeModel;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(LOG_TAG, "onCreate : BoardContentFragment");
         super.onCreate(savedInstanceState);
+
+        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/gettopicbyid";
+        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/checkLikeTopic";
+        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/";
+
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         setHasOptionsMenu(true);
@@ -328,7 +332,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setMessage("Error Occurred!!!");
+        alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
     }

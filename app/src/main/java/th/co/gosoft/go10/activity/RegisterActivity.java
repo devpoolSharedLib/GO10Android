@@ -21,13 +21,13 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private final String LOG_TAG = "RegisterActivity";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByToken";
-    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/getUserByToken";
 
+    private String URL;
     private EditText edtToken;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -38,6 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/getUserByToken";
         edtToken = (EditText) findViewById(R.id.edtToken);
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();

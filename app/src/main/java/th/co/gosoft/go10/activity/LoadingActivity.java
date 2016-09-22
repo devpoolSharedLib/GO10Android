@@ -32,18 +32,18 @@ import cz.msebera.android.httpclient.Header;
 import io.fabric.sdk.android.Fabric;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class LoadingActivity extends Activity {
 
     private final String LOG_TAG = "LoadingActivityTag";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
-    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/getUserByAccountId";
 
     private final long SPLASH_TIME_OUT = 1000L;
     private boolean IS_LOGIN_FACEBOOK = false;
     private boolean IS_SIGNIN_GOOGLE = false;
     private GoogleApiClient mGoogleApiClient;
 
+    private String URL;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
 
@@ -53,6 +53,7 @@ public class LoadingActivity extends Activity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_loading);
 
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/getUserByAccountId";
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 

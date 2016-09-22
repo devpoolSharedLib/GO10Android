@@ -26,14 +26,15 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class SettingAvatarName extends AppCompatActivity {
 
     private final String LOG_TAG = "SettingAvatarName";
 //    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
-    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
-
     private static final int MAX_LENGTH = 20;
+
+    private String URL;
     private EditText edtAvatarName;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -45,6 +46,7 @@ public class SettingAvatarName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_avatar_name);
 
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.change_avatar_name);
 
@@ -159,7 +161,7 @@ public class SettingAvatarName extends AppCompatActivity {
 
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setMessage("Error Occurred!!!");
+        alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
     }

@@ -25,13 +25,13 @@ import java.util.List;
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class ForgetPasswordActivity extends AppCompatActivity {
 
     private final String LOG_TAG = "ForgetPasswordActivity";
-//    private final String URL = "https://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/resetPasswordByEmail";
-    private final String URL = "https://go10.au-syd.mybluemix.net/GO10WebService/api/user/resetPasswordByEmail";
 
+    private String URL;
     private ProgressDialog progress;
     private EditText txtForgotEmail;
     private TextView txtOutput;
@@ -41,6 +41,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
 
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/resetPasswordByEmail";
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.forget_pass);

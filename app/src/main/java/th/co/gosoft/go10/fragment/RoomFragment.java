@@ -31,13 +31,14 @@ import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.TopicModel;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class RoomFragment extends Fragment {
 
     private final String LOG_TAG = "RoomFragmenttag";
 //    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
-    private final String URL = "http://go10.au-syd.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
 
+    private String URL;
     private ProgressDialog progress;
     private Map<String, Integer> imageIdMap = new HashMap<>();
     private List<TopicModel> topicModelList = new ArrayList<>();
@@ -49,11 +50,13 @@ public class RoomFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/gettopiclistbyroom";
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view =  inflater.inflate(R.layout.activity_room, container, false);
         Bundle bundle = getArguments();
         room_id = bundle.getString("room_id");
@@ -193,7 +196,7 @@ public class RoomFragment extends Fragment {
 
     private AlertDialog.Builder showErrorDialog(){
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setMessage("Error Occurred!!!");
+        alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
     }
