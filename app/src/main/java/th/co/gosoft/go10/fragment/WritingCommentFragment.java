@@ -45,7 +45,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import richeditor.classes.RichEditor;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
-import th.co.gosoft.go10.util.BitMapUtil;
+import th.co.gosoft.go10.util.BitmapUtil;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class WritingCommentFragment extends Fragment {
@@ -247,7 +247,7 @@ public class WritingCommentFragment extends Fragment {
             RequestParams params = new RequestParams();
 
             try {
-                Bitmap bitmap = BitMapUtil.resizeBitmap(picturePath, BitMapUtil.resolution, BitMapUtil.resolution);
+                Bitmap bitmap = BitmapUtil.resizeBitmap(picturePath);
                 Log.i(LOG_TAG, "resolution : "+bitmap.getWidth()+", "+bitmap.getHeight());
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -278,11 +278,11 @@ public class WritingCommentFragment extends Fragment {
                         String imgURL =  new JSONObject(responseString).getString("imgUrl");
                         Log.i(LOG_TAG, "imgURL : "+imgURL);
 
-                        if(BitMapUtil.width > BitMapUtil.height){
+                        if(BitmapUtil.width > BitmapUtil.height){
                             mEditor.insertImage(imgURL, 295, 166, "insertImageUrl");
-                        } else if(BitMapUtil.width < BitMapUtil.height){
+                        } else if(BitmapUtil.width < BitmapUtil.height){
                             mEditor.insertImage(imgURL, 230, 408, "insertImageUrl");
-                        } else if(BitMapUtil.width == BitMapUtil.height){
+                        } else if(BitmapUtil.width == BitmapUtil.height){
                             mEditor.insertImage(imgURL, 295, 295, "insertImageUrl");
                         }
                         closeLoadingDialog();

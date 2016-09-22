@@ -6,18 +6,20 @@ import android.graphics.BitmapFactory;
 /**
  * Created by manitkan on 23/05/16.
  */
-public class BitMapUtil {
+public class BitmapUtil {
+
+    public static final int RESOLUTION_WIDTH = 500;
+    public static final int RESOLUTION_HEIGHT = 300;
 
     public static int height;
     public static int width;
-    public static int resolution = 600;
 
-    public static Bitmap resizeBitmap(String picturePath, int width, int height) {
+    public static Bitmap resizeBitmap(String picturePath) {
         BitmapFactory.Options sizeOptions = new BitmapFactory.Options();
         sizeOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(picturePath, sizeOptions);
 
-        int inSampleSize = calculateInSampleSize(sizeOptions, width, height);
+        int inSampleSize = calculateInSampleSize(sizeOptions, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
 
         sizeOptions.inJustDecodeBounds = false;
         sizeOptions.inSampleSize = inSampleSize;
