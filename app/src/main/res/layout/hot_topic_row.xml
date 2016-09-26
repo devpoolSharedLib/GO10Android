@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/hotTopicRelativeLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp">
@@ -14,7 +15,7 @@
         android:id="@+id/rowSubject"
         android:text="column1"
         android:ellipsize="end"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
@@ -28,19 +29,31 @@
         android:paddingRight="10dp"
         android:layout_marginTop="5dp" />
 
+    <ImageView
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:srcCompat="@drawable/like"
+        android:id="@+id/imgLike"
+        android:layout_below="@+id/rowSubject"
+        android:layout_toRightOf="@+id/iconImage"
+        android:layout_toEndOf="@+id/iconImage"
+        android:layout_alignBottom="@+id/iconImage"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
+        android:scaleType="fitStart" />
+
     <TextView
-        android:id="@+id/rowUserName"
-        android:text="Column 2"
+        android:id="@+id/txtLikeCount"
+        android:text="0"
         android:layout_gravity="center_vertical"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:paddingLeft="10dp"
         android:textSize="12sp"
         android:textColor="#4c4c4c"
         android:maxLines="1"
         android:layout_alignBottom="@+id/iconImage"
-        android:layout_toRightOf="@+id/iconImage"
-        android:layout_toEndOf="@+id/iconImage" />
+        android:layout_toRightOf="@+id/imgLike"
+        android:layout_toEndOf="@+id/imgLike" />
 
     <TextView
         android:id="@+id/rowDate"

@@ -29,8 +29,8 @@ android {
         applicationId "th.co.gosoft.go10"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 6
-        versionName "1.0.5"
+        versionCode 9
+        versionName "1.0.8"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'

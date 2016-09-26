@@ -38,7 +38,9 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -46,6 +48,7 @@ import richeditor.classes.RichEditor;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.BitmapUtil;
+import th.co.gosoft.go10.util.ImageResolutionUtil;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class WritingCommentFragment extends Fragment {
@@ -249,6 +252,7 @@ public class WritingCommentFragment extends Fragment {
             try {
                 Bitmap bitmap = BitmapUtil.resizeBitmap(picturePath);
                 Log.i(LOG_TAG, "resolution : "+bitmap.getWidth()+", "+bitmap.getHeight());
+
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
 
@@ -278,13 +282,9 @@ public class WritingCommentFragment extends Fragment {
                         String imgURL =  new JSONObject(responseString).getString("imgUrl");
                         Log.i(LOG_TAG, "imgURL : "+imgURL);
 
-                        if(BitmapUtil.width > BitmapUtil.height){
-                            mEditor.insertImage(imgURL, 295, 166, "insertImageUrl");
-                        } else if(BitmapUtil.width < BitmapUtil.height){
-                            mEditor.insertImage(imgURL, 230, 408, "insertImageUrl");
-                        } else if(BitmapUtil.width == BitmapUtil.height){
-                            mEditor.insertImage(imgURL, 295, 295, "insertImageUrl");
-                        }
+                        Map<String, Integer> imageResolutionMap = ImageResolutionUtil.calculateResolution(BitmapUtil.width, BitmapUtil.height);
+                        mEditor.insertImage(imgURL, imageResolutionMap.get("width"), imageResolutionMap.get("height"), "insertImageUrl");
+
                         closeLoadingDialog();
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, e.getMessage(), e);

@@ -64,6 +64,16 @@ public class HomeActivity extends AppCompatActivity
             View headerLayout = navigationView.getHeaderView(0);
 
             profileImageView = (ImageView) headerLayout.findViewById(R.id.imgProfileImage);
+            profileImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(HomeActivity.this, SettingAvatar.class);
+                    startActivity(intent);
+                    DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+                    drawer.closeDrawer(GravityCompat.START);
+                }
+            });
+
             profileName = (TextView) headerLayout.findViewById(R.id.txtProfileName);
 
             sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
@@ -93,7 +103,7 @@ public class HomeActivity extends AppCompatActivity
     private void inflateSelectRoomFragment() {
         Fragment fragment = new SelectRoomFragment();
         FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).commit();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("home").commit();
     }
 
     private void inflateBoardContentFragment(String _id) {
@@ -135,8 +145,11 @@ public class HomeActivity extends AppCompatActivity
                     for(int i = 0; i < getFragmentManager().getBackStackEntryCount(); ++i) {
                         getFragmentManager().popBackStack("tag",FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     }
-                }else{
-                        getFragmentManager().popBackStack();
+                } else if(str == "home") {
+                    Log.i(LOG_TAG,"home");
+                    finish();
+                } else {
+                    getFragmentManager().popBackStack();
                 }
             }
         }
@@ -146,8 +159,18 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if (id == R.id.home) {
+            FragmentManager fragmentManager = getFragmentManager();
+            Fragment currentFragment = fragmentManager.findFragmentById(R.id.content_frame);
+            if (!(currentFragment instanceof SelectRoomFragment)){
+                fragmentManager.popBackStack("home", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                inflateSelectRoomFragment();
+//                Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+//                startActivity(intent);
+//                finish();
+            }
 
-        if (id == R.id.setting) {
+        } else if (id == R.id.setting) {
             Intent intent = new Intent(HomeActivity.this, SettingAvatar.class);
             startActivity(intent);
         } else if (id == R.id.logout) {

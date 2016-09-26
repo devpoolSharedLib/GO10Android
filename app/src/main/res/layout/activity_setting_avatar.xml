@@ -21,7 +21,6 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/imageButton"
             android:src="@drawable/camera"
             android:paddingBottom="10dp"
             android:layout_gravity="center_horizontal|bottom" />

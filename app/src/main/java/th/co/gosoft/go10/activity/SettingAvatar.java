@@ -212,4 +212,5 @@ public class SettingAvatar extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
 }

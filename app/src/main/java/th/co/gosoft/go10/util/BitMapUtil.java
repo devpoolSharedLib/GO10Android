@@ -2,14 +2,15 @@ package th.co.gosoft.go10.util;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 /**
  * Created by manitkan on 23/05/16.
  */
 public class BitmapUtil {
 
-    public static final int RESOLUTION_WIDTH = 500;
-    public static final int RESOLUTION_HEIGHT = 300;
+    public static final String LOG_TAG = "BitmapUtil";
+    public static final int RESOLUTION = 300;
 
     public static int height;
     public static int width;
@@ -19,7 +20,7 @@ public class BitmapUtil {
         sizeOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(picturePath, sizeOptions);
 
-        int inSampleSize = calculateInSampleSize(sizeOptions, RESOLUTION_WIDTH, RESOLUTION_HEIGHT);
+        int inSampleSize = calculateInSampleSize(sizeOptions, RESOLUTION, RESOLUTION);
 
         sizeOptions.inJustDecodeBounds = false;
         sizeOptions.inSampleSize = inSampleSize;
@@ -39,6 +40,7 @@ public class BitmapUtil {
             final int widthRatio = Math.round((float) width / (float) reqWidth);
 
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+            Log.i(LOG_TAG, "inSampleSize : "+ inSampleSize);
         }
 
         return inSampleSize;
