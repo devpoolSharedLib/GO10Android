@@ -123,11 +123,11 @@ public class SettingAvatarName extends AppCompatActivity {
 
     private void checkAvatarNameHasBeenUse(){
         try{
-            String finalURL = CHECK_AVATAR_NAME_URL+"?avatarName="+edtAvatarName.getText().toString().trim();
-            Log.i(LOG_TAG, finalURL);
+            String concatString = CHECK_AVATAR_NAME_URL+"?avatarName="+edtAvatarName.getText().toString().trim();
+            Log.i(LOG_TAG, concatString);
 
             AsyncHttpClient client = new AsyncHttpClient();
-            client.get(this, finalURL, new AsyncHttpResponseHandler() {
+            client.get(this, concatString, new AsyncHttpResponseHandler() {
 
                 @Override
                 public void onStart() {

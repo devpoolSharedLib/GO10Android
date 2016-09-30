@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="th.co.gosoft.go10"
     android:versionCode="1"
     android:versionName="1.0">
@@ -17,7 +18,8 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".activity.LoadingActivity"
+        <activity
+            android:name=".activity.LoadingActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,16 +39,17 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.FacebookGoogleLoginActivity" />
         <activity
-            android:name=".activity.FacebookGoogleLoginActivity"/>
-        <activity
+            tools:replace="android:theme"
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+        />
         <activity
             android:name=".activity.HomeActivity"
             android:configChanges="orientation|screenSize"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -62,11 +65,15 @@
             android:name=".activity.SelectAvatarPic"
             android:theme="@style/AppTheme" />
         <activity android:name=".activity.RegisterActivity" />
-        <activity android:name=".activity.LoginActivity"
+        <activity
+            android:name=".activity.LoginActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden|adjustResize"/>
-        <activity android:name=".activity.ForgetPasswordActivity"
-            android:theme="@style/AppTheme"/>
+            android:windowSoftInputMode="stateHidden|adjustResize" />
+        <activity
+            android:name=".activity.ForgetPasswordActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".activity.TermsAndPoliciesActivity"
+            android:theme="@style/AppTheme"></activity>
     </application>
 
 </manifest>

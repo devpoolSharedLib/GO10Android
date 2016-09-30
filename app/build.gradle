@@ -29,8 +29,8 @@ android {
         applicationId "th.co.gosoft.go10"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 9
-        versionName "1.0.8"
+        versionCode 11
+        versionName "1.1.0"
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
@@ -66,7 +66,7 @@ dependencies {
     compile 'com.android.support:design:23.4.0'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-    compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:support-v4:23.0.1'
     compile 'mobi.parchment:parchment:1.6.9@aar'
 }
 

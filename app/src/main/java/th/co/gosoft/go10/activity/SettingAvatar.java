@@ -53,6 +53,8 @@ public class SettingAvatar extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_avatar);
 
+        try{
+
         URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
         sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
@@ -103,6 +105,10 @@ public class SettingAvatar extends AppCompatActivity {
                 }
             }
         });
+
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
     }
 
     private boolean isComeFromRegisterActivity(Bundle extras) {

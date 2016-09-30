@@ -10,7 +10,7 @@ import android.util.Log;
 public class BitmapUtil {
 
     public static final String LOG_TAG = "BitmapUtil";
-    public static final int RESOLUTION = 300;
+    public static final int RESOLUTION = 200;
 
     public static int height;
     public static int width;

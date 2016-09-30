@@ -52,29 +52,40 @@ public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting_avatar_pic);
+        try{
+            setContentView(R.layout.activity_setting_avatar_pic);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(R.string.select_avatar);
+            Log.i(LOG_TAG, "activity_setting_avatar_pic onCreate()");
+            URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
+            ActionBar actionBar = getSupportActionBar();
+            actionBar.setTitle(R.string.select_avatar);
 
-        sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
-        Bundle extras = getIntent().getExtras();
-        isSeparateUpdate = extras.getBoolean("isSeparateUpdate");
+            sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
+            editor = sharedPref.edit();
+            Bundle extras = getIntent().getExtras();
+            isSeparateUpdate = extras.getBoolean("isSeparateUpdate");
 
-        viewPager = (ViewPager) findViewById(R.id.viewpager);
-        setupViewPager(viewPager);
+            viewPager = (ViewPager) findViewById(R.id.viewpager);
+            setupViewPager(viewPager);
 
-        tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+            tabLayout = (TabLayout) findViewById(R.id.tabs);
+            tabLayout.setupWithViewPager(viewPager);
+            Log.i(LOG_TAG, "finish onCreate()");
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new ManAvatarFragment(), "Man");
-        adapter.addFragment(new WomanAvatarFragment(), "Woman");
-        viewPager.setAdapter(adapter);
+        try{
+            ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+            adapter.addFragment(new ManAvatarFragment(), "Man");
+            adapter.addFragment(new WomanAvatarFragment(), "Woman");
+            viewPager.setAdapter(adapter);
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+        }
     }
 
     @Override
@@ -103,6 +114,7 @@ public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
         }
 
         public void addFragment(Fragment fragment, String title) {
+            Log.i(LOG_TAG, "ViewPagerAdapter addFragment");
             mFragmentList.add(fragment);
             mFragmentTitleList.add(title);
         }

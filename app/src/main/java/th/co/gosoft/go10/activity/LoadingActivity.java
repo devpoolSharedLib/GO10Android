@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.AccessToken;
@@ -22,11 +23,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
 import io.fabric.sdk.android.Fabric;
@@ -44,8 +47,10 @@ public class LoadingActivity extends Activity {
     private GoogleApiClient mGoogleApiClient;
 
     private String URL;
+    private String URL_CHECK_USER_ACTIVATION;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
+    private boolean isActivate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +59,7 @@ public class LoadingActivity extends Activity {
         setContentView(R.layout.activity_loading);
 
         URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/getUserByAccountId";
+        URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/checkUserActivation";
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
@@ -77,7 +83,7 @@ public class LoadingActivity extends Activity {
 //            }
             if(hasUserLoggedIn()){
                 Log.i(LOG_TAG, "User Logged In");
-                gotoHomeActivity();
+                isUserActivate();
             } else {
                 Log.i(LOG_TAG, "User Not Logged In");
                 gotoLoginActivity();
@@ -113,6 +119,41 @@ public class LoadingActivity extends Activity {
 
     private boolean hasUserLoggedIn() {
          return sharedPref.getBoolean("hasLoggedIn", false);
+    }
+
+    private void isUserActivate() {
+        String empEmail = sharedPref.getString("empEmail", null);
+        String concatString = URL_CHECK_USER_ACTIVATION+"?empEmail="+empEmail;
+        try {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(this, concatString, new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onStart() {}
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                    Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    if(statusCode == 201){
+                        gotoHomeActivity();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                    Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    Log.e(LOG_TAG, "AsyncHttpClient returned error", e);
+                    if(statusCode == 404) {
+                        Toast.makeText(getApplication(), new String(errorResponse), Toast.LENGTH_LONG).show();
+                        editor.putBoolean("hasLoggedIn", false);
+                        editor.commit();
+                        gotoLoginActivity();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+        }
     }
 
     private void checkCurrentTokenFacebook() {

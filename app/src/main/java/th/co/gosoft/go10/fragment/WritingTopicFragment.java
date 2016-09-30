@@ -258,7 +258,7 @@ public class WritingTopicFragment extends Fragment {
                 Log.i(LOG_TAG, "resolution : "+bitmap.getWidth()+", "+bitmap.getHeight());
 
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
 
                 byte[] myByteArray = stream.toByteArray();
                 params.put("imageFile", new ByteArrayInputStream(myByteArray));
