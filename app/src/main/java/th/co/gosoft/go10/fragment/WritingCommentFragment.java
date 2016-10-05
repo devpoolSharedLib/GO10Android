@@ -108,7 +108,9 @@ public class WritingCommentFragment extends Fragment {
         view.findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
 
-                mEditor.focusEditor();
+                if(!mEditor.hasFocus()){
+                    mEditor.focusEditor();
+                }
 
                 if (Build.VERSION.SDK_INT >= 23){
                     if (ContextCompat.checkSelfPermission(getActivity(),

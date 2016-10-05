@@ -10,7 +10,7 @@ import android.util.Log;
 public class BitmapUtil {
 
     public static final String LOG_TAG = "BitmapUtil";
-    public static final int RESOLUTION = 200;
+    public static final int RESOLUTION = 250;
 
     public static int height;
     public static int width;
@@ -24,6 +24,7 @@ public class BitmapUtil {
 
         sizeOptions.inJustDecodeBounds = false;
         sizeOptions.inSampleSize = inSampleSize;
+        sizeOptions.inScaled = false;
 
         return BitmapFactory.decodeFile(picturePath, sizeOptions);
     }

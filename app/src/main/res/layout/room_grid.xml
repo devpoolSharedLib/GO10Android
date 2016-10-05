@@ -8,8 +8,8 @@
     <ImageView
         android:id="@+id/roomIcon"
         android:layout_gravity="center"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"/>
 
@@ -18,7 +18,7 @@
         android:layout_gravity="center"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:textAlignment="center"

@@ -32,8 +32,6 @@ import th.co.gosoft.go10.util.PropertyUtility;
 public class SelectRoomFragment extends Fragment {
 
     private final String LOG_TAG = "SelectRoomFragmentTag";
-//    private final String URL_HOT = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gethottopiclist";
-//    private final String URL_ROOM = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/room/get";
 
     private String URL_HOT;
     private String URL_ROOM;

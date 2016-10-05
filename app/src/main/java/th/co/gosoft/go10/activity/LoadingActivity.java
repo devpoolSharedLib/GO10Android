@@ -64,26 +64,9 @@ public class LoadingActivity extends Activity {
         editor = sharedPref.edit();
 
         try{
-//            FacebookSdk.sdkInitialize(this.getApplicationContext());
-//            setContentView(R.layout.activity_loading);
-//            checkCurrentTokenFacebook();
-//            prepareGmailLoginSession();
-//            checkCurrentTokenGmail();
-//
-//            if(!IS_LOGIN_FACEBOOK && !IS_SIGNIN_GOOGLE){
-//                new Handler().postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        Intent i = new Intent(LoadingActivity.this, FacebookGoogleLoginActivity.class);
-//                        startActivity(i);
-//                        finish();
-//
-//                    }
-//                }, SPLASH_TIME_OUT);
-//            }
             if(hasUserLoggedIn()){
                 Log.i(LOG_TAG, "User Logged In");
-                isUserActivate();
+                activateUserAccount();
             } else {
                 Log.i(LOG_TAG, "User Not Logged In");
                 gotoLoginActivity();
@@ -121,7 +104,7 @@ public class LoadingActivity extends Activity {
          return sharedPref.getBoolean("hasLoggedIn", false);
     }
 
-    private void isUserActivate() {
+    private void activateUserAccount() {
         String empEmail = sharedPref.getString("empEmail", null);
         String concatString = URL_CHECK_USER_ACTIVATION+"?empEmail="+empEmail;
         try {
@@ -135,7 +118,11 @@ public class LoadingActivity extends Activity {
                 public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                     if(statusCode == 201){
-                        gotoHomeActivity();
+                        if(hasNotSettingAvatar()){
+                            gotoSettingAvatarActivity();
+                        } else {
+                            gotoHomeActivity();
+                        }
                     }
                 }
 
@@ -154,6 +141,17 @@ public class LoadingActivity extends Activity {
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
         }
+    }
+
+    private boolean hasNotSettingAvatar() {
+        return "Avatar Name".equals(sharedPref.getString("avatarName","Avatar Name")) || "default_avatar".equals(sharedPref.getString("avatarPic","default_avatar"));
+    }
+
+    private void gotoSettingAvatarActivity(){
+        Intent intent = new Intent(this, SettingAvatar.class);
+        intent.putExtra("state", "register");
+        startActivity(intent);
+        finish();
     }
 
     private void checkCurrentTokenFacebook() {

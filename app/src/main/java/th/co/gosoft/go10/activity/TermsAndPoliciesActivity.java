@@ -21,17 +21,10 @@ public class TermsAndPoliciesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_terms_and_policies_activity);
         Log.i(LOG_TAG, "onCreate()");
 
-        try {
-            termsAndPolicies = (TextView) findViewById(R.id.txtTermsAndPolicies);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setTitle(R.string.terms_and_policies);
 
-            ActionBar actionBar = getSupportActionBar();
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.terms_and_policies);
-
-            termsAndPolicies.setText(R.string.terms_and_policies_content);
-        }catch(Exception e){
-            Log.e(LOG_TAG, e.getMessage(), e);
-        }
     }
 
     @Override

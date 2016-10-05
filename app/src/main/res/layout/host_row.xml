@@ -48,26 +48,12 @@
         android:paddingLeft="10dp"
         android:textAlignment="gravity"
         android:gravity="center_vertical"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textColor="#0080ff"
         android:minLines="2"
         android:layout_below="@+id/hostImage"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="New Text"
-        android:id="@+id/hostContent"
-        android:autoLink="web"
-        android:textSize="18sp"
-        android:minLines="2"
-        android:lineSpacingExtra="10sp"
-        android:layout_gravity="start"
-        android:layout_below="@+id/hostSubject"
-        android:padding="10dp"
-        android:minHeight="80dp" />
 
     <ImageView
         android:layout_width="20dp"
@@ -128,5 +114,21 @@
             android:layout_alignParentStart="true"/>
 
     </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="New Text"
+        android:id="@+id/hostContent"
+        android:autoLink="web"
+        android:textSize="14sp"
+        android:minLines="2"
+        android:lineSpacingExtra="10sp"
+        android:layout_gravity="start"
+        android:padding="10dp"
+        android:minHeight="80dp"
+        android:layout_below="@+id/hostSubject"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

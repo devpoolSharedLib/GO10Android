@@ -10,13 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="th.co.gosoft.go10.activity.TermsAndPoliciesActivity">
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
+    <ScrollView android:id="@+id/textAreaScroller"
+        android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:id="@+id/txtTermsAndPolicies"
-        tools:text="@string/terms_and_policies_content" />
+        android:scrollbars="vertical">
+        <TextView
+            android:text="@string/terms_and_policies_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/txtTermsAndPolicies"/>
+    </ScrollView>
 </RelativeLayout>
