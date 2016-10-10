@@ -1,6 +1,7 @@
 package th.co.gosoft.go10.activity;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,6 +64,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
     }
 
     public void submit(View view){
+        hideKeyboard();
         if(isInputsEmpty()){
             Toast.makeText(this, "Please enter your E-mail.", Toast.LENGTH_SHORT).show();
         } else {
@@ -145,5 +148,14 @@ public class ForgetPasswordActivity extends AppCompatActivity {
 
     private void closeLoadingDialog(){
         progress.dismiss();
+    }
+
+    private void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            Log.i(LOG_TAG, "view null hide keyboard");
+            InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 }

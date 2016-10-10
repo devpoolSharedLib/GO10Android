@@ -3,8 +3,16 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/setting"
-            android:title="Setting"
+            android:id="@+id/home"
+            android:title="Home"
+            android:checkable="false" />
+        <item
+            android:id="@+id/settingAvatar"
+            android:title="Setting Avatar"
+            android:checkable="false" />
+        <item
+            android:id="@+id/termsAndPolicies"
+            android:title="Terms &amp; Policies"
             android:checkable="false" />
         <item
             android:id="@+id/logout"

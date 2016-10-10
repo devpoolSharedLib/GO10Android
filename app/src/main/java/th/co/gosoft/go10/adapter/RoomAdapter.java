@@ -43,7 +43,7 @@ public class RoomAdapter  extends ArrayAdapter<TopicModel> {
                 convertView = inflater.inflate(R.layout.hot_topic_row, null);
 
                 holder.txtRowSubject = (TextView) convertView.findViewById(R.id.rowSubject);
-                holder.txtRowUserName = (TextView) convertView.findViewById(R.id.rowUserName);
+                holder.txtLikeCount = (TextView) convertView.findViewById(R.id.txtLikeCount);
                 holder.txtRowDate = (TextView) convertView.findViewById(R.id.rowDate);
                 holder.imageView = (ImageView) convertView.findViewById(R.id.iconImage);
                 convertView.setTag(holder);
@@ -55,7 +55,7 @@ public class RoomAdapter  extends ArrayAdapter<TopicModel> {
 
             if (topicModel != null) {
                 holder.txtRowSubject.setText(topicModel.getSubject());
-                holder.txtRowUserName.setText(topicModel.getAvatarName());
+                holder.txtLikeCount.setText(String.valueOf(topicModel.getCountLike()));
                 holder.txtRowDate.setText(topicModel.getDate());
                 holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic(), "drawable",
                         context.getPackageName()));
@@ -70,7 +70,7 @@ public class RoomAdapter  extends ArrayAdapter<TopicModel> {
 
     private static class ViewHolder {
         TextView txtRowSubject;
-        TextView txtRowUserName;
+        TextView txtLikeCount;
         TextView txtRowDate;
         ImageView imageView;
     }

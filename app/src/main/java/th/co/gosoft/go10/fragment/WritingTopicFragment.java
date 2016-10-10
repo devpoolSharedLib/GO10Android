@@ -39,14 +39,17 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import richeditor.classes.RichEditor;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
-import th.co.gosoft.go10.util.BitMapUtil;
+import th.co.gosoft.go10.util.BitmapUtil;
+import th.co.gosoft.go10.util.ImageResolutionUtil;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class WritingTopicFragment extends Fragment {
@@ -108,7 +111,9 @@ public class WritingTopicFragment extends Fragment {
         view.findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
 
-                mEditor.focusEditor();
+                if(!mEditor.hasFocus()){
+                    mEditor.focusEditor();
+                }
 
                 if (Build.VERSION.SDK_INT >= 23){
                     if (ContextCompat.checkSelfPermission(getActivity(),
@@ -251,13 +256,14 @@ public class WritingTopicFragment extends Fragment {
 
             try {
 
-                Bitmap bitmap = BitMapUtil.resizeBitmap(picturePath, BitMapUtil.resolution, BitMapUtil.resolution);
+                Bitmap bitmap = BitmapUtil.resizeBitmap(picturePath);
+                Log.i(LOG_TAG, "resolution : "+bitmap.getWidth()+", "+bitmap.getHeight());
+
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
 
                 byte[] myByteArray = stream.toByteArray();
                 params.put("imageFile", new ByteArrayInputStream(myByteArray));
-
             } catch(Exception e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
@@ -281,13 +287,9 @@ public class WritingTopicFragment extends Fragment {
                         String imgURL =  new JSONObject(responseString).getString("imgUrl");
                         Log.i(LOG_TAG, "imgURL : "+imgURL);
 
-                        if(BitMapUtil.width > BitMapUtil.height){
-                            mEditor.insertImage(imgURL, 295, 166, "insertImageUrl");
-                        } else if(BitMapUtil.width < BitMapUtil.height){
-                            mEditor.insertImage(imgURL, 230, 408, "insertImageUrl");
-                        } else if(BitMapUtil.width == BitMapUtil.height){
-                            mEditor.insertImage(imgURL, 295, 295, "insertImageUrl");
-                        }
+                        Map<String, Integer> imageResolutionMap = ImageResolutionUtil.calculateResolution(BitmapUtil.width, BitmapUtil.height);
+                        mEditor.insertImage(imgURL, imageResolutionMap.get("width"), imageResolutionMap.get("height"), "insertImageUrl");
+
                         closeLoadingDialog();
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, e.getMessage(), e);
@@ -304,6 +306,47 @@ public class WritingTopicFragment extends Fragment {
                 }
             });
         }
+    }
+
+    private Map<String,Integer> calculateResolution(int width, int height) {
+        Log.i(LOG_TAG, "calculateResolution width - height : "+width+" * "+height);
+        Double ratio = (Math.round(((float) width / (float) height)*100.0) / 100.0);
+        Log.i(LOG_TAG, "calculateResolution Ration Bitmap : "+ratio);
+        Map<String,Integer> resultMap = new HashMap<>();
+        if(ratio > 1) {
+            if(ratio == 1.33) {
+                Log.i(LOG_TAG, "4:3 landscape");
+                resultMap.put("width", 295);
+                resultMap.put("height", 222);
+            } else if(ratio == 1.78 || ratio == 1.77) {
+                Log.i(LOG_TAG, "16:9 landscape");
+                resultMap.put("width", 295);
+                resultMap.put("height", 166);
+            } else {
+                Log.i(LOG_TAG, "16:9 landscape");
+                resultMap.put("width", 295);
+                resultMap.put("height", 166);
+            }
+        } else if(ratio < 1) {
+            if(ratio == 0.75) {
+                Log.i(LOG_TAG, "3:4 portrait");
+                resultMap.put("width", 230);
+                resultMap.put("height", 307);
+            } else if(ratio == 0.56) {
+                Log.i(LOG_TAG, "9:16 portrait");
+                resultMap.put("width", 230);
+                resultMap.put("height", 410);
+            } else {
+                Log.i(LOG_TAG, "9:16 portrait");
+                resultMap.put("width", 230);
+                resultMap.put("height", 410);
+            }
+        } else if(ratio == 1) {
+            Log.i(LOG_TAG, "1:1 square");
+            resultMap.put("width", 295);
+            resultMap.put("height", 295);
+        }
+        return resultMap;
     }
 
     @Override

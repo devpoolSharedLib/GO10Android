@@ -54,7 +54,7 @@ public class URLImageParser implements Html.ImageGetter {
         protected Bitmap doInBackground(Object... params) {
             String source = (String) params[0];
             mDrawable = (LevelListDrawable) params[1];
-            Log.d(LOG_TAG, "doInBackground " + source);
+            Log.i(LOG_TAG, "doInBackground " + source);
             try {
                 InputStream is = new URL(source).openStream();
                 return BitmapFactory.decodeStream(is);
@@ -70,12 +70,17 @@ public class URLImageParser implements Html.ImageGetter {
 
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            Log.d(LOG_TAG, "onPostExecute drawable " + mDrawable);
-            Log.d(LOG_TAG, "onPostExecute bitmap " + bitmap);
+            Log.i(LOG_TAG, "onPostExecute drawable " + mDrawable);
+            Log.i(LOG_TAG, "onPostExecute bitmap " + bitmap);
             if (bitmap != null) {
                 BitmapDrawable d = new BitmapDrawable(bitmap);
                 mDrawable.addLevel(1, 1, d);
-                mDrawable.setBounds(0, 0, bitmap.getWidth(), bitmap.getHeight());
+                Log.i(LOG_TAG, "Bitmap size : "+bitmap.getWidth()+", "+bitmap.getHeight());
+
+                float scaleFactor = (float)mTv.getWidth()/(float)bitmap.getWidth();
+                Log.i(LOG_TAG, "scaleFactor : "+scaleFactor);
+
+                mDrawable.setBounds(0, 0, mTv.getWidth(), Math.round(bitmap.getHeight()*scaleFactor));
                 mDrawable.setLevel(1);
                 CharSequence t = mTv.getText();
                 mTv.setText(t);

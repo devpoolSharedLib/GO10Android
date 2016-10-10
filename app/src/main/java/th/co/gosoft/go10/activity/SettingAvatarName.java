@@ -12,7 +12,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +38,7 @@ public class SettingAvatarName extends AppCompatActivity {
     private static final int MAX_LENGTH = 20;
 
     private String URL;
+    private String CHECK_AVATAR_NAME_URL;
     private EditText edtAvatarName;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -47,6 +51,7 @@ public class SettingAvatarName extends AppCompatActivity {
         setContentView(R.layout.activity_setting_avatar_name);
 
         URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
+        CHECK_AVATAR_NAME_URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/checkAvatarName";
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.change_avatar_name);
 
@@ -70,12 +75,18 @@ public class SettingAvatarName extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.btnSaveSetting:
-                saveAvatarToSharedPreferences();
-                if(isSeparateUpdate){
-                    saveSetting();
+                if(isEmpty(edtAvatarName.getText().toString())){
+                    Toast.makeText(getApplication(), "Please insert your avatar name.", Toast.LENGTH_SHORT).show();
                 } else {
-                    backPressed();
+                    hideKeyboard();
+                    checkAvatarNameHasBeenUse();
                 }
+//                saveAvatarToSharedPreferences();
+//                if(isSeparateUpdate){
+//                    saveSetting();
+//                } else {
+//                    backPressed();
+//                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -110,6 +121,48 @@ public class SettingAvatarName extends AppCompatActivity {
         return userModel;
     }
 
+    private void checkAvatarNameHasBeenUse(){
+        try{
+            String concatString = CHECK_AVATAR_NAME_URL+"?avatarName="+edtAvatarName.getText().toString().trim();
+            Log.i(LOG_TAG, concatString);
+
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(this, concatString, new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onStart() {
+                    showLoadingDialog();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                    Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    if(statusCode == 201){
+                        saveAvatarToSharedPreferences();
+                        if(isSeparateUpdate){
+                            saveSetting();
+                        } else {
+                            backPressed();
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                    Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    Log.e(LOG_TAG, "AsyncHttpClient returned error", e);
+                    if(statusCode == 404) {
+                        closeLoadingDialog();
+                        Toast.makeText(getApplication(), new String(errorResponse), Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+        } catch (Exception e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            showErrorDialog().show();
+        }
+    }
+
     private void callWebService(UserModel userModel){
         try {
             String jsonString = new ObjectMapper().writeValueAsString(userModel);
@@ -122,7 +175,6 @@ public class SettingAvatarName extends AppCompatActivity {
 
                         @Override
                         public void onStart() {
-                            showLoadingDialog();
                         }
 
                         @Override
@@ -164,5 +216,18 @@ public class SettingAvatarName extends AppCompatActivity {
         alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
+    }
+
+    private void hideKeyboard(){
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            Log.i(LOG_TAG, "view null hide keyboard");
+            InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private boolean isEmpty(String string) {
+        return string.trim().length() == 0;
     }
 }

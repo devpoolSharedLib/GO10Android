@@ -48,7 +48,7 @@
         android:text="New Text"
         android:id="@+id/commentContent"
         android:layout_gravity="start"
-        android:textSize="18sp"
+        android:textSize="14sp"
         android:lineSpacingExtra="10sp"
         android:autoLink="web"
         android:layout_below="@+id/commentTime"

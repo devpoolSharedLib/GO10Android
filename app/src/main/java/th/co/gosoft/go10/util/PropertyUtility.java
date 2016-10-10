@@ -14,7 +14,7 @@ public class PropertyUtility {
 
     public static String getProperty(String key, Context context) {
         try {
-            Properties properties = new Properties();;
+            Properties properties = new Properties();
             AssetManager assetManager = context.getAssets();
             InputStream inputStream = assetManager.open("app.properties");
             properties.load(inputStream);
