@@ -1,4 +1,4 @@
-package th.co.gosoft.go10.util;
+package th.co.gosoft.go10.model;
 
 /**
  * Created by manitkan on 09/09/16.
@@ -11,6 +11,7 @@ public class LikeModel {
     private String empEmail;
     private boolean statusLike;
     private String type;
+    private String date;
 
     public String get_id() {
         return _id;
@@ -47,5 +48,13 @@ public class LikeModel {
     }
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

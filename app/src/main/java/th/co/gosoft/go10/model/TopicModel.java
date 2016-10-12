@@ -14,6 +14,7 @@ public class TopicModel {
     private String type;
     private String roomId;
     private int countLike;
+    private String updateDate;
 
     public String get_id() {
         return _id;
@@ -109,5 +110,13 @@ public class TopicModel {
 
     public void setCountLike(int countLike) {
         this.countLike = countLike;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
     }
 }

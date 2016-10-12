@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -32,8 +31,8 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.TopicAdapter;
+import th.co.gosoft.go10.model.LikeModel;
 import th.co.gosoft.go10.model.TopicModel;
-import th.co.gosoft.go10.util.LikeModel;
 import th.co.gosoft.go10.util.OnDataPass;
 import th.co.gosoft.go10.util.PropertyUtility;
 
@@ -64,9 +63,9 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         Log.i(LOG_TAG, "onCreate : BoardContentFragment");
         super.onCreate(savedInstanceState);
 
-        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/gettopicbyid";
-        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/checkLikeTopic";
-        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/";
+        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/gettopicbyid";
+        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/checkLikeTopic";
+        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/";
 
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
@@ -86,7 +85,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     }
 
     @Override
-    public void onResume() {
+    public void onStart() {
         try {
             super.onResume();
             Log.i(LOG_TAG, "onResume");

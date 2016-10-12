@@ -48,7 +48,7 @@ public class SelectRoomFragment extends Fragment {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "onCreate()");
 
-        URL_HOT = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/gethottopiclist";
+        URL_HOT = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/gethottopiclist";
         URL_ROOM = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/room/get";
     }
 

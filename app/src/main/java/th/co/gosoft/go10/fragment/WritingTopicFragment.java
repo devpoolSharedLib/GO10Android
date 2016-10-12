@@ -1,6 +1,7 @@
 package th.co.gosoft.go10.fragment;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
@@ -36,6 +37,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -70,7 +72,7 @@ public class WritingTopicFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/post";
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/post";
         URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/UploadServlet";
     }
 
@@ -242,7 +244,7 @@ public class WritingTopicFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && null != data) {
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
@@ -255,10 +257,7 @@ public class WritingTopicFragment extends Fragment {
             RequestParams params = new RequestParams();
 
             try {
-
                 Bitmap bitmap = BitmapUtil.resizeBitmap(picturePath);
-                Log.i(LOG_TAG, "resolution : "+bitmap.getWidth()+", "+bitmap.getHeight());
-
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
 
@@ -269,7 +268,6 @@ public class WritingTopicFragment extends Fragment {
             }
 
             AsyncHttpClient client = new AsyncHttpClient();
-
             client.post(URL_POST_SERVLET, params, new AsyncHttpResponseHandler() {
 
                 @Override
@@ -363,6 +361,7 @@ public class WritingTopicFragment extends Fragment {
                 Log.i(LOG_TAG, "click post");
                 String hostSubjectString = edtHostSubject.getText().toString();
                 String hostContentString = mEditor.getHtml();
+
                 Log.i(LOG_TAG, "title : " + hostSubjectString);
                 Log.i(LOG_TAG, "Content : " + hostContentString);
 
@@ -393,8 +392,15 @@ public class WritingTopicFragment extends Fragment {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private boolean isEmpty(String string) {
-        return string.trim().length() == 0;
+    private boolean isEmpty(String htmlString) {
+        if(htmlString.contains("<img")){
+            return false;
+        } else {
+            String replaceString = htmlString.replace("&nbsp;", " ");
+            String string = Jsoup.parse(replaceString).text();
+            Log.i(LOG_TAG, "String is Empty : "+string.isEmpty());
+            return string.trim().length() == 0;
+        }
     }
 
     private void hideKeyboard(){

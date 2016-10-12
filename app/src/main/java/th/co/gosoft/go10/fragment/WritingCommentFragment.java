@@ -35,6 +35,7 @@ import com.loopj.android.http.RequestParams;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -69,7 +70,7 @@ public class WritingCommentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/post";
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/post";
         URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/UploadServlet";
     }
 
@@ -253,20 +254,16 @@ public class WritingCommentFragment extends Fragment {
 
             try {
                 Bitmap bitmap = BitmapUtil.resizeBitmap(picturePath);
-                Log.i(LOG_TAG, "resolution : "+bitmap.getWidth()+", "+bitmap.getHeight());
-
                 ByteArrayOutputStream stream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, stream);
 
                 byte[] myByteArray = stream.toByteArray();
-                Log.i(LOG_TAG, "Done parse to byteArray");
                 params.put("imageFile", new ByteArrayInputStream(myByteArray));
             } catch(Exception e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
 
             AsyncHttpClient client = new AsyncHttpClient();
-            client.setTimeout(AsyncHttpClient.DEFAULT_SOCKET_TIMEOUT*3);
             client.post(URL_POST_SERVLET, params, new AsyncHttpResponseHandler() {
 
                 @Override
@@ -347,8 +344,15 @@ public class WritingCommentFragment extends Fragment {
         Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private boolean isEmpty(String string) {
-        return string.trim().length() == 0;
+    private boolean isEmpty(String htmlString) {
+        if(htmlString.contains("<img")){
+            return false;
+        } else {
+            String replaceString = htmlString.replace("&nbsp;", " ");
+            String string = Jsoup.parse(replaceString).text();
+            Log.i(LOG_TAG, "String is Empty : "+string.isEmpty());
+            return string.trim().length() == 0;
+        }
     }
 
     private void hideKeyboard(){

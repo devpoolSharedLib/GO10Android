@@ -51,7 +51,7 @@ public class RoomFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topic/gettopiclistbyroom";
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/gettopiclistbyroom";
     }
 
     @Override

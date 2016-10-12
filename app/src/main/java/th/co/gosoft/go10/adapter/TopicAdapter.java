@@ -1,8 +1,6 @@
 package th.co.gosoft.go10.adapter;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -19,9 +17,9 @@ import java.util.List;
 import java.util.Map;
 
 import th.co.gosoft.go10.R;
+import th.co.gosoft.go10.model.LikeModel;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.LikeButtonOnClick;
-import th.co.gosoft.go10.util.LikeModel;
 import th.co.gosoft.go10.util.OnDataPass;
 import th.co.gosoft.go10.util.URLImageParser;
 
