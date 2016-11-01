@@ -33,16 +33,17 @@ import th.co.gosoft.go10.adapter.RoomAdapter;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.PropertyUtility;
 
+import static android.os.SystemClock.sleep;
+
 public class RoomFragment extends Fragment {
 
     private final String LOG_TAG = "RoomFragmenttag";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopiclistbyroom";
 
     private String URL;
     private ProgressDialog progress;
     private Map<String, Integer> imageIdMap = new HashMap<>();
     private List<TopicModel> topicModelList = new ArrayList<>();
-
+    private ListView topicListView;
     private String room_id;
     private String roomName;
 
@@ -50,13 +51,11 @@ public class RoomFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
         URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/gettopiclistbyroom";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view =  inflater.inflate(R.layout.activity_room, container, false);
         Bundle bundle = getArguments();
         room_id = bundle.getString("room_id");
@@ -71,33 +70,21 @@ public class RoomFragment extends Fragment {
         imageView.setImageResource(id);
         TextView txtRoomName = (TextView)  view.findViewById(R.id.txtRoomName);
         txtRoomName.setText(roomName);
-
-//        Button button = (Button) view.findViewById(R.id.btnNewTopic);
-//        button.setOnClickListener(new View.OnClickListener()
-//        {
-//            @Override
-//            public void onClick(View v)
-//            {
-//            Bundle data = new Bundle();
-//            data.putString("room_id", room_id);
-//            Fragment fragment = new WritingTopicFragment();
-//            fragment.setArguments(data);
-//            FragmentManager fragmentManager = getFragmentManager();
-//            fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
-//
-//            }
-//        });
-
-
         return view;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        Log.i(LOG_TAG, "onResume");
-        ListView topicListView = (ListView)  getView().findViewById(R.id.listViewTopic);
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        topicListView = (ListView) getView().findViewById(R.id.listViewTopic);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.i(LOG_TAG, "onStart");
         topicListView.setAdapter(null);
+        sleep(100);
         callGetWebService();
     }
 
@@ -107,23 +94,20 @@ public class RoomFragment extends Fragment {
         try {
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("Cache-Control", "no-cache");
-            Log.i(LOG_TAG, "client");
+            showLoadingDialog();
             client.get(concatString, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
 
                 @Override
                 public void onStart() {
-                    showLoadingDialog();
                 }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
                     try {
-                        Log.i(LOG_TAG, "raw json : " + rawJsonResponse);
                         topicModelList = response;
                         generateListView();
                         closeLoadingDialog();
                         Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
-
                     } catch (Throwable e) {
                         closeLoadingDialog();
                         Log.e(LOG_TAG, e.getMessage(), e);
@@ -151,10 +135,8 @@ public class RoomFragment extends Fragment {
     }
 
     private void generateListView() {
-        ListView topicListView = (ListView)  getView().findViewById(R.id.listViewTopic);
         RoomAdapter roomtAdapter = new RoomAdapter(getActivity(), R.layout.hot_topic_row, topicModelList);
         topicListView.setAdapter(roomtAdapter);
-
         topicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
                 goBoardContentActivity(position);
@@ -168,7 +150,6 @@ public class RoomFragment extends Fragment {
         Fragment fragment = new BoardContentFragment();
         fragment.setArguments(data);
         FragmentManager fragmentManager = getFragmentManager();
-//            FragmentTransaction tx = fragmentManager.beginTransaction();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
     }
 

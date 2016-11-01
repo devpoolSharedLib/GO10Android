@@ -26,22 +26,19 @@ import com.loopj.android.http.RequestParams;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.TopicAdapter;
 import th.co.gosoft.go10.model.LikeModel;
-import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.OnDataPass;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private final String LOG_TAG = "BoardContentFragmentTag";
-//    private final String GET_TOPIC_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/gettopicbyid";
-//    private final String CHECK_LIKE_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/checkLikeTopic";
-//    private final String LIKE_URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/topic/";
 
     private String GET_TOPIC_URL;
     private String CHECK_LIKE_URL;
@@ -55,7 +52,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private boolean isLoadTopicDone = false;
     private boolean isCheckLikeDone = false;
-    private List<TopicModel> topicModelList;
+    private List<Map> topicModelMap;
     private LikeModel likeModel;
 
     @Override
@@ -63,7 +60,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         Log.i(LOG_TAG, "onCreate : BoardContentFragment");
         super.onCreate(savedInstanceState);
 
-        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/gettopicbyid";
+        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topicv2/gettopicbyid";
         CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/checkLikeTopic";
         LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/";
 
@@ -87,8 +84,8 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     @Override
     public void onStart() {
         try {
-            super.onResume();
-            Log.i(LOG_TAG, "onResume");
+            super.onStart();
+            Log.i(LOG_TAG, "onStart");
             ListView commentListView = (ListView) getView().findViewById(R.id.commentListView);
             commentListView.setAdapter(null);
             callGetWebService();
@@ -100,9 +97,9 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     @Override
     public void onStop() {
         try {
+            super.onStop();
             Log.i(LOG_TAG, "onStop");
-            super.onResume();
-            LikeModel likeModel = getLikeModelFromSharedPreferences();
+            LikeModel likeModel = createLikeModelFromSharedPreferences();
             String webServiceURL = LIKE_URL;
             if(this.likeModel == null && likeModel.isStatusLike() == true) {
                 Log.i(LOG_TAG, "New Like");
@@ -165,7 +162,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                         Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                        Log.i(LOG_TAG, "new id : "+new String(response));
+                        Log.i(LOG_TAG, "finish updateLike");
                     }
 
                     @Override
@@ -179,7 +176,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         }
     }
 
-    private LikeModel getLikeModelFromSharedPreferences() {
+    private LikeModel createLikeModelFromSharedPreferences() {
         LikeModel likeModel = new LikeModel();
         String like_id = sharedPref.getString("like_id", null);
         Log.i(LOG_TAG, "like_id : "+like_id);
@@ -201,10 +198,10 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private void callGetWebService(){
 
         try {
-            String concatGetTopicString = GET_TOPIC_URL+"?topicId="+_id;
+            String concatGetTopicString = GET_TOPIC_URL+"?topicId="+_id+"&empEmail="+empEmail;
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("Cache-Control", "no-cache");
-            client.get(concatGetTopicString, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
+            client.get(concatGetTopicString, new BaseJsonHttpResponseHandler<List<Map>>() {
 
                 @Override
                 public void onStart() {
@@ -212,12 +209,12 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
+                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<Map> response) {
                     try {
-                        topicModelList = response;
-                        room_id = topicModelList.get(0).getRoomId();
+                        topicModelMap = response;
+                        room_id = (String) topicModelMap.get(0).get("roomId");
                         isLoadTopicDone = true;
-                        Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
+                        Log.i(LOG_TAG, "Topic Model List Size : " + topicModelMap.size());
                         if(isLoadTopicDone && isCheckLikeDone){
                             Log.i(LOG_TAG, "finish get topic");
                             insertLikeModelToSharedPreferences();
@@ -232,14 +229,14 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<Map> errorResponse) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
                 }
 
                 @Override
-                protected List<TopicModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                protected List<Map> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
-                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {});
+                    return new ObjectMapper().readValue(rawJsonData,new TypeReference<List<Map<String,Object>>>() {});
                 }
 
             });
@@ -296,7 +293,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private void generateListView() {
         ListView commentListView = (ListView) getView().findViewById(R.id.commentListView);
-        TopicAdapter commentAdapter = new TopicAdapter(getActivity(), this, topicModelList, likeModel);
+        TopicAdapter commentAdapter = new TopicAdapter(getActivity(), this, topicModelMap, likeModel);
         commentListView.setAdapter(commentAdapter);
     }
 
