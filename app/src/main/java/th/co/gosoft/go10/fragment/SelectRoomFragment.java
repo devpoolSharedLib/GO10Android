@@ -3,6 +3,8 @@ package th.co.gosoft.go10.fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -18,14 +20,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.HotTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomGridAdapter;
-import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.PropertyUtility;
 
@@ -37,19 +40,24 @@ public class SelectRoomFragment extends Fragment {
     private String URL_ROOM;
     private ProgressDialog progress;
     private List<TopicModel> topicModelList;
-    private List<RoomModel> roomModelList;
+    private List<Map<String, Object>> roomModelList;
     private ListView hotTopicListView;
     private LinearLayout linearRoom;
     private boolean isLoadTopicDone = false;
     private boolean isLoadRoomDone = false;
 
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.i(LOG_TAG, "onCreate()");
+        sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
 
-        URL_HOT = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/gethottopiclist";
-        URL_ROOM = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/room/get";
+        URL_HOT = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topicv2/gethottopiclist";
+        URL_ROOM = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/roomv1/get";
     }
 
     @Override
@@ -84,83 +92,93 @@ public class SelectRoomFragment extends Fragment {
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("Cache-Control", "no-cache");
             showLoadingDialog();
-            client.get(URL_HOT, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
-
-                @Override
-                public void onStart() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
-                    try {
-                        topicModelList = response;
-                        generateListView();
-                        isLoadTopicDone = true;
-                        if(isLoadTopicDone && isLoadRoomDone){
-                            closeLoadingDialog();
-                        }
-                        Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
-
-                    } catch (Throwable e) {
-                        closeLoadingDialog();
-                        Log.e(LOG_TAG, e.getMessage(), e);
-                        throw new RuntimeException(e.getMessage(), e);
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
-                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
-                }
-
-                @Override
-                  protected List<TopicModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
-                    Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
-                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {});
-                }
-
-            });
-            client.get(URL_ROOM, new BaseJsonHttpResponseHandler<List<RoomModel>>() {
-
-                @Override
-                public void onStart() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<RoomModel> response) {
-                    try {
-                        roomModelList = response;
-                        generateGridView();
-                        isLoadRoomDone = true;
-                        if(isLoadTopicDone && isLoadRoomDone){
-                            closeLoadingDialog();
-                        }
-                        Log.i(LOG_TAG, "Room Model List Size : " + roomModelList.size());
-
-                    } catch (Throwable e) {
-                        closeLoadingDialog();
-                        Log.e(LOG_TAG, e.getMessage(), e);
-                        throw new RuntimeException(e.getMessage(), e);
-                    }
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<RoomModel> errorResponse) {
-                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
-                }
-
-                @Override
-                protected List<RoomModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
-                    Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
-                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<RoomModel>>() {});
-                }
-            });
-
+            callHotTopicApi(client);
+            callRoomApi(client);
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
             closeLoadingDialog();
             showErrorDialog().show();
         }
+    }
+
+    private void callHotTopicApi(AsyncHttpClient client) {
+        String urlHot = URL_HOT+"?empEmail="+sharedPref.getString("empEmail", null);
+        client.get(urlHot, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
+
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
+                try {
+                    topicModelList = response;
+                    generateListView();
+                    isLoadTopicDone = true;
+                    if(isLoadTopicDone && isLoadRoomDone){
+                        closeLoadingDialog();
+                    }
+                    Log.i(LOG_TAG, "Topic Model List Size : " + topicModelList.size());
+
+                } catch (Throwable e) {
+                    closeLoadingDialog();
+                    Log.e(LOG_TAG, e.getMessage(), e);
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
+                Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
+            }
+
+            @Override
+            protected List<TopicModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
+                return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {});
+            }
+
+        });
+    }
+
+    private void callRoomApi(AsyncHttpClient client){
+        String urlRoom = URL_ROOM+"?empEmail="+sharedPref.getString("empEmail", null);
+        client.get(urlRoom, new BaseJsonHttpResponseHandler<List<Map<String, Object>>>() {
+
+            @Override
+            public void onStart() {
+            }
+
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<Map<String, Object>> response) {
+                try {
+                    roomModelList = response;
+                    generateGridView();
+                    isLoadRoomDone = true;
+                    if(isLoadTopicDone && isLoadRoomDone){
+                        closeLoadingDialog();
+                    }
+                    insertUserRoleManagementToSharedPreferences(roomModelList);
+                    Log.i(LOG_TAG, "Room Model List Size : " + roomModelList.size());
+
+                } catch (Throwable e) {
+                    closeLoadingDialog();
+                    Log.e(LOG_TAG, e.getMessage(), e);
+                    throw new RuntimeException(e.getMessage(), e);
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<Map<String, Object>> errorResponse) {
+                Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
+            }
+
+            @Override
+            protected List<Map<String, Object>> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
+                return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<Map<String, Object>>>(){});
+            }
+        });
     }
 
     private void generateListView() {
@@ -211,6 +229,22 @@ public class SelectRoomFragment extends Fragment {
         }
     }
 
+    private void insertUserRoleManagementToSharedPreferences(List<Map<String, Object>> roomModelList) {
+        for (Map<String, Object> roomMap : roomModelList) {
+            editor.putStringSet("postUser"+roomMap.get("_id").toString(), createSet((List<String>) roomMap.get("postUser")));
+            editor.putStringSet("commentUser"+roomMap.get("_id").toString(),  createSet((List<String>) roomMap.get("commentUser")));
+        }
+        editor.commit();
+    }
+
+    private Set<String> createSet(List<String> userList) {
+        Set<String> stringSet = new HashSet<>();
+        for (String name : userList) {
+            stringSet.add(name);
+        }
+        return stringSet;
+    }
+
     private void goRoomActivity(int position) {
         Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. goRoomActivity");
         try{
@@ -218,14 +252,12 @@ public class SelectRoomFragment extends Fragment {
             Log.i(LOG_TAG, ">>>>>>>>> room_id " +data.getString("room_id"));
             Log.i(LOG_TAG, ">>>>>>>>> roomName " +data.getString("roomName"));
 
-            data.putString("room_id", roomModelList.get(position).get_id());
-            data.putString("roomName", roomModelList.get(position).getName());
+            data.putString("room_id", (String) roomModelList.get(position).get("_id"));
+            data.putString("roomName", (String) roomModelList.get(position).get("name"));
             Fragment fragment = new RoomFragment();
             fragment.setArguments(data);
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack(null).commit();
-
-
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);

@@ -3,6 +3,8 @@ package th.co.gosoft.go10.fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
@@ -47,10 +50,13 @@ public class RoomFragment extends Fragment {
     private String room_id;
     private String roomName;
 
+    private SharedPreferences sharedPref;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/gettopiclistbyroom";
     }
 
@@ -184,8 +190,20 @@ public class RoomFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.room_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+        if(isPostUser(room_id)) {
+            inflater.inflate(R.menu.room_menu, menu);
+            super.onCreateOptionsMenu(menu, inflater);
+        }
+    }
+
+    private boolean isPostUser(String room_id) {
+        boolean result = false;
+        String empEmail = sharedPref.getString("empEmail", null);
+        Set<String> stringSet = sharedPref.getStringSet("postUser"+room_id, null);
+        if (stringSet.contains("all") || stringSet.contains(empEmail)) {
+            result = true;
+        }
+        return result;
     }
 
     @Override

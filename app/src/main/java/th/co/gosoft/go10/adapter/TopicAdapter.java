@@ -34,14 +34,21 @@ public class TopicAdapter extends BaseAdapter {
     private boolean isClick = false;
     private ViewHolder holder = null;
     private OnDataPass onDataPass;
+    private boolean canComment;
 
-    public TopicAdapter(Context context,  OnDataPass onDataPass, List<Map> topicModelMapList, LikeModel likeModel) {
+    public TopicAdapter(Context context,  OnDataPass onDataPass, List<Map> topicModelMapList, LikeModel likeModel, boolean canComment) {
         this.topicModelMapList = topicModelMapList;
         this.context = context;
         this.likeModel = likeModel;
         this.onDataPass = onDataPass;
+        this.canComment = canComment;
         rowLayoutMap = new HashMap<>();
-        rowLayoutMap.put(0, R.layout.host_row);
+//        rowLayoutMap.put(0, R.layout.host_row_can_comment);
+        Log.i(LOG_TAG, "canComment : "+canComment);
+        if (canComment) {
+            rowLayoutMap.put(0, R.layout.host_row_can_comment);
+        } else {rowLayoutMap.put(0, R.layout.host_row_not_comment);
+        }
         rowLayoutMap.put(1, R.layout.comment_row);
     }
 
@@ -104,47 +111,35 @@ public class TopicAdapter extends BaseAdapter {
                 holder = (ViewHolder) convertView.getTag();
             }
             if (rowType == 0) {
-                Log.i(LOG_TAG, "row type : 0");
                 holder.subject.setText((String) topicModelMap.get("subject"));
                 URLImageParser urlImageParser = new URLImageParser(holder.content, this.context);
                 Spanned htmlSpan = Html.fromHtml((String) topicModelMap.get("content"), urlImageParser, null);
-                Log.i(LOG_TAG, "row type : 00");
                 holder.content.setText(htmlSpan);
                 holder.user.setText((String) topicModelMap.get("avatarName"));
-                Log.i(LOG_TAG, "row type : 01");
                 holder.date.setText((String) topicModelMap.get("date"));
-                Log.i(LOG_TAG, "row type : 02");
                 Log.i(LOG_TAG, "countLike : "+topicModelMap.get("countLike"));
                 holder.likeCount.setText(String.valueOf((Integer) topicModelMap.get("countLike")));
-                Log.i(LOG_TAG, "row type : 03");
                 holder.imageView.setImageResource(context.getResources().getIdentifier((String) topicModelMap.get("avatarPic") , "drawable", context.getPackageName()));
-                Log.i(LOG_TAG, "row type : 04");
                 if(likeModel != null && likeModel.isStatusLike()){
                     holder.btnLike.setTextColor(this.context.getResources().getColor(R.color.colorLikeButton));
                     isClick = true;
-                    Log.i(LOG_TAG, "row type : 044");
                 }
                 holder.btnLike.setOnClickListener(new LikeButtonOnClick(this.context, holder.btnLike, holder.likeCount, isClick));
-                holder.btnComment.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        onDataPass.onDataPass(null);
-                        Log.i(LOG_TAG, "row type : 055");
-                    }
-                });
-                Log.i(LOG_TAG, "row type : 05");
+                if(canComment){
+                    holder.btnComment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onDataPass.onDataPass(null);
+                        }
+                    });
+                }
             } else if(rowType == 1) {
-                Log.i(LOG_TAG, "row type : 1");
                 URLImageParser urlImageParser = new URLImageParser(holder.content, this.context);
                 Spanned htmlSpan = Html.fromHtml((String) topicModelMap.get("content"), urlImageParser, null);
-                Log.i(LOG_TAG, "row type : 10");
                 holder.content.setText(htmlSpan);
                 holder.user.setText((String) topicModelMap.get("avatarName"));
-                Log.i(LOG_TAG, "row type : 11");
                 holder.date.setText((String) topicModelMap.get("date"));
-                Log.i(LOG_TAG, "row type : 12");
                 holder.imageView.setImageResource(context.getResources().getIdentifier((String) topicModelMap.get("avatarPic") , "drawable", context.getPackageName()));
-                Log.i(LOG_TAG, "row type : 13");
             }
             return convertView;
         } catch (Exception e) {

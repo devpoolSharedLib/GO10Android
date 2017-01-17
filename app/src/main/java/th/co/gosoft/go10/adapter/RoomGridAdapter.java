@@ -17,12 +17,12 @@ import java.util.Map;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.RoomModel;
 
-public class RoomGridAdapter extends ArrayAdapter<RoomModel> {
+public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
 
     private final String LOG_TAG = "RoomGridAdapter";
     private Map<String, Integer> imageIdMap = new HashMap<>();
 
-    public RoomGridAdapter(Context context, int resource, List<RoomModel> items) {
+    public RoomGridAdapter(Context context, int resource, List<Map<String, Object>> items) {
         super(context, resource, items);
         generateImageToMap(imageIdMap);
     }
@@ -45,11 +45,11 @@ public class RoomGridAdapter extends ArrayAdapter<RoomModel> {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            RoomModel room = getItem(position);
+            Map<String, Object> roomMap = getItem(position);
 
-            if (room != null) {
-                holder.imgRoomIcon.setImageResource(imageIdMap.get(room.get_id()));
-                holder.txtRoomName.setText(room.getName());
+            if (roomMap != null) {
+                holder.imgRoomIcon.setImageResource(imageIdMap.get(roomMap.get("_id").toString()));
+                holder.txtRoomName.setText(roomMap.get("name").toString());
             }
 
             return convertView;

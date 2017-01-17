@@ -27,6 +27,7 @@ import com.loopj.android.http.RequestParams;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
@@ -54,6 +55,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private boolean isCheckLikeDone = false;
     private List<Map> topicModelMap;
     private LikeModel likeModel;
+    private boolean canComent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,7 +68,6 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-        setHasOptionsMenu(true);
     }
 
     @Override
@@ -214,6 +215,8 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                         topicModelMap = response;
                         room_id = (String) topicModelMap.get(0).get("roomId");
                         isLoadTopicDone = true;
+                        isCommentUser(room_id);
+                        setHasOptionsMenu(true);
                         Log.i(LOG_TAG, "Topic Model List Size : " + topicModelMap.size());
                         if(isLoadTopicDone && isCheckLikeDone){
                             Log.i(LOG_TAG, "finish get topic");
@@ -293,7 +296,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private void generateListView() {
         ListView commentListView = (ListView) getView().findViewById(R.id.commentListView);
-        TopicAdapter commentAdapter = new TopicAdapter(getActivity(), this, topicModelMap, likeModel);
+        TopicAdapter commentAdapter = new TopicAdapter(getActivity(), this, topicModelMap, likeModel, canComent);
         commentListView.setAdapter(commentAdapter);
     }
 
@@ -335,8 +338,24 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.board_content_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+        Log.i(LOG_TAG, "onCreateOptionsMenu");
+        if(canComent) {
+            inflater.inflate(R.menu.board_content_menu, menu);
+            super.onCreateOptionsMenu(menu, inflater);
+        }
+    }
+
+    private boolean isCommentUser(String room_id) {
+        boolean result = false;
+        String empEmail = sharedPref.getString("empEmail", null);
+        Set<String> stringSet = sharedPref.getStringSet("commentUser"+room_id, null);
+        if (stringSet.contains("all") || stringSet.contains(empEmail)) {
+            Log.i(LOG_TAG, "if");
+            result = true;
+        }
+        canComent = result;
+        Log.i(LOG_TAG, "isCommentUser : "+canComent);
+        return result;
     }
 
     @Override
