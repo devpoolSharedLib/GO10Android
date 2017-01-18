@@ -35,8 +35,10 @@ public class TopicAdapter extends BaseAdapter {
     private ViewHolder holder = null;
     private OnDataPass onDataPass;
     private boolean canComment;
+    private LayoutInflater layoutInflater;
 
     public TopicAdapter(Context context,  OnDataPass onDataPass, List<Map> topicModelMapList, LikeModel likeModel, boolean canComment) {
+        this.layoutInflater =  LayoutInflater.from(context);
         this.topicModelMapList = topicModelMapList;
         this.context = context;
         this.likeModel = likeModel;
@@ -81,7 +83,6 @@ public class TopicAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         try {
             Log.i(LOG_TAG, "Position : "+position);
-            LayoutInflater layoutInflater =  LayoutInflater.from(context);
 
             Map<String, Object> topicModelMap = (Map<String, Object>) getItem(position);
             Log.i(LOG_TAG, "Item Type : "+topicModelMap.get("type"));
