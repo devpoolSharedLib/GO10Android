@@ -56,8 +56,10 @@ public class SelectRoomFragment extends Fragment {
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
-        URL_HOT = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topicv2/gethottopiclist";
-        URL_ROOM = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/roomv1/get";
+        URL_HOT = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+                +"topic/gethottopiclist";
+        URL_ROOM = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+                +"room/get";
     }
 
     @Override

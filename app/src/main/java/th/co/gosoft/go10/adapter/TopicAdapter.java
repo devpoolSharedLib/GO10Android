@@ -119,7 +119,7 @@ public class TopicAdapter extends BaseAdapter {
                 holder.user.setText((String) topicModelMap.get("avatarName"));
                 holder.date.setText((String) topicModelMap.get("date"));
                 Log.i(LOG_TAG, "countLike : "+topicModelMap.get("countLike"));
-                holder.likeCount.setText(String.valueOf((Integer) topicModelMap.get("countLike")));
+                holder.likeCount.setText(topicModelMap.get("countLike") == null ? "0" : String.valueOf((Integer) topicModelMap.get("countLike")));
                 holder.imageView.setImageResource(context.getResources().getIdentifier((String) topicModelMap.get("avatarPic") , "drawable", context.getPackageName()));
                 if(likeModel != null && likeModel.isStatusLike()){
                     holder.btnLike.setTextColor(this.context.getResources().getColor(R.color.colorLikeButton));

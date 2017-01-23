@@ -13,7 +13,8 @@ public class TopicModel {
     private String date;
     private String type;
     private String roomId;
-    private int countLike;
+    private Integer countLike;
+    private Integer countRead;
     private String updateDate;
 
     public String get_id() {
@@ -104,19 +105,27 @@ public class TopicModel {
         this.empEmail = empEmail;
     }
 
-    public int getCountLike() {
-        return countLike;
-    }
-
-    public void setCountLike(int countLike) {
-        this.countLike = countLike;
-    }
-
     public String getUpdateDate() {
         return updateDate;
     }
 
     public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
+    }
+
+    public Integer getCountLike() {
+        return countLike;
+    }
+
+    public void setCountLike(Integer countLike) {
+        this.countLike = countLike;
+    }
+
+    public Integer getCountRead() {
+        return countRead;
+    }
+
+    public void setCountRead(Integer countRead) {
+        this.countRead = countRead;
     }
 }

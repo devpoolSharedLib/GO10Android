@@ -58,8 +58,10 @@ public class LoadingActivity extends Activity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_loading);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/getUserByAccountId";
-        URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/checkUserActivation";
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                +"user/getUserByAccountId";
+        URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                +"user/checkUserActivation";
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 

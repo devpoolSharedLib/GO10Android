@@ -72,7 +72,8 @@ public class WritingTopicFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/post";
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+                +"topic/post";
         URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/UploadServlet";
     }
 

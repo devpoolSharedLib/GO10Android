@@ -62,9 +62,12 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         Log.i(LOG_TAG, "onCreate : BoardContentFragment");
         super.onCreate(savedInstanceState);
 
-        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/topicv2/gettopicbyid";
-        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/checkLikeTopic";
-        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/newtopic/";
+        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+                +"topic/gettopicbyid";
+        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+                +"topic/checkLikeTopic";
+        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+                +"topic/";
 
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();

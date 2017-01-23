@@ -35,7 +35,6 @@ import th.co.gosoft.go10.util.PropertyUtility;
 public class SettingAvatar extends AppCompatActivity {
 
     private final String LOG_TAG = "SettingAvatar";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
 
     private String URL;
     private ImageView avatarPic;
@@ -55,7 +54,8 @@ public class SettingAvatar extends AppCompatActivity {
 
         try{
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                    +"user/updateUser";
         sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         Bundle extras = getIntent().getExtras();

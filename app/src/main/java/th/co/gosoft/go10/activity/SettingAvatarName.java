@@ -50,8 +50,10 @@ public class SettingAvatarName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_avatar_name);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/updateUser";
-        CHECK_AVATAR_NAME_URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/checkAvatarName";
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                +"user/updateUser";
+        CHECK_AVATAR_NAME_URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                +"user/checkAvatarName";
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.change_avatar_name);
 

@@ -51,7 +51,7 @@ public class HotTopicListAdapter extends ArrayAdapter<TopicModel> {
 
             if (topicModel != null) {
                 holder.txtRowSubject.setText(topicModel.getSubject());
-                holder.txtLikeCount.setText(String.valueOf(topicModel.getCountLike()));
+                holder.txtLikeCount.setText(topicModel.getCountLike() == null ? "0" : String.valueOf(topicModel.getCountLike()));
                 holder.txtRowDate.setText(topicModel.getDate());
             }
 
