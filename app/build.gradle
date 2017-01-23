@@ -70,6 +70,7 @@ dependencies {
     compile 'com.android.support:support-v4:23.0.1'
     compile 'mobi.parchment:parchment:1.6.9@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha2'
+    compile 'com.github.rampo.updatechecker:library:2.1.8'
 }
 
 configurations {
