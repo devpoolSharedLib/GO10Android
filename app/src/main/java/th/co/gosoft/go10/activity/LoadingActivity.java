@@ -22,6 +22,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushException;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationStatus;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationStatusListener;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushResponseListener;
+import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
@@ -51,13 +59,42 @@ public class LoadingActivity extends Activity {
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private boolean isActivate;
+    private MFPPush push;
+    private MFPPushNotificationListener notificationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_loading);
+//        notification
+        BMSClient.getInstance().initialize(this, BMSClient.REGION_SYDNEY);
+        push = MFPPush.getInstance();
+        push.initialize(getApplicationContext(), "3c5e9860-be2b-4276-a53b-b12f0d3db6bb", "f1b7da23-fe5e-40d4-99b5-ca39eaae8b35");
+        push.registerDevice(new MFPPushResponseListener<String>() {
+            @Override
+            public void onSuccess(String deviceId) {
+                Log.d(LOG_TAG,"REGISTER SUCCESS : "+deviceId);    // 180d96c9-8b0f-3f3d-9247-260d4aa635cb
+            }
+            @Override
+            public void onFailure(MFPPushException ex) {
+                Log.e(LOG_TAG,"REGISTER FALSE : "+ex.getMessage(), ex);
+            }
+        });
+        push.setNotificationStatusListener(new MFPPushNotificationStatusListener() {
+            @Override
+            public void onStatusChange(String messageId, MFPPushNotificationStatus status) {
+                Log.d(LOG_TAG, "Status Change : "+status);
+            }
+        });
+       notificationListener = new MFPPushNotificationListener() {
+            @Override
+            public void onReceive (final MFPSimplePushNotification message){
+                Log.d(LOG_TAG, "Messsage : "+message);
+            }
+        };
 
+//
         URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/getUserByAccountId";
         URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
@@ -89,6 +126,22 @@ public class LoadingActivity extends Activity {
             }
         }, SPLASH_TIME_OUT);
 
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        if(push != null) {
+            push.listen(notificationListener);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (push != null) {
+            push.hold();
+        }
     }
 
     private void gotoLoginActivity() {
