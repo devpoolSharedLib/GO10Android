@@ -29,6 +29,7 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.fragment.SelectRoomFragment;
+import th.co.gosoft.go10.util.CheckUpdateUtil;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -46,6 +47,7 @@ public class HomeActivity extends AppCompatActivity
         setContentView(R.layout.activity_home);
 
         try{
+            new CheckUpdateUtil().checkUpdateVersion(this);
             prepareGmailLoginSession();
             FacebookSdk.sdkInitialize(this.getApplicationContext());
 
