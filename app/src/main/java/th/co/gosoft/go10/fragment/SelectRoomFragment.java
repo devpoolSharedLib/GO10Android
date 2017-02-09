@@ -1,12 +1,12 @@
 package th.co.gosoft.go10.fragment;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +39,7 @@ public class SelectRoomFragment extends Fragment {
     private String URL_HOT;
     private String URL_ROOM;
     private ProgressDialog progress;
-    private List<TopicModel> topicModelList;
+    private List<Map<String, Object>> topicModelList;
     private List<Map<String, Object>> roomModelList;
     private ListView hotTopicListView;
     private LinearLayout linearRoom;
@@ -104,15 +104,16 @@ public class SelectRoomFragment extends Fragment {
     }
 
     private void callHotTopicApi(AsyncHttpClient client) {
-        String urlHot = URL_HOT+"?empEmail="+sharedPref.getString("empEmail", null);
-        client.get(urlHot, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
+        String urlHot = URL_HOT+"?empEmail="+sharedPref.getString("empEmail", null)+"&startDate="+sharedPref.getString("notificationDate", null);
+        Log.i(LOG_TAG, "urlHot : "+urlHot);
+        client.get(urlHot, new BaseJsonHttpResponseHandler<List<Map<String, Object>>>() {
 
             @Override
             public void onStart() {
             }
 
             @Override
-            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
+            public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<Map<String, Object>> response) {
                 try {
                     topicModelList = response;
                     generateListView();
@@ -130,14 +131,15 @@ public class SelectRoomFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
-                Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
+            public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<Map<String, Object>> errorResponse) {
+                Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage(), throwable);
+                closeLoadingDialog();
             }
 
             @Override
-            protected List<TopicModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+            protected List<Map<String, Object>> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
                 Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
-                return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {});
+                return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<Map<String, Object>>>(){});
             }
 
         });
@@ -172,7 +174,8 @@ public class SelectRoomFragment extends Fragment {
 
             @Override
             public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<Map<String, Object>> errorResponse) {
-                Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
+                Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage(), throwable);
+                closeLoadingDialog();
             }
 
             @Override
@@ -219,7 +222,7 @@ public class SelectRoomFragment extends Fragment {
     private void goBoardContentActivity(int position) {
         try{
             Bundle data = new Bundle();
-            data.putString("_id", topicModelList.get(position).get_id());
+            data.putString("_id", topicModelList.get(position).get("_id").toString());
             Fragment fragment = new BoardContentFragment();
             fragment.setArguments(data);
             FragmentManager fragmentManager = getFragmentManager();
@@ -248,14 +251,11 @@ public class SelectRoomFragment extends Fragment {
     }
 
     private void goRoomActivity(int position) {
-        Log.i(LOG_TAG, ">>>>>>>>>>>>>>.. goRoomActivity");
         try{
             Bundle data = new Bundle();
-            Log.i(LOG_TAG, ">>>>>>>>> room_id " +data.getString("room_id"));
-            Log.i(LOG_TAG, ">>>>>>>>> roomName " +data.getString("roomName"));
-
             data.putString("room_id", (String) roomModelList.get(position).get("_id"));
             data.putString("roomName", (String) roomModelList.get(position).get("name"));
+
             Fragment fragment = new RoomFragment();
             fragment.setArguments(data);
             FragmentManager fragmentManager = getFragmentManager();

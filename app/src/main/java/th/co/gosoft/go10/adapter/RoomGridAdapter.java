@@ -16,6 +16,7 @@ import java.util.Map;
 
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.RoomModel;
+import th.co.gosoft.go10.util.BadgeViewUtil;
 
 public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
 
@@ -40,6 +41,7 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
 
                 holder.imgRoomIcon = (ImageView) convertView.findViewById(R.id.roomIcon);
                 holder.txtRoomName = (TextView) convertView.findViewById(R.id.roomName);
+                holder.badge = new BadgeViewUtil(getContext(), holder.imgRoomIcon);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -50,6 +52,14 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
             if (roomMap != null) {
                 holder.imgRoomIcon.setImageResource(imageIdMap.get(roomMap.get("_id").toString()));
                 holder.txtRoomName.setText(roomMap.get("name").toString());
+                int badge = (int) roomMap.get("badgeNumber");
+                Log.i(LOG_TAG, "badge : "+ badge);
+                if (badge > 0) {
+                    holder.badge.setText(String.valueOf(roomMap.get("badgeNumber")));
+                    holder.badge.show();
+                } else {
+                    holder.badge.hide();
+                }
             }
 
             return convertView;
@@ -62,6 +72,7 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
     private static class ViewHolder {
         ImageView imgRoomIcon;
         TextView txtRoomName;
+        BadgeViewUtil badge;
     }
 
     private void generateImageToMap(Map<String, Integer> imageIdMap) {

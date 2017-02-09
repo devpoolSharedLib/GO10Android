@@ -2,6 +2,7 @@ package th.co.gosoft.go10.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
@@ -17,7 +18,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -203,9 +203,8 @@ public class WritingTopicFragment extends Fragment {
 
                     @Override
                     public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
                         closeLoadingDialog();
-                        Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                        Log.e(LOG_TAG, "AsyncHttpClient returned error", e);
                     }
                 });
 
@@ -301,7 +300,6 @@ public class WritingTopicFragment extends Fragment {
                     alertMessage("Error while uploading image");
                     Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                     Log.e(LOG_TAG, e.getMessage(), e);
-                    Log.e(LOG_TAG, "response body : "+new String(responseBody));
                 }
             });
         }

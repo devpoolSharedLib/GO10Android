@@ -1,6 +1,8 @@
 package th.co.gosoft.go10.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,12 +18,12 @@ import java.util.Map;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.TopicModel;
 
-public class HotTopicListAdapter extends ArrayAdapter<TopicModel> {
+public class HotTopicListAdapter extends ArrayAdapter<Map<String, Object>> {
 
     private final String LOG_TAG = "HotTopicListAdapter";
     private Map<String, Integer> imageIdMap = new HashMap<>();
 
-    public HotTopicListAdapter(Context context, int resource, List<TopicModel> items) {
+    public HotTopicListAdapter(Context context, int resource, List<Map<String, Object>> items) {
         super(context, resource, items);
         generateImageToMap(imageIdMap);
     }
@@ -47,15 +49,21 @@ public class HotTopicListAdapter extends ArrayAdapter<TopicModel> {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            TopicModel topicModel = getItem(position);
+            Map<String, Object> topicMap = getItem(position);
 
-            if (topicModel != null) {
-                holder.txtRowSubject.setText(topicModel.getSubject());
-                holder.txtLikeCount.setText(topicModel.getCountLike() == null ? "0" : String.valueOf(topicModel.getCountLike()));
-                holder.txtRowDate.setText(topicModel.getDate());
+            if (topicMap != null) {
+                holder.txtRowSubject.setText(topicMap.get("subject").toString());
+                holder.txtLikeCount.setText(topicMap.get("countLike") == null ? "0" : topicMap.get("countLike").toString());
+                holder.txtRowDate.setText(topicMap.get("date").toString());
+                holder.imageView.setImageResource(imageIdMap.get(topicMap.get("roomId").toString()));
+                Log.i(LOG_TAG, "statusRead : "+topicMap.get("statusRead"));
+                if((Boolean) topicMap.get("statusRead") == false) {
+                    convertView.setBackgroundColor(Color.parseColor("#FBB2BC"));
+                } else {
+                    convertView.setBackgroundColor(0);
+                }
             }
 
-            holder.imageView.setImageResource(imageIdMap.get(topicModel.getRoomId()));
             return convertView;
         } catch (Exception e){
             Log.e(LOG_TAG, e.getMessage(), e);

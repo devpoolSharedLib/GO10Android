@@ -16,9 +16,11 @@ import android.widget.Toast;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
 import java.util.List;
+import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
@@ -30,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private final String LOG_TAG = "LoginActivity";
 
     private String URL;
+    private String CHECK_ROOM_NOTIFICATION_URL;
     private EditText txtEmail;
     private EditText txtPassword;
     private Button btnLogin;
@@ -39,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
 
+    private List<Map<String, Object>> userModelList;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
 
         URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/getUserByUserPassword";
+        CHECK_ROOM_NOTIFICATION_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                +"user/checkRoomNotificationModel";
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -68,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
         try {
             AsyncHttpClient client = new AsyncHttpClient();
-            client.get(concatString, new BaseJsonHttpResponseHandler<List<UserModel>>() {
+            client.get(concatString, new BaseJsonHttpResponseHandler<List<Map<String, Object>>>() {
 
                 @Override
                 public void onStart() {
@@ -77,10 +84,10 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<UserModel> response) {
+                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<Map<String, Object>> response) {
                     try {
                         closeLoadingDialog();
-                        List<UserModel> userModelList = response;
+                        userModelList = response;
                         Log.i(LOG_TAG, "user modelList size : "+userModelList.size());
                         if(userModelList.isEmpty()){
                             Log.i(LOG_TAG, "Not have user model");
@@ -90,11 +97,12 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(getApplication(), "The e-mail or password is incorrect.\nPlease try again.", Toast.LENGTH_SHORT).show();
                             } else {
                                 insertUserModelToSharedPreferences(userModelList.get(0));
-                                if(hasNotSettingAvatar(userModelList)){
-                                    gotoSettingAvatarActivity();
-                                } else {
-                                    gotoHomeActivity();
-                                }
+                                registerRoomNotificationModel();
+//                                if(hasNotSettingAvatar(userModelList)){
+//                                    gotoSettingAvatarActivity();
+//                                } else {
+//                                    gotoHomeActivity();
+//                                }
                             }
                             Log.i(LOG_TAG, "have user model");
                         }
@@ -106,15 +114,15 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<UserModel> errorResponse) {
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<Map<String, Object>> errorResponse) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
                     closeLoadingDialog();
                 }
 
                 @Override
-                protected List<UserModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                protected List<Map<String, Object>> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
-                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<UserModel>>() {});
+                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<Map<String, Object>>>() {});
                 }
 
             });
@@ -124,25 +132,71 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private boolean hasNotSettingAvatar(List<UserModel> userModelList) {
-        return "Avatar Name".equals(userModelList.get(0).getAvatarName()) || "default_avatar".equals(userModelList.get(0).getAvatarPic());
+    private void registerRoomNotificationModel() {
+        String email = txtEmail.getText().toString();
+        String concatString = CHECK_ROOM_NOTIFICATION_URL+"?empEmail="+email;
+        Log.i(LOG_TAG, "Concat URL : "+concatString);
+        try {
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(concatString, new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onStart() {
+                    super.onStart();
+                    showLoadingDialog();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                    try {
+                        closeLoadingDialog();
+                        String responseString = new String(response);
+                        Log.i(LOG_TAG, "Room Notification Model Date : "+responseString);
+                        editor.putString("notificationDate", responseString);
+                        editor.commit();
+                        if(hasNotSettingAvatar(userModelList)){
+                            gotoSettingAvatarActivity();
+                        } else {
+                            gotoHomeActivity();
+                        }
+                    } catch (Throwable e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
+                        throw new RuntimeException(e.getMessage(), e);
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
+                    closeLoadingDialog();
+                }
+
+            });
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+            closeLoadingDialog();
+        }
     }
 
-    private boolean isActivate(List<UserModel> userModelList) {
-        return !userModelList.get(0).isActivate();
+    private boolean hasNotSettingAvatar(List<Map<String, Object>> userModelList) {
+        return "Avatar Name".equals(userModelList.get(0).get("avatarName")) || "default_avatar".equals(userModelList.get(0).get("avatarPic"));
     }
 
-    private void insertUserModelToSharedPreferences(UserModel userModel) {
-        editor.putString("_id",  userModel.get_id());
-        editor.putString("_rev",  userModel.get_rev());
-        editor.putString("empName",  userModel.getEmpName());
-        editor.putString("empEmail",  userModel.getEmpEmail());
-        editor.putString("avatarName",  userModel.getAvatarName());
-        editor.putString("avatarPic",  userModel.getAvatarPic());
-        editor.putString("birthday",  userModel.getBirthday());
-        editor.putBoolean("activate",  userModel.isActivate());
-        editor.putString("type", userModel.getType());
-        editor.putString("accountId", userModel.getAccountId());
+    private boolean isActivate(List<Map<String, Object>> userModelList) {
+        return ! (Boolean) userModelList.get(0).get("activate");
+    }
+
+    private void insertUserModelToSharedPreferences(Map<String, Object> userModel) {
+        editor.putString("_id", (String) userModel.get("_id"));
+        editor.putString("_rev",  (String) userModel.get("_rev"));
+        editor.putString("empName",  (String) userModel.get("empName"));
+        editor.putString("empEmail",  (String) userModel.get("empEmail"));
+        editor.putString("avatarName",  (String) userModel.get("avatarName"));
+        editor.putString("avatarPic",  (String) userModel.get("avatarPic"));
+        editor.putString("birthday",  (String) userModel.get("birthday"));
+        editor.putBoolean("activate",  (Boolean) userModel.get("activate"));
+        editor.putString("type", (String) userModel.get("type"));
+        editor.putString("accountId", (String) userModel.get("accountId"));
         editor.putBoolean("hasLoggedIn", true);
         editor.commit();
     }

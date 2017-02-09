@@ -20,12 +20,12 @@ import th.co.gosoft.go10.model.TopicModel;
 /**
  * Created by manitkan on 27/06/16.
  */
-public class RoomAdapter  extends ArrayAdapter<TopicModel> {
+public class RoomAdapter  extends ArrayAdapter<Map<String, Object>> {
 
-    private final String LOG_TAG = "HotTopicListAdapter";
+    private final String LOG_TAG = "RoomAdapter";
     private Context context;
 
-    public RoomAdapter(Context context, int resource, List<TopicModel> items) {
+    public RoomAdapter(Context context, int resource, List<Map<String, Object>> items) {
         super(context, resource, items);
         this.context = context;
     }
@@ -51,13 +51,13 @@ public class RoomAdapter  extends ArrayAdapter<TopicModel> {
                 holder = (ViewHolder) convertView.getTag();
             }
 
-            TopicModel topicModel = getItem(position);
+            Map<String, Object> topicMap = getItem(position);
 
-            if (topicModel != null) {
-                holder.txtRowSubject.setText(topicModel.getSubject());
-                holder.txtLikeCount.setText(topicModel.getCountLike() == null ? "0" : String.valueOf(topicModel.getCountLike()));
-                holder.txtRowDate.setText(topicModel.getDate());
-                holder.imageView.setImageResource(context.getResources().getIdentifier(topicModel.getAvatarPic(), "drawable",
+            if (topicMap != null) {
+                holder.txtRowSubject.setText(topicMap.get("subject").toString());
+                holder.txtLikeCount.setText(topicMap.get("countLike") == null ? "0" : topicMap.get("countLike").toString());
+                holder.txtRowDate.setText(topicMap.get("date").toString());
+                holder.imageView.setImageResource(context.getResources().getIdentifier(topicMap.get("avatarPic").toString(), "drawable",
                         context.getPackageName()));
             }
 

@@ -87,7 +87,7 @@ public class LoadingActivity extends Activity {
                 Log.d(LOG_TAG, "Status Change : "+status);
             }
         });
-       notificationListener = new MFPPushNotificationListener() {
+        notificationListener = new MFPPushNotificationListener() {
             @Override
             public void onReceive (final MFPSimplePushNotification message){
                 Log.d(LOG_TAG, "Messsage : "+message);

@@ -45,7 +45,7 @@ public class RoomFragment extends Fragment {
     private String URL;
     private ProgressDialog progress;
     private Map<String, Integer> imageIdMap = new HashMap<>();
-    private List<TopicModel> topicModelList = new ArrayList<>();
+    private List<Map<String, Object>> topicModelList = new ArrayList<>();
     private ListView topicListView;
     private String room_id;
     private String roomName;
@@ -96,20 +96,20 @@ public class RoomFragment extends Fragment {
     }
 
     private void callGetWebService(){
-        String concatString = URL+"?roomId="+room_id;
+        String concatString = URL+"?roomId="+room_id+"&empEmail="+sharedPref.getString("empEmail", null)+"&startDate="+sharedPref.getString("notificationDate", null);
         Log.i(LOG_TAG, "URL : " + concatString);
         try {
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("Cache-Control", "no-cache");
             showLoadingDialog();
-            client.get(concatString, new BaseJsonHttpResponseHandler<List<TopicModel>>() {
+            client.get(concatString, new BaseJsonHttpResponseHandler<List<Map<String, Object>>>() {
 
                 @Override
                 public void onStart() {
                 }
 
                 @Override
-                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<TopicModel> response) {
+                public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<Map<String, Object>> response) {
                     try {
                         topicModelList = response;
                         generateListView();
@@ -123,14 +123,15 @@ public class RoomFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<TopicModel> errorResponse) {
-                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage());
+                public void onFailure(int statusCode, Header[] headers, Throwable throwable, String rawJsonData, List<Map<String, Object>> errorResponse) {
+                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + throwable.getMessage(), throwable);
+                    closeLoadingDialog();
                 }
 
                 @Override
-                protected List<TopicModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                protected List<Map<String, Object>> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : " + rawJsonData);
-                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<TopicModel>>() {
+                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<Map<String, Object>>>() {
                     });
                 }
 
@@ -153,7 +154,7 @@ public class RoomFragment extends Fragment {
 
     private void goBoardContentActivity(int position) {
         Bundle data = new Bundle();
-        data.putString("_id", topicModelList.get(position).get_id());
+        data.putString("_id", topicModelList.get(position).get("_id").toString());
         Fragment fragment = new BoardContentFragment();
         fragment.setArguments(data);
         FragmentManager fragmentManager = getFragmentManager();
