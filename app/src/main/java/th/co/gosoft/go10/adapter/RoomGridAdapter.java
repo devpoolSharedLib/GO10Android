@@ -53,7 +53,6 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
                 holder.imgRoomIcon.setImageResource(imageIdMap.get(roomMap.get("_id").toString()));
                 holder.txtRoomName.setText(roomMap.get("name").toString());
                 int badge = (int) roomMap.get("badgeNumber");
-                Log.i(LOG_TAG, "badge : "+ badge);
                 if (badge > 0) {
                     holder.badge.setText(String.valueOf(roomMap.get("badgeNumber")));
                     holder.badge.show();
