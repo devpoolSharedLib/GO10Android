@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -33,9 +34,17 @@ import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotif
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
+import com.onesignal.NotificationExtenderService;
+import com.onesignal.OSNotification;
+import com.onesignal.OSNotificationAction;
+import com.onesignal.OSNotificationDisplayedResult;
+import com.onesignal.OSNotificationOpenResult;
+import com.onesignal.OSNotificationReceivedResult;
+import com.onesignal.OneSignal;
 
 import org.json.JSONObject;
 
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 
@@ -59,40 +68,45 @@ public class LoadingActivity extends Activity {
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
     private boolean isActivate;
-    private MFPPush push;
-    private MFPPushNotificationListener notificationListener;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_loading);
+        OneSignal.startInit(this)
+                .autoPromptLocation(true)
+//                .setNotificationReceivedHandler(new ExampleNotificationReceivedHandler())
+              .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
+              .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
+              .init();
 //        notification
-        BMSClient.getInstance().initialize(this, BMSClient.REGION_SYDNEY);
-        push = MFPPush.getInstance();
-        push.initialize(getApplicationContext(), "3c5e9860-be2b-4276-a53b-b12f0d3db6bb", "f1b7da23-fe5e-40d4-99b5-ca39eaae8b35");
-        push.registerDevice(new MFPPushResponseListener<String>() {
-            @Override
-            public void onSuccess(String deviceId) {
-                Log.d(LOG_TAG,"REGISTER SUCCESS : "+deviceId);    // 180d96c9-8b0f-3f3d-9247-260d4aa635cb
-            }
-            @Override
-            public void onFailure(MFPPushException ex) {
-                Log.e(LOG_TAG,"REGISTER FALSE : "+ex.getMessage(), ex);
-            }
-        });
-        push.setNotificationStatusListener(new MFPPushNotificationStatusListener() {
-            @Override
-            public void onStatusChange(String messageId, MFPPushNotificationStatus status) {
-                Log.d(LOG_TAG, "Status Change : "+status);
-            }
-        });
-        notificationListener = new MFPPushNotificationListener() {
-            @Override
-            public void onReceive (final MFPSimplePushNotification message){
-                Log.d(LOG_TAG, "Messsage : "+message);
-            }
-        };
+//        BMSClient.getInstance().initialize(this, BMSClient.REGION_SYDNEY);
+//        push = MFPPush.getInstance();
+//        push.initialize(getApplicationContext(), "3c5e9860-be2b-4276-a53b-b12f0d3db6bb", "f1b7da23-fe5e-40d4-99b5-ca39eaae8b35");
+//        push.registerDevice(new MFPPushResponseListener<String>() {
+//            @Override
+//            public void onSuccess(String deviceId) {
+//                Log.d(LOG_TAG,"REGISTER SUCCESS : "+deviceId);    // 180d96c9-8b0f-3f3d-9247-260d4aa635cb
+//            }
+//            @Override
+//            public void onFailure(MFPPushException ex) {
+//                Log.e(LOG_TAG,"REGISTER FALSE : "+ex.getMessage(), ex);
+//            }
+//        });
+//        push.setNotificationStatusListener(new MFPPushNotificationStatusListener() {
+//            @Override
+//            public void onStatusChange(String messageId, MFPPushNotificationStatus status) {
+//                Log.d(LOG_TAG, "Status Change : "+status);
+//            }
+//        });
+//        notificationListener = new MFPPushNotificationListener() {
+//            @Override
+//            public void onReceive (final MFPSimplePushNotification message){
+//                Log.d(LOG_TAG, "Messsage : "+message);
+//            }
+//        };
 
 //
         URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
@@ -127,22 +141,22 @@ public class LoadingActivity extends Activity {
         }, SPLASH_TIME_OUT);
 
     }
-
-    @Override
-    protected void onResume(){
-        super.onResume();
-        if(push != null) {
-            push.listen(notificationListener);
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (push != null) {
-            push.hold();
-        }
-    }
+// notification IMPush
+//    @Override
+//    protected void onResume(){
+//        super.onResume();
+//        if(push != null) {
+//            push.listen(notificationListener);
+//        }
+//    }
+//
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        if (push != null) {
+//            push.hold();
+//        }
+//    }
 
     private void gotoLoginActivity() {
         new Handler().postDelayed(new Runnable() {
@@ -153,6 +167,38 @@ public class LoadingActivity extends Activity {
                 finish();
             }
         }, SPLASH_TIME_OUT);
+    }
+
+    private class ExampleNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
+        // This fires when a notification is opened by tapping on it.
+        @Override
+        public void notificationOpened(OSNotificationOpenResult result) {
+            OSNotificationAction.ActionType actionType = result.action.type;
+            JSONObject data = result.notification.payload.additionalData;
+            String customKey;
+            if (data != null) {
+                customKey = data.optString("customkey", null);
+                if (customKey != null)
+                    Log.i("OneSignalExample", "customkey set with value: " + customKey);
+            }
+            if (actionType == OSNotificationAction.ActionType.ActionTaken)
+                Log.i("OneSignalExample", "Button pressed with id: " + result.action.actionID);
+        }
+
+    }
+
+    private class ExampleNotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
+        @Override
+        public void notificationReceived(OSNotification notification) {
+            JSONObject data = notification.payload.additionalData;
+            String customKey;
+
+            if (data != null) {
+                customKey = data.optString("customkey", null);
+                if (customKey != null)
+                    Log.i("OneSignalExample", "customkey set with value: " + customKey);
+            }
+        }
     }
 
     private boolean hasUserLoggedIn() {
@@ -387,4 +433,22 @@ public class LoadingActivity extends Activity {
         editor.commit();
     }
 
+    public class NotificationExtenderExample extends NotificationExtenderService {
+        @Override
+        protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
+            OverrideSettings overrideSettings = new NotificationExtenderService.OverrideSettings();
+            overrideSettings.extender = new NotificationCompat.Extender() {
+                @Override
+                public NotificationCompat.Builder extend(NotificationCompat.Builder builder) {
+                    // Sets the background notification color to Green on Android 5.0+ devices.
+                    return builder.setColor(new BigInteger("FF00FF00", 16).intValue());
+                }
+            };
+
+            OSNotificationDisplayedResult displayedResult = displayNotification(overrideSettings);
+            Log.d("OneSignalExample", "Notification displayed with id: " + displayedResult.androidNotificationId);
+
+            return true;
+        }
+    }
 }

@@ -36,6 +36,9 @@
                  <action android:name="th.co.gosoft.go10.IBMPushNotification"/>
                  <category  android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.onesignal.NotificationExtender" />
+            </intent-filter>
         </activity>
         <activity
             android:name="com.facebook.CustomTabActivity"

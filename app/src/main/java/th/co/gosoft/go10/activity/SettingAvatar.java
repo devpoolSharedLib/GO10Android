@@ -1,10 +1,24 @@
 package th.co.gosoft.go10.activity;
 
+import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +36,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.lang.annotation.Target;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
@@ -30,6 +56,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.SettingAvatarAdapter;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.BitmapUtil;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class SettingAvatar extends AppCompatActivity {
@@ -46,6 +73,12 @@ public class SettingAvatar extends AppCompatActivity {
     private SharedPreferences.Editor editor;
     private ProgressDialog progress;
     private boolean isSeparateUpdate;
+    private String URL_POST_SERVLET;
+    private String imgURL;
+    private com.squareup.picasso.Target target ;
+    private AlertDialog.Builder builder;
+    public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 89;
+    public static final int RESULT_LOAD_IMAGE = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +89,7 @@ public class SettingAvatar extends AppCompatActivity {
 
         URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                     +"user/updateUser";
+        URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", this) + "GO10WebService/UploadServlet";
         sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         Bundle extras = getIntent().getExtras();
@@ -74,20 +108,56 @@ public class SettingAvatar extends AppCompatActivity {
                     if(avatarPicName.equals("default_avatar") || avatarName.equals("Avatar Name")){
                         Toast.makeText(getApplication(), "Please select avatar image and setting avatar name.", Toast.LENGTH_LONG).show();
                     } else {
-                        saveSetting();
+                        saveSetting(true);
                     }
                 }
             });
         }
 
-        avatarPic = (ImageView) findViewById(R.id.imgProfileImage);
-        avatarPic.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), SelectAvatarPic.class);
-                intent.putExtra("isSeparateUpdate",isSeparateUpdate);
-                startActivity(intent);
-            }
-        });
+            avatarPic = (ImageView) findViewById(R.id.imgProfileImage);
+            avatarPic.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    final CharSequence settingAvatar[] = new CharSequence[] {"Upload photo", "Select avatar"};
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SettingAvatar.this);
+                    builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String selected = (String) settingAvatar[which];
+                            if (selected.toString().equals("Upload photo")) {
+                                if (Build.VERSION.SDK_INT >= 23) {
+                                    if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                                            != PackageManager.PERMISSION_GRANTED) {
+
+                                        if (ActivityCompat.shouldShowRequestPermissionRationale(getParent(),
+                                                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                                        } else {
+                                            Log.i(LOG_TAG, "else");
+                                            requestPermissions(
+                                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                                        }
+                                    } else {
+                                        Log.i(LOG_TAG, "ELSE");
+                                        requestPermissions(
+                                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                                    }
+                                } else {
+                                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                                    photoPickerIntent.setType("image/*");
+                                    startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
+                                }
+                            } else {
+                                Intent intent = new Intent(getApplicationContext(), SelectAvatarPic.class);
+                                intent.putExtra("isSeparateUpdate",isSeparateUpdate);
+                                startActivity(intent);
+                            }
+                        }
+                    });
+                    builder.show();
+                }
+            });
 
         settingListView = (ListView) findViewById(R.id.settingListview);
         settingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -111,6 +181,97 @@ public class SettingAvatar extends AppCompatActivity {
         }
     }
 
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && null != data) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
+            Log.i(LOG_TAG, "picturePath : " + picturePath);
+            RequestParams params = new RequestParams();
+            try {
+                Bitmap bitmap = BitmapUtil.resizeBitmap(picturePath);
+                ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 80, byteArrayOutputStream);
+                byte[] myByteArray = byteArrayOutputStream.toByteArray();
+                params.put("imageFile", new ByteArrayInputStream(myByteArray));
+            } catch (Exception e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+            }
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.post(URL_POST_SERVLET, params, new AsyncHttpResponseHandler() {
+
+                public void onStart() {
+                    showLoadingDialog();
+                }
+
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    String responseString = new String(responseBody);
+                    Log.i(LOG_TAG, "Path : " + responseString);
+                    try {
+                        imgURL = new JSONObject(responseString).getString("imgUrl");
+                        Log.i(LOG_TAG, "imgURL : " + imgURL);
+                        target = new com.squareup.picasso.Target() {
+
+                            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
+                                FileOutputStream fileOutputStream = null;
+                                try {
+                                    String imgFile = imgURL.substring(imgURL.lastIndexOf("/")+1);
+                                    ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+                                    File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
+                                    File myPath = new File(directory, imgFile);
+                                    fileOutputStream = new FileOutputStream(myPath);
+                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
+                                    Log.i(LOG_TAG,"PATH FILE : "+imgURL);
+//                                  File file = new File(directory, imgFile);
+//                                  Bitmap imgBitmap = BitmapFactory.decodeStream(new FileInputStream(file));
+                                    avatarPic.setImageBitmap(bitmap);
+                                    Log.i(LOG_TAG,"PATH FILE : "+myPath);
+                                    editor.putString("avatarPic",  new String(imgFile));
+                                    editor.commit();
+                                    saveSetting(false);
+                                } catch (Exception e) {
+                                    Log.e(LOG_TAG, e.getMessage(), e);
+                                } finally {
+                                    try {
+                                        fileOutputStream.close();
+                                    } catch (IOException e) {
+                                        Log.e(LOG_TAG, e.getMessage(), e);
+                                    }
+                                }
+                            }
+
+                            public void onBitmapFailed(Drawable errorDrawable) {
+                            }
+
+                            public void onPrepareLoad(Drawable placeHolderDrawable) {
+                            }
+                        };
+                        Picasso.with(SettingAvatar.this)
+                                .load(imgURL)
+                                .into(target);
+                        closeLoadingDialog();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable e) {
+                    closeLoadingDialog();
+                    Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    Log.e(LOG_TAG, e.getMessage(), e);
+                    Log.e(LOG_TAG, "response body : " + new String(responseBody));
+                }
+            });
+        }
+    }
+
     private boolean isComeFromRegisterActivity(Bundle extras) {
         return extras != null && extras.getString("state").equals("register");
     }
@@ -130,19 +291,25 @@ public class SettingAvatar extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
-        Log.i(LOG_TAG, "SettingAvatar AvatarPicName : "+avatarPicName);
-        avatarPic.setImageResource(getResources().getIdentifier(avatarPicName , "drawable", getPackageName()));
-
         avatarName = sharedPref.getString("avatarName", "Avatar Name");
+        avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
+        String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
+        File imgFile = new  File(directory,avatarPicName);
+        if(imgFile.exists()){
+            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            avatarPic.setImageBitmap(myBitmap);
+        }else{
+            avatarPic.setImageResource(getResources().getIdentifier(avatarPicName, "drawable", getPackageName()));
+        }
         SettingAvatarAdapter settingAvatarAdapter = new SettingAvatarAdapter(this, avatarName);
         settingListView.setAdapter(settingAvatarAdapter);
-
     }
 
-    private void saveSetting(){
+    private void saveSetting(boolean flag){
         UserModel userModel = getUserModelFromSharedPreferences();
-        callWebService(userModel);
+        callWebService(userModel, flag);
     }
 
     private UserModel getUserModelFromSharedPreferences() {
@@ -160,7 +327,7 @@ public class SettingAvatar extends AppCompatActivity {
         return userModel;
     }
 
-    private void callWebService(UserModel userModel){
+    private void callWebService(UserModel userModel, final boolean flag){
         try {
             String jsonString = new ObjectMapper().writeValueAsString(userModel);
             Log.i(LOG_TAG, URL);
@@ -182,7 +349,9 @@ public class SettingAvatar extends AppCompatActivity {
                         editor.putString("_rev",  new String(response));
                         editor.commit();
                         closeLoadingDialog();
-                        callNextActivity();
+                        if(flag){
+                            callNextActivity();
+                        }
                     }
 
                     @Override

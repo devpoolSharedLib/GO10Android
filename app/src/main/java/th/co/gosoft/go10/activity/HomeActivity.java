@@ -3,8 +3,11 @@ package th.co.gosoft.go10.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,6 +28,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+
+import java.io.File;
 
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.fragment.BoardContentFragment;
@@ -120,7 +125,15 @@ public class HomeActivity extends AppCompatActivity
     private void initialUserProfile() {
         Log.i(LOG_TAG, "empEmail : "+sharedPref.getString("empEmail", null));
         String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
-        profileImageView.setImageResource(getResources().getIdentifier(avatarPicName , "drawable", getPackageName()));
+        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+        File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
+        File imgFile = new File(directory,avatarPicName);
+        if(imgFile.exists()){
+            Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+            profileImageView.setImageBitmap(bitmap);
+        }else{
+            profileImageView.setImageResource(getResources().getIdentifier(avatarPicName, "drawable", getPackageName()));
+        }
         String avatarName = sharedPref.getString("avatarName", "Avatar Name");
         profileName.setText(avatarName);
     }
