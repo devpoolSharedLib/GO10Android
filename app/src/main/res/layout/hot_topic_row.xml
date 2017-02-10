@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:text="Small Text"
-        android:textColor="#b3b3b3"
+        android:textColor="@color/colorDateTime"
         android:textSize="12sp"
         android:layout_alignBottom="@+id/iconImage"
         android:layout_alignRight="@+id/rowSubject"

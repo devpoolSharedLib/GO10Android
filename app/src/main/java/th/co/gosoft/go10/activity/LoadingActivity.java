@@ -23,14 +23,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
-import com.ibm.mobilefirstplatform.clientsdk.android.core.api.BMSClient;
-import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush;
-import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushException;
-import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationListener;
-import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationStatus;
-import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationStatusListener;
-import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushResponseListener;
-import com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPSimplePushNotification;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
@@ -77,8 +69,8 @@ public class LoadingActivity extends Activity {
         setContentView(R.layout.activity_loading);
         OneSignal.startInit(this)
                 .autoPromptLocation(true)
-//                .setNotificationReceivedHandler(new ExampleNotificationReceivedHandler())
-              .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
+                .setNotificationReceivedHandler(new GO10NotificationReceivedHandler())
+//              .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
               .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
               .init();
 //        notification
@@ -108,7 +100,6 @@ public class LoadingActivity extends Activity {
 //            }
 //        };
 
-//
         URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/getUserByAccountId";
         URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
@@ -187,9 +178,10 @@ public class LoadingActivity extends Activity {
 
     }
 
-    private class ExampleNotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
+    private class GO10NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
         @Override
         public void notificationReceived(OSNotification notification) {
+            Log.i(LOG_TAG, "receive notification");
             JSONObject data = notification.payload.additionalData;
             String customKey;
 

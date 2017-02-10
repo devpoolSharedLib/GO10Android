@@ -11,4 +11,6 @@
 
     <color name="colorButton">#8c000000</color>
     <color name="colorLikeButton">#0080ff</color>
+    <color name="colorUnreadTopic">#cecece</color>
+    <color name="colorDateTime">#706C6C</color>
 </resources>

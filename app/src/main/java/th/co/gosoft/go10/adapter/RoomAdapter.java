@@ -1,6 +1,8 @@
 package th.co.gosoft.go10.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +61,11 @@ public class RoomAdapter  extends ArrayAdapter<Map<String, Object>> {
                 holder.txtRowDate.setText(topicMap.get("date").toString());
                 holder.imageView.setImageResource(context.getResources().getIdentifier(topicMap.get("avatarPic").toString(), "drawable",
                         context.getPackageName()));
+                if((Boolean) topicMap.get("statusRead") == false) {
+                    convertView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorUnreadTopic));
+                } else {
+                    convertView.setBackgroundColor(0);
+                }
             }
 
             return convertView;

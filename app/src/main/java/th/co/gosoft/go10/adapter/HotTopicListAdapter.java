@@ -2,6 +2,7 @@ package th.co.gosoft.go10.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -57,7 +58,7 @@ public class HotTopicListAdapter extends ArrayAdapter<Map<String, Object>> {
                 holder.txtRowDate.setText(topicMap.get("date").toString());
                 holder.imageView.setImageResource(imageIdMap.get(topicMap.get("roomId").toString()));
                 if((Boolean) topicMap.get("statusRead") == false) {
-                    convertView.setBackgroundColor(Color.parseColor("#FBB2BC"));
+                    convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorUnreadTopic));
                 } else {
                     convertView.setBackgroundColor(0);
                 }

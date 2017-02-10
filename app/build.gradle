@@ -34,7 +34,7 @@ android {
         versionCode 17
         versionName "1.1.6"
         manifestPlaceholders = [onesignal_app_id: "fa8c76f3-acb7-4cae-8f89-b0b82c40b7ed",
-                                onesignal_google_project_number: "REMOTE"]
+                                onesignal_google_project_number: "181972566105"]
     }
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
