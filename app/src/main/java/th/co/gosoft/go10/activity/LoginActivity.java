@@ -18,11 +18,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.onesignal.OSNotification;
+import com.onesignal.OSNotificationAction;
+import com.onesignal.OSNotificationOpenResult;
+import com.onesignal.OneSignal;
+import com.onesignal.shortcutbadger.ShortcutBadger;
+
+import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.UserModel;
 import th.co.gosoft.go10.util.PropertyUtility;
@@ -31,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private final String LOG_TAG = "LoginActivity";
 
+    private String GET_BADGE_NUMBER_URL;
     private String URL;
     private String CHECK_ROOM_NOTIFICATION_URL;
     private EditText txtEmail;
@@ -48,11 +59,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        ShortcutBadger.removeCount(LoginActivity.this);
         URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/getUserByUserPassword";
         CHECK_ROOM_NOTIFICATION_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/checkRoomNotificationModel";
+        GET_BADGE_NUMBER_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                +"topic/getbadgenumbernotification";
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
         btnLogin = (Button) findViewById(R.id.btnLogin);
@@ -103,6 +116,12 @@ public class LoginActivity extends AppCompatActivity {
 //                                } else {
 //                                    gotoHomeActivity();
 //                                }
+                                OneSignal.startInit(LoginActivity.this)
+                                        .autoPromptLocation(true)
+                                        .setNotificationReceivedHandler(new LoginActivity.GO10NotificationReceivedHandler())
+//                                      .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
+                                        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
+                                        .init();
                             }
                             Log.i(LOG_TAG, "have user model");
                         }
@@ -132,7 +151,38 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void registerRoomNotificationModel() {
+    private class GO10NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
+        @Override
+        public void notificationReceived(OSNotification notification) {
+            Log.i(LOG_TAG, "receive notification");
+            String email = txtEmail.getText().toString();
+            String concatString = GET_BADGE_NUMBER_URL+"?empEmail="+email;
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(LoginActivity.this, concatString, new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onStart() {
+                    showLoadingDialog();
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    int badgeCount = Integer.parseInt(new String(responseBody));
+                    ShortcutBadger.applyCount(LoginActivity.this, badgeCount);
+                    closeLoadingDialog();
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
+                    closeLoadingDialog();
+                }
+            });
+        }
+    }
+
+        private void registerRoomNotificationModel() {
         String email = txtEmail.getText().toString();
         String concatString = CHECK_ROOM_NOTIFICATION_URL+"?empEmail="+email;
         Log.i(LOG_TAG, "Concat URL : "+concatString);

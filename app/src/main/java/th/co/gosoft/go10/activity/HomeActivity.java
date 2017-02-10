@@ -28,6 +28,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+import com.onesignal.OneSignal;
+import com.onesignal.shortcutbadger.ShortcutBadger;
 
 import java.io.File;
 
@@ -50,7 +52,6 @@ public class HomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         try{
             new CheckUpdateUtil().checkUpdateVersion(this);
             prepareGmailLoginSession();
@@ -105,6 +106,7 @@ public class HomeActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         initialUserProfile();
+        ShortcutBadger.removeCount(HomeActivity.this);
     }
 
     private void inflateSelectRoomFragment() {
@@ -194,6 +196,7 @@ public class HomeActivity extends AppCompatActivity
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("hasLoggedIn", false);
             editor.commit();
+//          OneSignal.setSubscription(true);
             goToLoginActivity();
         }
 

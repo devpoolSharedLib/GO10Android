@@ -33,6 +33,7 @@ import com.onesignal.OSNotificationDisplayedResult;
 import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OSNotificationReceivedResult;
 import com.onesignal.OneSignal;
+import com.onesignal.shortcutbadger.ShortcutBadger;
 
 import org.json.JSONObject;
 
@@ -67,12 +68,6 @@ public class LoadingActivity extends Activity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_loading);
-        OneSignal.startInit(this)
-                .autoPromptLocation(true)
-                .setNotificationReceivedHandler(new GO10NotificationReceivedHandler())
-//              .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
-              .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
-              .init();
 //        notification
 //        BMSClient.getInstance().initialize(this, BMSClient.REGION_SYDNEY);
 //        push = MFPPush.getInstance();
@@ -158,39 +153,6 @@ public class LoadingActivity extends Activity {
                 finish();
             }
         }, SPLASH_TIME_OUT);
-    }
-
-    private class ExampleNotificationOpenedHandler implements OneSignal.NotificationOpenedHandler {
-        // This fires when a notification is opened by tapping on it.
-        @Override
-        public void notificationOpened(OSNotificationOpenResult result) {
-            OSNotificationAction.ActionType actionType = result.action.type;
-            JSONObject data = result.notification.payload.additionalData;
-            String customKey;
-            if (data != null) {
-                customKey = data.optString("customkey", null);
-                if (customKey != null)
-                    Log.i("OneSignalExample", "customkey set with value: " + customKey);
-            }
-            if (actionType == OSNotificationAction.ActionType.ActionTaken)
-                Log.i("OneSignalExample", "Button pressed with id: " + result.action.actionID);
-        }
-
-    }
-
-    private class GO10NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
-        @Override
-        public void notificationReceived(OSNotification notification) {
-            Log.i(LOG_TAG, "receive notification");
-            JSONObject data = notification.payload.additionalData;
-            String customKey;
-
-            if (data != null) {
-                customKey = data.optString("customkey", null);
-                if (customKey != null)
-                    Log.i("OneSignalExample", "customkey set with value: " + customKey);
-            }
-        }
     }
 
     private boolean hasUserLoggedIn() {
@@ -365,6 +327,7 @@ public class LoadingActivity extends Activity {
                         Log.e(LOG_TAG, e.getMessage(), e);
                         throw new RuntimeException(e.getMessage(), e);
                     }
+
                 }
 
                 @Override
@@ -425,22 +388,4 @@ public class LoadingActivity extends Activity {
         editor.commit();
     }
 
-    public class NotificationExtenderExample extends NotificationExtenderService {
-        @Override
-        protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
-            OverrideSettings overrideSettings = new NotificationExtenderService.OverrideSettings();
-            overrideSettings.extender = new NotificationCompat.Extender() {
-                @Override
-                public NotificationCompat.Builder extend(NotificationCompat.Builder builder) {
-                    // Sets the background notification color to Green on Android 5.0+ devices.
-                    return builder.setColor(new BigInteger("FF00FF00", 16).intValue());
-                }
-            };
-
-            OSNotificationDisplayedResult displayedResult = displayNotification(overrideSettings);
-            Log.d("OneSignalExample", "Notification displayed with id: " + displayedResult.androidNotificationId);
-
-            return true;
-        }
-    }
 }
