@@ -192,9 +192,6 @@ public class HomeActivity extends AppCompatActivity
             if (!(currentFragment instanceof SelectRoomFragment)){
                 fragmentManager.popBackStack("home", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                 inflateSelectRoomFragment();
-//                Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
-//                startActivity(intent);
-//                finish();
             }
         } else if (id == R.id.settingAvatar) {
             Intent intent = new Intent(HomeActivity.this, SettingAvatar.class);

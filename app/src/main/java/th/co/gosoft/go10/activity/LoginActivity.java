@@ -23,7 +23,6 @@ import com.onesignal.OneSignal;
 import com.onesignal.shortcutbadger.ShortcutBadger;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
@@ -67,8 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         OneSignal.startInit(this)
-            .setNotificationReceivedHandler(new GO10NotificationReceivedHandler())
-//                                      .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
             .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
             .init();
     }
@@ -135,35 +132,6 @@ public class LoginActivity extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
             closeLoadingDialog();
-        }
-    }
-
-    private class GO10NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
-        @Override
-        public void notificationReceived(OSNotification notification) {
-            Log.i(LOG_TAG, "receive notification");
-            String email = txtEmail.getText().toString();
-            String concatString = GET_BADGE_NUMBER_URL+"?empEmail="+email;
-            AsyncHttpClient client = new AsyncHttpClient();
-            client.get(LoginActivity.this, concatString, new AsyncHttpResponseHandler() {
-
-                @Override
-                public void onStart() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                    int badgeCount = Integer.parseInt(new String(responseBody));
-                    ShortcutBadger.applyCount(LoginActivity.this, badgeCount);
-                    closeLoadingDialog();
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
-                }
-            });
         }
     }
 

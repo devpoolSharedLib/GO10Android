@@ -24,6 +24,9 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.onesignal.NotificationOpened.DEFAULT"
+            android:value="DISABLE" />
 
         <activity
             android:name=".activity.LoadingActivity"
@@ -55,11 +58,9 @@
             android:name=".activity.HomeActivity"
             android:configChanges="orientation|screenSize"
             android:windowSoftInputMode="stateHidden|adjustResize" />
-
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="b0837d4ec86bbd61fee49a9961fdb35ea1490db4" />
-
         <activity
             android:name=".activity.SettingAvatar"
             android:theme="@style/AppTheme" />
@@ -82,29 +83,13 @@
             android:theme="@style/AppTheme" />
         <activity android:name= "com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationHandler"
             android:theme="@android:style/Theme.NoDisplay"/>
-        <service android:name="com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushIntentService"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
         <service
-            android:name="com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPush"
-            android:exported="true" >
+            android:name="th.co.gosoft.go10.util.GO10NotificationExtender"
+            android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.onesignal.NotificationExtender" />
             </intent-filter>
         </service>
-        <!--<receiver android:name="com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationDismissHandler">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="th.co.gosoft.go10.Cancel_IBMPushNotification"/>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
-        <receiver android:name="th.co.gosoft.go10.util.GO10DismissHandler">
-            <intent-filter>
-                <action android:name="th.co.gosoft.go10.Cancel_IBMPushNotification"/>
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
