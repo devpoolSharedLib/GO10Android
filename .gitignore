@@ -7,7 +7,10 @@
 /.idea/vcs.xml
 /.idea/.name
 /.idea/gradle.xml
+/.idea/.inspectionProfiles/
 /.DS_Store
+/.idea/.DS_Store
+projectFilesBackup/.DS_Store
 /build
 /captures
 keystore.properties
