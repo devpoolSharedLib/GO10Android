@@ -4,8 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,23 +18,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
-import com.loopj.android.http.RequestParams;
 import com.onesignal.OSNotification;
-import com.onesignal.OSNotificationAction;
-import com.onesignal.OSNotificationOpenResult;
 import com.onesignal.OneSignal;
 import com.onesignal.shortcutbadger.ShortcutBadger;
-
-import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
 import cz.msebera.android.httpclient.Header;
-import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.model.UserModel;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class LoginActivity extends AppCompatActivity {
@@ -73,6 +66,11 @@ public class LoginActivity extends AppCompatActivity {
 
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+        OneSignal.startInit(this)
+            .setNotificationReceivedHandler(new GO10NotificationReceivedHandler())
+//                                      .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
+            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
+            .init();
     }
 
     public void login(View view){
@@ -111,17 +109,6 @@ public class LoginActivity extends AppCompatActivity {
                             } else {
                                 insertUserModelToSharedPreferences(userModelList.get(0));
                                 registerRoomNotificationModel();
-//                                if(hasNotSettingAvatar(userModelList)){
-//                                    gotoSettingAvatarActivity();
-//                                } else {
-//                                    gotoHomeActivity();
-//                                }
-                                OneSignal.startInit(LoginActivity.this)
-                                        .autoPromptLocation(true)
-                                        .setNotificationReceivedHandler(new LoginActivity.GO10NotificationReceivedHandler())
-//                                      .setNotificationOpenedHandler(new ExampleNotificationOpenedHandler())
-                                        .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
-                                        .init();
                             }
                             Log.i(LOG_TAG, "have user model");
                         }
@@ -162,7 +149,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 public void onStart() {
-                    showLoadingDialog();
                 }
 
                 @Override
@@ -176,13 +162,12 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
-                    closeLoadingDialog();
                 }
             });
         }
     }
 
-        private void registerRoomNotificationModel() {
+    private void registerRoomNotificationModel() {
         String email = txtEmail.getText().toString();
         String concatString = CHECK_ROOM_NOTIFICATION_URL+"?empEmail="+email;
         Log.i(LOG_TAG, "Concat URL : "+concatString);
@@ -204,6 +189,7 @@ public class LoginActivity extends AppCompatActivity {
                         Log.i(LOG_TAG, "Room Notification Model Date : "+responseString);
                         editor.putString("notificationDate", responseString);
                         editor.commit();
+                        OneSignal.setSubscription(true);
                         if(hasNotSettingAvatar(userModelList)){
                             gotoSettingAvatarActivity();
                         } else {
@@ -218,6 +204,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                     Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
+                    OneSignal.setSubscription(false);
                     closeLoadingDialog();
                 }
 

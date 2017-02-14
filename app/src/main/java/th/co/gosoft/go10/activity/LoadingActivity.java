@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -26,18 +25,9 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
-import com.onesignal.NotificationExtenderService;
-import com.onesignal.OSNotification;
-import com.onesignal.OSNotificationAction;
-import com.onesignal.OSNotificationDisplayedResult;
-import com.onesignal.OSNotificationOpenResult;
-import com.onesignal.OSNotificationReceivedResult;
-import com.onesignal.OneSignal;
-import com.onesignal.shortcutbadger.ShortcutBadger;
 
 import org.json.JSONObject;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Locale;
 

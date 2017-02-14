@@ -28,20 +28,27 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.onesignal.OSNotification;
 import com.onesignal.OneSignal;
 import com.onesignal.shortcutbadger.ShortcutBadger;
 
 import java.io.File;
+import java.util.Locale;
 
+import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.fragment.SelectRoomFragment;
 import th.co.gosoft.go10.util.CheckUpdateUtil;
+import th.co.gosoft.go10.util.PropertyUtility;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String LOG_TAG = "HomeActivityTag";
+    private String GET_BADGE_NUMBER_URL;
     private GoogleApiClient mGoogleApiClient;
     private ImageView profileImageView;
     private TextView profileName;
@@ -53,6 +60,9 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         try{
+            GET_BADGE_NUMBER_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                    +"topic/getbadgenumbernotification";
+
             new CheckUpdateUtil().checkUpdateVersion(this);
             prepareGmailLoginSession();
             FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -196,7 +206,7 @@ public class HomeActivity extends AppCompatActivity
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putBoolean("hasLoggedIn", false);
             editor.commit();
-//          OneSignal.setSubscription(true);
+            OneSignal.setSubscription(false);
             goToLoginActivity();
         }
 
@@ -252,4 +262,33 @@ public class HomeActivity extends AppCompatActivity
             return false;
         }
     }
+
+    private class GO10NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
+        @Override
+        public void notificationReceived(OSNotification notification) {
+            Log.i(LOG_TAG, "receive notification");
+            String email = sharedPref.getString("notificationDate", null);
+            String concatString = GET_BADGE_NUMBER_URL+"?empEmail="+email;
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.get(HomeActivity.this, concatString, new AsyncHttpResponseHandler() {
+
+                @Override
+                public void onStart() {
+                }
+
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+//                     int badgeCount = Integer.parseInt(new String(responseBody));
+//                     ShortcutBadger.applyCount(HomeActivity.this, badgeCount);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
+                }
+            });
+        }
+    }
+
 }
