@@ -19,7 +19,7 @@ import th.co.gosoft.go10.R;
 
 public class GO10NotificationExtender extends NotificationExtenderService {
 
-    private String LOG_TAG = "GO10NotificationExtender";
+    private String LOG_TAG = "GO10Extender";
     private String GET_BADGE_NUMBER_URL;
     private SharedPreferences sharedPref;
 
@@ -27,10 +27,10 @@ public class GO10NotificationExtender extends NotificationExtenderService {
     protected boolean onNotificationProcessing(OSNotificationReceivedResult receivedResult) {
 
         try {
-            boolean foregroud = new GO10ForegroundCheckTask().execute(getApplicationContext()).get();
-            Log.i(LOG_TAG, "IS FOREGOUD "+foregroud);
+            boolean foreground = new GO10ForegroundCheckTask().execute(getApplicationContext()).get();
+            Log.i(LOG_TAG, "IS FOREGOUD "+foreground);
 
-            if(!foregroud) {
+            if(!foreground) {
                 GET_BADGE_NUMBER_URL = PropertyUtility.getProperty("httpsUrlSite", getApplicationContext()) + "GO10WebService/api/" + PropertyUtility.getProperty("versionServer", getApplicationContext())
                         + "topic/getbadgenumbernotification";
                 sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);

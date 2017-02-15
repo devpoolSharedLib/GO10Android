@@ -24,9 +24,7 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
-        <meta-data
-            android:name="com.onesignal.NotificationOpened.DEFAULT"
-            android:value="DISABLE" />
+        <meta-data android:name="com.onesignal.BadgeCount" android:value="DISABLE" />
 
         <activity
             android:name=".activity.LoadingActivity"
@@ -84,7 +82,7 @@
         <activity android:name= "com.ibm.mobilefirstplatform.clientsdk.android.push.api.MFPPushNotificationHandler"
             android:theme="@android:style/Theme.NoDisplay"/>
         <service
-            android:name="th.co.gosoft.go10.util.GO10NotificationExtender"
+            android:name=".util.GO10NotificationExtender"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.onesignal.NotificationExtender" />
