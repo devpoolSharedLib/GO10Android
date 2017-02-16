@@ -18,7 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
-import com.onesignal.OSNotification;
 import com.onesignal.OneSignal;
 import com.onesignal.shortcutbadger.ShortcutBadger;
 
@@ -65,9 +64,6 @@ public class LoginActivity extends AppCompatActivity {
 
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-        OneSignal.startInit(this)
-            .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
-            .init();
     }
 
     public void login(View view){
@@ -157,7 +153,6 @@ public class LoginActivity extends AppCompatActivity {
                         Log.i(LOG_TAG, "Room Notification Model Date : "+responseString);
                         editor.putString("notificationDate", responseString);
                         editor.commit();
-                        OneSignal.setSubscription(true);
                         if(hasNotSettingAvatar(userModelList)){
                             gotoSettingAvatarActivity();
                         } else {

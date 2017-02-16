@@ -3,9 +3,9 @@ package th.co.gosoft.go10.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,19 +14,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.loopj.android.http.BaseJsonHttpResponseHandler;
-
-import junit.framework.Test;
-
-import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.model.UserModel;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class ForgetPasswordActivity extends AppCompatActivity {

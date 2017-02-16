@@ -63,6 +63,8 @@ public class HomeActivity extends AppCompatActivity
             GET_BADGE_NUMBER_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                     +"topic/getbadgenumbernotification";
 
+            initialOneSignal();
+
             new CheckUpdateUtil().checkUpdateVersion(this);
             prepareGmailLoginSession();
             FacebookSdk.sdkInitialize(this.getApplicationContext());
@@ -110,6 +112,13 @@ public class HomeActivity extends AppCompatActivity
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
+    }
+
+    private void initialOneSignal() {
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.None)
+                .init();
+        OneSignal.setSubscription(true);
     }
 
     @Override
