@@ -28,16 +28,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
-import com.loopj.android.http.AsyncHttpClient;
-import com.loopj.android.http.AsyncHttpResponseHandler;
-import com.onesignal.OSNotification;
 import com.onesignal.OneSignal;
 import com.onesignal.shortcutbadger.ShortcutBadger;
 
 import java.io.File;
-import java.util.Locale;
 
-import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.fragment.SelectRoomFragment;
@@ -266,34 +261,6 @@ public class HomeActivity extends AppCompatActivity
         } else {
             Log.i(LOG_TAG, "Gmail cached not sign-in");
             return false;
-        }
-    }
-
-    private class GO10NotificationReceivedHandler implements OneSignal.NotificationReceivedHandler {
-        @Override
-        public void notificationReceived(OSNotification notification) {
-            Log.i(LOG_TAG, "receive notification");
-            String email = sharedPref.getString("notificationDate", null);
-            String concatString = GET_BADGE_NUMBER_URL+"?empEmail="+email;
-            AsyncHttpClient client = new AsyncHttpClient();
-            client.get(HomeActivity.this, concatString, new AsyncHttpResponseHandler() {
-
-                @Override
-                public void onStart() {
-                }
-
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-//                     int badgeCount = Integer.parseInt(new String(responseBody));
-//                     ShortcutBadger.applyCount(HomeActivity.this, badgeCount);
-                }
-
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                    Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
-                }
-            });
         }
     }
 

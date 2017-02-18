@@ -76,7 +76,6 @@ public class SettingAvatar extends AppCompatActivity {
     private String URL_POST_SERVLET;
     private String imgURL;
     private com.squareup.picasso.Target target ;
-    private AlertDialog.Builder builder;
     public static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 89;
     public static final int RESULT_LOAD_IMAGE = 7;
 
@@ -125,11 +124,11 @@ public class SettingAvatar extends AppCompatActivity {
                             String selected = (String) settingAvatar[which];
                             if (selected.toString().equals("Upload photo")) {
                                 if (Build.VERSION.SDK_INT >= 23) {
-                                    if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                                    if (ContextCompat.checkSelfPermission(SettingAvatar.this,
                                             Manifest.permission.READ_EXTERNAL_STORAGE)
                                             != PackageManager.PERMISSION_GRANTED) {
 
-                                        if (ActivityCompat.shouldShowRequestPermissionRationale(getParent(),
+                                        if (ActivityCompat.shouldShowRequestPermissionRationale(SettingAvatar.this,
                                                 Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                         } else {
                                             Log.i(LOG_TAG, "else");
@@ -274,6 +273,26 @@ public class SettingAvatar extends AppCompatActivity {
 
     private boolean isComeFromRegisterActivity(Bundle extras) {
         return extras != null && extras.getString("state").equals("register");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+        Log.i(LOG_TAG, "onRequestPermissionsResult");
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(LOG_TAG, "if onRequestPermissionsResult");
+                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                    photoPickerIntent.setType("image/*");
+                    startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
+
+                } else {
+                    Log.i(LOG_TAG, "else onRequestPermissionsResult");
+                }
+                return;
+            }
+        }
     }
 
     @Override

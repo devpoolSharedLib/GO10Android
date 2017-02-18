@@ -206,7 +206,7 @@ public class SettingAvatarName extends AppCompatActivity {
     }
 
     private void showLoadingDialog() {
-        progress = ProgressDialog.show(this, null, "Processing", true);
+        progress = ProgressDialog.show(SettingAvatarName.this, null, "Processing", true);
     }
 
     private void closeLoadingDialog(){

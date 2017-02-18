@@ -128,13 +128,13 @@ public class WritingCommentFragment extends Fragment {
                                     MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
                         }
-                    }else{
+                    } else{
                         Log.i(LOG_TAG, "ELSE");
                         requestPermissions(
                                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                 MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                     }
-                }else {
+                } else {
 
                     Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                     photoPickerIntent.setType("image/*");

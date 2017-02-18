@@ -8,9 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -32,13 +30,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private final String LOG_TAG = "LoginActivity";
 
-    private String GET_BADGE_NUMBER_URL;
     private String URL;
     private String CHECK_ROOM_NOTIFICATION_URL;
     private EditText txtEmail;
     private EditText txtPassword;
-    private Button btnLogin;
-    private TextView txtForgotYourPassword;
     private ProgressDialog progress;
 
     private SharedPreferences sharedPref;
@@ -55,15 +50,10 @@ public class LoginActivity extends AppCompatActivity {
                 +"user/getUserByUserPassword";
         CHECK_ROOM_NOTIFICATION_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/checkRoomNotificationModel";
-        GET_BADGE_NUMBER_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
-                +"topic/getbadgenumbernotification";
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
-        btnLogin = (Button) findViewById(R.id.btnLogin);
-        txtForgotYourPassword = (TextView) findViewById(R.id.txtForgotYourPassword);
 
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
-        editor = sharedPref.edit();
     }
 
     public void login(View view){
@@ -151,6 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                         closeLoadingDialog();
                         String responseString = new String(response);
                         Log.i(LOG_TAG, "Room Notification Model Date : "+responseString);
+                        editor = sharedPref.edit();
                         editor.putString("notificationDate", responseString);
                         editor.commit();
                         if(hasNotSettingAvatar(userModelList)){
@@ -187,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void insertUserModelToSharedPreferences(Map<String, Object> userModel) {
+        editor = sharedPref.edit();
         editor.putString("_id", (String) userModel.get("_id"));
         editor.putString("_rev",  (String) userModel.get("_rev"));
         editor.putString("empName",  (String) userModel.get("empName"));

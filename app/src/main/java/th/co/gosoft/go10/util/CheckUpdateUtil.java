@@ -16,7 +16,7 @@ public class CheckUpdateUtil {
         Log.i( LOG_TAG, "checkUpdateVersion" );
 
         UpdateChecker checker = new UpdateChecker(activity);
-        checker.setSuccessfulChecksRequired( 1 );
+        checker.setSuccessfulChecksRequired(1);
         checker.showNotification();
         checker.start();
     }
