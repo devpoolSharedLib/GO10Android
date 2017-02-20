@@ -91,11 +91,8 @@ public class SelectRoomFragment extends Fragment {
 
     private void callGetWebService(){
         try {
-            AsyncHttpClient client = new AsyncHttpClient();
-            client.addHeader("Cache-Control", "no-cache");
             showLoadingDialog();
-            callHotTopicApi(client);
-            callRoomApi(client);
+            callRoomApi();
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
             closeLoadingDialog();
@@ -103,9 +100,11 @@ public class SelectRoomFragment extends Fragment {
         }
     }
 
-    private void callHotTopicApi(AsyncHttpClient client) {
+    private void callHotTopicApi() {
         String urlHot = URL_HOT+"?empEmail="+sharedPref.getString("empEmail", null)+"&startDate="+sharedPref.getString("notificationDate", null);
         Log.i(LOG_TAG, "urlHot : "+urlHot);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("Cache-Control", "no-cache");
         client.get(urlHot, new BaseJsonHttpResponseHandler<List<Map<String, Object>>>() {
 
             @Override
@@ -145,8 +144,10 @@ public class SelectRoomFragment extends Fragment {
         });
     }
 
-    private void callRoomApi(AsyncHttpClient client){
+    private void callRoomApi(){
         String urlRoom = URL_ROOM+"?empEmail="+sharedPref.getString("empEmail", null);
+        AsyncHttpClient client = new AsyncHttpClient();
+        client.addHeader("Cache-Control", "no-cache");
         client.get(urlRoom, new BaseJsonHttpResponseHandler<List<Map<String, Object>>>() {
 
             @Override
@@ -159,12 +160,9 @@ public class SelectRoomFragment extends Fragment {
                     roomModelList = response;
                     generateGridView();
                     isLoadRoomDone = true;
-                    if(isLoadTopicDone && isLoadRoomDone){
-                        closeLoadingDialog();
-                    }
                     insertUserRoleManagementToSharedPreferences(roomModelList);
                     Log.i(LOG_TAG, "Room Model List Size : " + roomModelList.size());
-
+                    callHotTopicApi();
                 } catch (Throwable e) {
                     closeLoadingDialog();
                     Log.e(LOG_TAG, e.getMessage(), e);
