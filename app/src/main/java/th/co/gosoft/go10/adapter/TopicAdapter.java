@@ -18,6 +18,7 @@ import java.util.Map;
 
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.LikeModel;
+import th.co.gosoft.go10.util.AvatarImageUtils;
 import th.co.gosoft.go10.util.LikeButtonOnClick;
 import th.co.gosoft.go10.util.OnDataPass;
 import th.co.gosoft.go10.util.URLImageParser;
@@ -45,7 +46,6 @@ public class TopicAdapter extends BaseAdapter {
         this.onDataPass = onDataPass;
         this.canComment = canComment;
         rowLayoutMap = new HashMap<>();
-//        rowLayoutMap.put(0, R.layout.host_row_can_comment);
         Log.i(LOG_TAG, "canComment : "+canComment);
         if (canComment) {
             rowLayoutMap.put(0, R.layout.host_row_can_comment);
@@ -120,7 +120,8 @@ public class TopicAdapter extends BaseAdapter {
                 holder.date.setText((String) topicModelMap.get("date"));
                 Log.i(LOG_TAG, "countLike : "+topicModelMap.get("countLike"));
                 holder.likeCount.setText(topicModelMap.get("countLike") == null ? "0" : String.valueOf((Integer) topicModelMap.get("countLike")));
-                holder.imageView.setImageResource(context.getResources().getIdentifier((String) topicModelMap.get("avatarPic") , "drawable", context.getPackageName()));
+                AvatarImageUtils.setAvatarImage(context, holder.imageView, topicModelMap.get("avatarPic").toString());
+
                 if(likeModel != null && likeModel.isStatusLike()){
                     holder.btnLike.setTextColor(this.context.getResources().getColor(R.color.colorLikeButton));
                     isClick = true;
@@ -140,7 +141,7 @@ public class TopicAdapter extends BaseAdapter {
                 holder.content.setText(htmlSpan);
                 holder.user.setText((String) topicModelMap.get("avatarName"));
                 holder.date.setText((String) topicModelMap.get("date"));
-                holder.imageView.setImageResource(context.getResources().getIdentifier((String) topicModelMap.get("avatarPic") , "drawable", context.getPackageName()));
+                AvatarImageUtils.setAvatarImage(context, holder.imageView, topicModelMap.get("avatarPic").toString());
             }
             return convertView;
         } catch (Exception e) {

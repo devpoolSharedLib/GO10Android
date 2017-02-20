@@ -44,11 +44,8 @@ import org.json.JSONObject;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.annotation.Target;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
@@ -227,8 +224,6 @@ public class SettingAvatar extends AppCompatActivity {
                                     fileOutputStream = new FileOutputStream(myPath);
                                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                                     Log.i(LOG_TAG,"PATH FILE : "+imgURL);
-//                                  File file = new File(directory, imgFile);
-//                                  Bitmap imgBitmap = BitmapFactory.decodeStream(new FileInputStream(file));
                                     avatarPic.setImageBitmap(bitmap);
                                     Log.i(LOG_TAG,"PATH FILE : "+myPath);
                                     editor.putString("avatarPic",  new String(imgFile));
