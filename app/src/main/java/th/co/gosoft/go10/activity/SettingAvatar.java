@@ -53,6 +53,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.SettingAvatarAdapter;
 import th.co.gosoft.go10.model.UserModel;
+import th.co.gosoft.go10.util.AvatarImageUtils;
 import th.co.gosoft.go10.util.BitmapUtil;
 import th.co.gosoft.go10.util.PropertyUtility;
 
@@ -110,50 +111,50 @@ public class SettingAvatar extends AppCompatActivity {
             });
         }
 
-            avatarPic = (ImageView) findViewById(R.id.imgProfileImage);
-            avatarPic.setOnClickListener(new View.OnClickListener() {
-                public void onClick(View v) {
-                    final CharSequence settingAvatar[] = new CharSequence[] {"Upload photo", "Select avatar"};
-                    AlertDialog.Builder builder = new AlertDialog.Builder(SettingAvatar.this);
-                    builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            String selected = (String) settingAvatar[which];
-                            if (selected.toString().equals("Upload photo")) {
-                                if (Build.VERSION.SDK_INT >= 23) {
-                                    if (ContextCompat.checkSelfPermission(SettingAvatar.this,
-                                            Manifest.permission.READ_EXTERNAL_STORAGE)
-                                            != PackageManager.PERMISSION_GRANTED) {
+        avatarPic = (ImageView) findViewById(R.id.imgProfileImage);
+        avatarPic.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                final CharSequence settingAvatar[] = new CharSequence[] {"Upload photo", "Select avatar"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingAvatar.this);
+                builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String selected = (String) settingAvatar[which];
+                        if (selected.toString().equals("Upload photo")) {
+                            if (Build.VERSION.SDK_INT >= 23) {
+                                if (ContextCompat.checkSelfPermission(SettingAvatar.this,
+                                        Manifest.permission.READ_EXTERNAL_STORAGE)
+                                        != PackageManager.PERMISSION_GRANTED) {
 
-                                        if (ActivityCompat.shouldShowRequestPermissionRationale(SettingAvatar.this,
-                                                Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                                        } else {
-                                            Log.i(LOG_TAG, "else");
-                                            requestPermissions(
-                                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-                                        }
+                                    if (ActivityCompat.shouldShowRequestPermissionRationale(SettingAvatar.this,
+                                            Manifest.permission.READ_EXTERNAL_STORAGE)) {
                                     } else {
-                                        Log.i(LOG_TAG, "ELSE");
+                                        Log.i(LOG_TAG, "else");
                                         requestPermissions(
                                                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                                 MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                                     }
                                 } else {
-                                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                                    photoPickerIntent.setType("image/*");
-                                    startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
+                                    Log.i(LOG_TAG, "ELSE");
+                                    requestPermissions(
+                                            new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                            MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                                 }
                             } else {
-                                Intent intent = new Intent(getApplicationContext(), SelectAvatarPic.class);
-                                intent.putExtra("isSeparateUpdate",isSeparateUpdate);
-                                startActivity(intent);
+                                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                                photoPickerIntent.setType("image/*");
+                                startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
                             }
+                        } else {
+                            Intent intent = new Intent(getApplicationContext(), SelectAvatarPic.class);
+                            intent.putExtra("isSeparateUpdate",isSeparateUpdate);
+                            startActivity(intent);
                         }
-                    });
-                    builder.show();
-                }
-            });
+                    }
+                });
+                builder.show();
+            }
+        });
 
         settingListView = (ListView) findViewById(R.id.settingListview);
         settingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -308,15 +309,16 @@ public class SettingAvatar extends AppCompatActivity {
         avatarName = sharedPref.getString("avatarName", "Avatar Name");
         avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
         String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
-        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
-        File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
-        File imgFile = new  File(directory,avatarPicName);
-        if(imgFile.exists()){
-            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            avatarPic.setImageBitmap(myBitmap);
-        }else{
-            avatarPic.setImageResource(getResources().getIdentifier(avatarPicName, "drawable", getPackageName()));
-        }
+//        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
+//        File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
+//        File imgFile = new  File(directory,avatarPicName);
+//        if(imgFile.exists()){
+//            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//            avatarPic.setImageBitmap(myBitmap);
+//        }else{
+//            avatarPic.setImageResource(getResources().getIdentifier(avatarPicName, "drawable", getPackageName()));
+//        }
+        AvatarImageUtils.setAvatarImage(SettingAvatar.this, avatarPic, avatarPicName);
         SettingAvatarAdapter settingAvatarAdapter = new SettingAvatarAdapter(this, avatarName);
         settingListView.setAdapter(settingAvatarAdapter);
     }

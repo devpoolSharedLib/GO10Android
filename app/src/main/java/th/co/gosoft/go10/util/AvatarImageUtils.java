@@ -40,7 +40,6 @@ public class AvatarImageUtils {
             resourceId = resources.getIdentifier(imageName, "drawable", context.getPackageName());
             imageView.setImageResource(resourceId);
         } else {
-            final ImageView finalImageView = imageView;
             Target target = new Target() {
                 @Override
                 public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
@@ -49,6 +48,7 @@ public class AvatarImageUtils {
                         fileOutputStream = new FileOutputStream(imgFile);
                         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                         imageView.setImageBitmap(bitmap);
+                        Log.i(LOG_TAG, "Finish Load Image");
                     } catch (FileNotFoundException e) {
                         Log.e(LOG_TAG, e.getMessage(), e);
                     }
@@ -64,8 +64,9 @@ public class AvatarImageUtils {
 
                 }
             };
+            imageView.setTag(target);
             String imageURL = URL + "?imageName="+fileName;
-            Log.i(LOG_TAG,"myImage : "+imageURL);
+            Log.i(LOG_TAG,"Loading Image : "+imageURL);
             Picasso.with(context)
                     .load(imageURL)
                     .into(target);

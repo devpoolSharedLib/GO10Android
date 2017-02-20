@@ -3,11 +3,8 @@ package th.co.gosoft.go10.activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -31,19 +28,16 @@ import com.google.android.gms.common.api.OptionalPendingResult;
 import com.onesignal.OneSignal;
 import com.onesignal.shortcutbadger.ShortcutBadger;
 
-import java.io.File;
-
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.fragment.SelectRoomFragment;
+import th.co.gosoft.go10.util.AvatarImageUtils;
 import th.co.gosoft.go10.util.CheckUpdateUtil;
-import th.co.gosoft.go10.util.PropertyUtility;
 
 public class HomeActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final String LOG_TAG = "HomeActivityTag";
-    private String GET_BADGE_NUMBER_URL;
     private GoogleApiClient mGoogleApiClient;
     private ImageView profileImageView;
     private TextView profileName;
@@ -55,9 +49,6 @@ public class HomeActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         try{
-            GET_BADGE_NUMBER_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
-                    +"topic/getbadgenumbernotification";
-
             initialOneSignal();
 
             new CheckUpdateUtil().checkUpdateVersion(this);
@@ -90,7 +81,6 @@ public class HomeActivity extends AppCompatActivity
             });
 
             profileName = (TextView) headerLayout.findViewById(R.id.txtProfileName);
-
             sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
 
             Intent intent = getIntent();
@@ -102,7 +92,6 @@ public class HomeActivity extends AppCompatActivity
                 Log.i(LOG_TAG, "ELSE");
                 inflateBoardContentFragment(_id);
             }
-
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
@@ -141,15 +130,8 @@ public class HomeActivity extends AppCompatActivity
     private void initialUserProfile() {
         Log.i(LOG_TAG, "empEmail : "+sharedPref.getString("empEmail", null));
         String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
-        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
-        File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
-        File imgFile = new File(directory,avatarPicName);
-        if(imgFile.exists()){
-            Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-            profileImageView.setImageBitmap(bitmap);
-        }else{
-            profileImageView.setImageResource(getResources().getIdentifier(avatarPicName, "drawable", getPackageName()));
-        }
+        Log.i(LOG_TAG, "avatarPic : "+avatarPicName);
+        AvatarImageUtils.setAvatarImage(getApplication(), profileImageView, avatarPicName);
         String avatarName = sharedPref.getString("avatarName", "Avatar Name");
         profileName.setText(avatarName);
     }
