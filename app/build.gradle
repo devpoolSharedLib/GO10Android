@@ -32,8 +32,8 @@ android {
         applicationId "th.co.gosoft.go10"
         minSdkVersion 15
         targetSdkVersion 23
-        versionCode 17
-        versionName "1.1.6"
+        versionCode 18
+        versionName "1.1.7"
         manifestPlaceholders = [onesignal_app_id: "fa8c76f3-acb7-4cae-8f89-b0b82c40b7ed",
                                 onesignal_google_project_number: "181972566105"]
         multiDexEnabled true

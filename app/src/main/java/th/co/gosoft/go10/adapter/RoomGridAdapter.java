@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.HashMap;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Map;
 
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.model.RoomModel;
 import th.co.gosoft.go10.util.BadgeViewUtil;
 
 public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
@@ -50,7 +48,9 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
             Map<String, Object> roomMap = getItem(position);
 
             if (roomMap != null) {
-                holder.imgRoomIcon.setImageResource(imageIdMap.get(roomMap.get("_id").toString()));
+                if(null != imageIdMap.get(roomMap.get("_id").toString())) {
+                    holder.imgRoomIcon.setImageResource(imageIdMap.get(roomMap.get("_id").toString()));
+                }
                 holder.txtRoomName.setText(roomMap.get("name").toString());
                 int badge = (int) roomMap.get("badgeNumber");
                 if (badge > 0) {
