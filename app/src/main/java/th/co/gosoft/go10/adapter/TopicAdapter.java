@@ -1,6 +1,12 @@
 package th.co.gosoft.go10.adapter;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
+import android.database.DataSetObserver;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -9,18 +15,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
+import cz.msebera.android.httpclient.Header;
+import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.LikeModel;
 import th.co.gosoft.go10.util.AvatarImageUtils;
 import th.co.gosoft.go10.util.LikeButtonOnClick;
 import th.co.gosoft.go10.util.OnDataPass;
+import th.co.gosoft.go10.util.PropertyUtility;
 import th.co.gosoft.go10.util.URLImageParser;
 
 public class TopicAdapter extends BaseAdapter {
@@ -37,8 +54,16 @@ public class TopicAdapter extends BaseAdapter {
     private OnDataPass onDataPass;
     private boolean canComment;
     private LayoutInflater layoutInflater;
+    private String URL ;
+    private ProgressDialog progress;
+    private SharedPreferences sharedPref;
+    private SharedPreferences.Editor editor;
+    private String empEmail;
+
 
     public TopicAdapter(Context context,  OnDataPass onDataPass, List<Map> topicModelMapList, LikeModel likeModel, boolean canComment) {
+        URL = PropertyUtility.getProperty("httpUrlSite", context)+"GO10WebService/api/"+ PropertyUtility.getProperty("versionServer", context)
+                +"topic/deleteObj";
         this.layoutInflater =  LayoutInflater.from(context);
         this.topicModelMapList = topicModelMapList;
         this.context = context;
@@ -46,6 +71,9 @@ public class TopicAdapter extends BaseAdapter {
         this.onDataPass = onDataPass;
         this.canComment = canComment;
         rowLayoutMap = new HashMap<>();
+        sharedPref = context.getSharedPreferences(context.getString(R.string.preference_key), Context.MODE_PRIVATE);
+        editor = sharedPref.edit();
+
         Log.i(LOG_TAG, "canComment : "+canComment);
         if (canComment) {
             rowLayoutMap.put(0, R.layout.host_row_can_comment);
@@ -80,17 +108,18 @@ public class TopicAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         try {
             Log.i(LOG_TAG, "Position : "+position);
 
-            Map<String, Object> topicModelMap = (Map<String, Object>) getItem(position);
+            final Map<String, Object> topicModelMap = (Map<String, Object>) getItem(position);
             Log.i(LOG_TAG, "Item Type : "+topicModelMap.get("type"));
 
             int rowType = getItemViewType(position);
             if (convertView == null) {
                 holder = new ViewHolder();
                 if(rowType == 0) {
+                    empEmail = sharedPref.getString("empEmail", null);
                     convertView = layoutInflater.inflate(rowLayoutMap.get(0), null);
                     holder.subject = (TextView) convertView.findViewById(R.id.hostSubject);
                     holder.content = (TextView) convertView.findViewById(R.id.hostContent);
@@ -100,12 +129,60 @@ public class TopicAdapter extends BaseAdapter {
                     holder.imageView =(ImageView) convertView.findViewById(R.id.hostImage);
                     holder.btnLike = (Button) convertView.findViewById(R.id.btnLike);
                     holder.btnComment = (Button) convertView.findViewById(R.id.btnComment);
+                    holder.btnDelete = (ImageButton) convertView.findViewById(R.id.btnDelete);
+                    if(empEmail.equals(topicModelMap.get("empEmail"))) {
+                        holder.btnDelete.setVisibility(View.VISIBLE);
+                        Log.i(LOG_TAG,"EMAIL : "+empEmail.equals(topicModelMap.get("empEmail")));
+                        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                final CharSequence settingAvatar[] = new CharSequence[]{"Delete"};
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                Log.i(LOG_TAG, "Position : " + position);
+                                builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String selected = (String) settingAvatar[which];
+                                        if (selected.toString().equals("Delete")) {
+                                            Log.i(LOG_TAG, "Topic : " + topicModelMap);
+                                            callPostWebService(topicModelMap,true);
+                                        }
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
+                    }else{
+                        holder.btnDelete.setVisibility(View.GONE);
+                    }
                 } else if(rowType == 1) {
                     convertView = layoutInflater.inflate(rowLayoutMap.get(1), null);
                     holder.content = (TextView) convertView.findViewById(R.id.commentContent);
                     holder.user = (TextView) convertView.findViewById(R.id.commentUsername);
                     holder.date = (TextView) convertView.findViewById(R.id.commentTime);
                     holder.imageView =(ImageView) convertView.findViewById(R.id.commentImage);
+                    holder.btnDelete = (ImageButton) convertView.findViewById(R.id.btnDelete);
+                    if(empEmail.equals(topicModelMap.get("empEmail"))) {
+                        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                final CharSequence settingAvatar[] = new CharSequence[]{"Delete"};
+                                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        String selected = (String) settingAvatar[which];
+                                        Log.i(LOG_TAG, "Position : " + position);
+                                        if (selected.toString().equals("Delete")) {
+                                            Log.i(LOG_TAG, "Comment : " + topicModelMap);
+                                            callPostWebService(topicModelMap,false);
+                                        }
+                                    }
+                                });
+                                builder.show();
+                            }
+                        });
+                    }else{
+                        holder.btnDelete.setVisibility(View.GONE);
+                    }
                 }
                 convertView.setTag(holder);
             } else {
@@ -131,7 +208,7 @@ public class TopicAdapter extends BaseAdapter {
                     holder.btnComment.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            onDataPass.onDataPass(null);
+                            onDataPass.onDataPass("comment");
                         }
                     });
                 }
@@ -159,6 +236,72 @@ public class TopicAdapter extends BaseAdapter {
         ImageView imageView;
         Button btnLike;
         Button btnComment;
+        ImageButton btnDelete;
+    }
+
+    private void callPostWebService(Object topicModelMap, final boolean flag){
+        Log.i(LOG_TAG,"TOPIC MODEL : "+topicModelMap);
+        try {
+            String jsonString = new ObjectMapper().writeValueAsString(topicModelMap);
+            Log.i(LOG_TAG, jsonString);
+
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.post(context, URL, new StringEntity(jsonString,"utf-8"),
+                    RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onStart() {
+                            showLoadingDialog();
+                        }
+
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                            Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                            Log.i(LOG_TAG, "New id : "+new String(response));
+                            closeLoadingDialog();
+                            if(flag){
+                                callBackActivity();
+                            }else{
+                                onDataPass.onDataPass("refresh");
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable e) {
+                            Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
+                            closeLoadingDialog();
+                        }
+                    });
+
+        } catch (JsonProcessingException e) {
+            Log.e(LOG_TAG, "JsonProcessingException : "+e.getMessage(), e);
+            showErrorDialog().show();
+        }
+    }
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+        super.registerDataSetObserver(observer);
+    }
+
+    private void showLoadingDialog() {
+        progress = ProgressDialog.show(context, null,
+                "Processing", true);
+    }
+
+    private void closeLoadingDialog(){
+        progress.dismiss();
+    }
+
+    private android.app.AlertDialog.Builder showErrorDialog(){
+        android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(context);
+        alert.setMessage("Error while loading content.");
+        alert.setCancelable(true);
+        return alert;
+    }
+
+    private void callBackActivity() {
+        final Activity activity = (Activity) context;
+        activity.getFragmentManager().popBackStack();
     }
 
 }

@@ -56,6 +56,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private List<Map> topicModelMap;
     private LikeModel likeModel;
     private boolean canComent;
+    private ListView commentListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,9 +90,8 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     public void onStart() {
         try {
             super.onStart();
+            commentListView = (ListView) getView().findViewById(R.id.commentListView);
             Log.i(LOG_TAG, "onStart");
-            ListView commentListView = (ListView) getView().findViewById(R.id.commentListView);
-            commentListView.setAdapter(null);
             callGetWebService();
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -203,6 +203,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
         try {
             String concatGetTopicString = GET_TOPIC_URL+"?topicId="+_id+"&empEmail="+empEmail;
+            Log.i(LOG_TAG,"CONCAT          :  "+concatGetTopicString);
             AsyncHttpClient client = new AsyncHttpClient();
             client.addHeader("Cache-Control", "no-cache");
             client.get(concatGetTopicString, new BaseJsonHttpResponseHandler<List<Map>>() {
@@ -298,7 +299,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     }
 
     private void generateListView() {
-        ListView commentListView = (ListView) getView().findViewById(R.id.commentListView);
+        commentListView.setAdapter(null);
         TopicAdapter commentAdapter = new TopicAdapter(getActivity(), this, topicModelMap, likeModel, canComent);
         commentListView.setAdapter(commentAdapter);
     }
@@ -387,6 +388,11 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     @Override
     public void onDataPass(String data) {
-        callWritingCommentFragment();
+        if(data.equals("comment")){
+            callWritingCommentFragment();
+        }else if(data.equals("refresh")){
+            callGetWebService();
+        }
+
     }
 }
