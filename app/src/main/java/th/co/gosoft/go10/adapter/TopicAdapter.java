@@ -2,6 +2,7 @@ package th.co.gosoft.go10.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -301,7 +302,18 @@ public class TopicAdapter extends BaseAdapter {
 
     private void callBackActivity() {
         final Activity activity = (Activity) context;
-        activity.getFragmentManager().popBackStack();
+        FragmentManager fragmentManager = activity.getFragmentManager();
+        String str="";
+        Log.i(LOG_TAG,"backStackName "+fragmentManager.getBackStackEntryCount());
+        FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount()-1);
+        str = backEntry.getName();
+
+        Log.i(LOG_TAG,"backStackName "+str);
+        if(str == "tag"){
+            for(int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
+                fragmentManager.popBackStack("tag",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+            }
+        }
     }
 
 }

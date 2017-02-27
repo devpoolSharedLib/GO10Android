@@ -31,6 +31,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
@@ -213,44 +214,14 @@ public class SettingAvatar extends AppCompatActivity {
                     try {
                         imgURL = new JSONObject(responseString).getString("imgUrl");
                         Log.i(LOG_TAG, "imgURL : " + imgURL);
-                        target = new com.squareup.picasso.Target() {
-
-                            public void onBitmapLoaded(final Bitmap bitmap, Picasso.LoadedFrom from) {
-                                FileOutputStream fileOutputStream = null;
-                                try {
-                                    String imgFile = imgURL.substring(imgURL.lastIndexOf("/")+1);
-                                    ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
-                                    File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
-                                    File myPath = new File(directory, imgFile);
-                                    fileOutputStream = new FileOutputStream(myPath);
-                                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
-                                    Log.i(LOG_TAG,"PATH FILE : "+imgURL);
-                                    avatarPic.setImageBitmap(bitmap);
-                                    Log.i(LOG_TAG,"PATH FILE : "+myPath);
-                                    editor.putString("avatarPic",  new String(imgFile));
-                                    editor.commit();
-                                    saveSetting(false);
-                                } catch (Exception e) {
-                                    Log.e(LOG_TAG, e.getMessage(), e);
-                                } finally {
-                                    try {
-                                        fileOutputStream.close();
-                                    } catch (IOException e) {
-                                        Log.e(LOG_TAG, e.getMessage(), e);
-                                    }
-                                }
-                            }
-
-                            public void onBitmapFailed(Drawable errorDrawable) {
-                            }
-
-                            public void onPrepareLoad(Drawable placeHolderDrawable) {
-                            }
-                        };
-                        Picasso.with(SettingAvatar.this)
+                        String imgFile = imgURL.substring(imgURL.lastIndexOf("/")+1);
+                        editor.putString("avatarPic",  new String(imgFile));
+                        editor.commit();
+                        Glide.with(SettingAvatar.this)
                                 .load(imgURL)
-                                .into(target);
+                                .into(avatarPic);
                         closeLoadingDialog();
+                                    saveSetting(false);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -309,15 +280,6 @@ public class SettingAvatar extends AppCompatActivity {
         avatarName = sharedPref.getString("avatarName", "Avatar Name");
         avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
         String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
-//        ContextWrapper contextWrapper = new ContextWrapper(getApplicationContext());
-//        File directory = contextWrapper.getDir("imageDir", Context.MODE_PRIVATE);
-//        File imgFile = new  File(directory,avatarPicName);
-//        if(imgFile.exists()){
-//            Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-//            avatarPic.setImageBitmap(myBitmap);
-//        }else{
-//            avatarPic.setImageResource(getResources().getIdentifier(avatarPicName, "drawable", getPackageName()));
-//        }
         AvatarImageUtils.setAvatarImage(SettingAvatar.this, avatarPic, avatarPicName);
         SettingAvatarAdapter settingAvatarAdapter = new SettingAvatarAdapter(this, avatarName);
         settingListView.setAdapter(settingAvatarAdapter);
