@@ -4,15 +4,12 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,16 +34,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Locale;
 
 import cz.msebera.android.httpclient.Header;
@@ -54,7 +47,7 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.SettingAvatarAdapter;
 import th.co.gosoft.go10.model.UserModel;
-import th.co.gosoft.go10.util.AvatarImageUtils;
+import th.co.gosoft.go10.util.DownloadImageUtils;
 import th.co.gosoft.go10.util.BitmapUtil;
 import th.co.gosoft.go10.util.PropertyUtility;
 
@@ -280,7 +273,7 @@ public class SettingAvatar extends AppCompatActivity {
         avatarName = sharedPref.getString("avatarName", "Avatar Name");
         avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
         String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
-        AvatarImageUtils.setAvatarImage(SettingAvatar.this, avatarPic, avatarPicName);
+        DownloadImageUtils.setImageAvatar(SettingAvatar.this, avatarPic, avatarPicName);
         SettingAvatarAdapter settingAvatarAdapter = new SettingAvatarAdapter(this, avatarName);
         settingListView.setAdapter(settingAvatarAdapter);
     }

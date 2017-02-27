@@ -15,26 +15,43 @@ import java.io.File;
  * Created by manitkannika on 2/20/2017 AD.
  */
 
-public class AvatarImageUtils {
+public class DownloadImageUtils {
 
-    private static final String LOG_TAG = "AvatarImageUtils";
+    private static final String LOG_TAG = "DownloadImageUtils";
     private static int resourceId ;
 
-    public static void setAvatarImage(Context context, ImageView imageView, String imageName) {
+    public static void setImageAvatar(Context context, ImageView imageView, String imageName) {
+        Log.i(LOG_TAG, "setImageAvatar");
         String URL = PropertyUtility.getProperty("httpUrlSite", context )+"GO10WebService/DownloadServlet";
+        getResourceFromURL(context, imageView, imageName, URL, false);
+    }
+
+    public static void setImageRoom(Context context, ImageView imageView, String imageName) {
+        Log.i(LOG_TAG, "setImageRoom");
+        String URL = PropertyUtility.getProperty("httpUrlSite", context )+"GO10WebService/DownloadServlet";
+        getResourceFromURL(context, imageView, imageName, URL, true);
+    }
+
+    private static void getResourceFromURL(Context context, ImageView imageView, String imageName, String URL, boolean concat) {
         Resources resources = context.getResources();
         Log.i(LOG_TAG, "Exits file : "+imageName.toString());
         if(isExitInDrawable(context, imageName)) {
             resourceId = resources.getIdentifier(imageName, "drawable", context.getPackageName());
             imageView.setImageResource(resourceId);
         } else {
+            if(concat) {
+                imageName = concatFileType(imageName);
+            }
             String imageURL = URL + "?imageName="+imageName;
             Log.i(LOG_TAG,"Loading Image : "+imageURL);
             Glide.with(context)
                     .load(imageURL)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .into(imageView);
         }
+    }
+
+    private static String concatFileType(String imageName) {
+        return imageName+".png";
     }
 
     private static boolean isExitInDrawable(Context context, String fileName) {
@@ -43,4 +60,5 @@ public class AvatarImageUtils {
                 context.getPackageName());
         return resourceId != 0;
     }
+
 }

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import th.co.gosoft.go10.R;
-import th.co.gosoft.go10.util.AvatarImageUtils;
+import th.co.gosoft.go10.util.DownloadImageUtils;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 /**
@@ -71,7 +71,7 @@ public class RoomAdapter  extends ArrayAdapter<Map<String, Object>> {
                 holder.txtRowSubject.setText(topicMap.get("subject").toString());
                 holder.txtLikeCount.setText(topicMap.get("countLike") == null ? "0" : topicMap.get("countLike").toString());
                 holder.txtRowDate.setText(topicMap.get("date").toString());
-                AvatarImageUtils.setAvatarImage(getContext(), holder.imageView, topicMap.get("avatarPic").toString());
+                DownloadImageUtils.setImageAvatar(getContext(), holder.imageView, topicMap.get("avatarPic").toString());
 
                 if((Boolean) topicMap.get("statusRead") == false) {
                     convertView.setBackgroundColor(ContextCompat.getColor(context, R.color.colorUnreadTopic));

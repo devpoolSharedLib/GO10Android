@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import th.co.gosoft.go10.R;
+import th.co.gosoft.go10.util.DownloadImageUtils;
 import th.co.gosoft.go10.util.BadgeViewUtil;
 
 public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
@@ -48,9 +49,7 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
             Map<String, Object> roomMap = getItem(position);
 
             if (roomMap != null) {
-                if(null != imageIdMap.get(roomMap.get("_id").toString())) {
-                    holder.imgRoomIcon.setImageResource(imageIdMap.get(roomMap.get("_id").toString()));
-                }
+                DownloadImageUtils.setImageRoom(getContext(), holder.imgRoomIcon, roomMap.get("_id").toString());
                 holder.txtRoomName.setText(roomMap.get("name").toString());
                 int badge = (int) roomMap.get("badgeNumber");
                 if (badge > 0) {
@@ -75,16 +74,16 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
     }
 
     private void generateImageToMap(Map<String, Integer> imageIdMap) {
-        imageIdMap.put("rm01", R.drawable.general);
-        imageIdMap.put("rm02", R.drawable.tell);
-        imageIdMap.put("rm03", R.drawable.game);
-        imageIdMap.put("rm04", R.drawable.food);
-        imageIdMap.put("rm05", R.drawable.stock);
-        imageIdMap.put("rm06", R.drawable.travel);
-        imageIdMap.put("rm07", R.drawable.it);
-        imageIdMap.put("rm08", R.drawable.sport);
-        imageIdMap.put("rm09", R.drawable.newbie);
-        imageIdMap.put("rm10", R.drawable.talktoadmin);
+        imageIdMap.put("rm01", R.drawable.rm01);
+        imageIdMap.put("rm02", R.drawable.rm02);
+        imageIdMap.put("rm03", R.drawable.rm03);
+        imageIdMap.put("rm04", R.drawable.rm04);
+        imageIdMap.put("rm05", R.drawable.rm05);
+        imageIdMap.put("rm06", R.drawable.rm06);
+        imageIdMap.put("rm07", R.drawable.rm07);
+        imageIdMap.put("rm08", R.drawable.rm08);
+        imageIdMap.put("rm09", R.drawable.rm09);
+        imageIdMap.put("rm10", R.drawable.rm10);
     }
 
 }

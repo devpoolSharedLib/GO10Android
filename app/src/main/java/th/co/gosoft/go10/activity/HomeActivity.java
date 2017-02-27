@@ -31,7 +31,7 @@ import com.onesignal.shortcutbadger.ShortcutBadger;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.fragment.BoardContentFragment;
 import th.co.gosoft.go10.fragment.SelectRoomFragment;
-import th.co.gosoft.go10.util.AvatarImageUtils;
+import th.co.gosoft.go10.util.DownloadImageUtils;
 import th.co.gosoft.go10.util.CheckUpdateUtil;
 
 public class HomeActivity extends AppCompatActivity
@@ -131,7 +131,7 @@ public class HomeActivity extends AppCompatActivity
         Log.i(LOG_TAG, "empEmail : "+sharedPref.getString("empEmail", null));
         String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
         Log.i(LOG_TAG, "avatarPic : "+avatarPicName);
-        AvatarImageUtils.setAvatarImage(getApplication(), profileImageView, avatarPicName);
+        DownloadImageUtils.setImageAvatar(getApplication(), profileImageView, avatarPicName);
         String avatarName = sharedPref.getString("avatarName", "Avatar Name");
         profileName.setText(avatarName);
     }

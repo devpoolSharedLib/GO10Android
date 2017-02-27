@@ -35,7 +35,7 @@ import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.model.LikeModel;
-import th.co.gosoft.go10.util.AvatarImageUtils;
+import th.co.gosoft.go10.util.DownloadImageUtils;
 import th.co.gosoft.go10.util.LikeButtonOnClick;
 import th.co.gosoft.go10.util.OnDataPass;
 import th.co.gosoft.go10.util.PropertyUtility;
@@ -198,7 +198,7 @@ public class TopicAdapter extends BaseAdapter {
                 holder.date.setText((String) topicModelMap.get("date"));
                 Log.i(LOG_TAG, "countLike : "+topicModelMap.get("countLike"));
                 holder.likeCount.setText(topicModelMap.get("countLike") == null ? "0" : String.valueOf((Integer) topicModelMap.get("countLike")));
-                AvatarImageUtils.setAvatarImage(context, holder.imageView, topicModelMap.get("avatarPic").toString());
+                DownloadImageUtils.setImageAvatar(context, holder.imageView, topicModelMap.get("avatarPic").toString());
 
                 if(likeModel != null && likeModel.isStatusLike()){
                     holder.btnLike.setTextColor(this.context.getResources().getColor(R.color.colorLikeButton));
@@ -219,7 +219,7 @@ public class TopicAdapter extends BaseAdapter {
                 holder.content.setText(htmlSpan);
                 holder.user.setText((String) topicModelMap.get("avatarName"));
                 holder.date.setText((String) topicModelMap.get("date"));
-                AvatarImageUtils.setAvatarImage(context, holder.imageView, topicModelMap.get("avatarPic").toString());
+                DownloadImageUtils.setImageAvatar(context, holder.imageView, topicModelMap.get("avatarPic").toString());
             }
             return convertView;
         } catch (Exception e) {
