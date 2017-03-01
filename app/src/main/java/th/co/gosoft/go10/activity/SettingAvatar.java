@@ -28,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
@@ -47,8 +46,8 @@ import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.SettingAvatarAdapter;
 import th.co.gosoft.go10.model.UserModel;
-import th.co.gosoft.go10.util.DownloadImageUtils;
 import th.co.gosoft.go10.util.BitmapUtil;
+import th.co.gosoft.go10.util.DownloadImageUtils;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class SettingAvatar extends AppCompatActivity {
@@ -170,6 +169,7 @@ public class SettingAvatar extends AppCompatActivity {
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
         }
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -210,11 +210,9 @@ public class SettingAvatar extends AppCompatActivity {
                         String imgFile = imgURL.substring(imgURL.lastIndexOf("/")+1);
                         editor.putString("avatarPic",  new String(imgFile));
                         editor.commit();
-                        Glide.with(SettingAvatar.this)
-                                .load(imgURL)
-                                .into(avatarPic);
+                        DownloadImageUtils.setImageAvatar(SettingAvatar.this, avatarPic, imgFile);
                         closeLoadingDialog();
-                                    saveSetting(false);
+                        saveSetting(false);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -225,7 +223,6 @@ public class SettingAvatar extends AppCompatActivity {
                     closeLoadingDialog();
                     Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                     Log.e(LOG_TAG, e.getMessage(), e);
-                    Log.e(LOG_TAG, "response body : " + new String(responseBody));
                 }
             });
         }
@@ -269,13 +266,13 @@ public class SettingAvatar extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
+        Log.i(LOG_TAG, "onStart");
         avatarName = sharedPref.getString("avatarName", "Avatar Name");
         avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
         String avatarPicName = sharedPref.getString("avatarPic", "default_avatar");
-        DownloadImageUtils.setImageAvatar(SettingAvatar.this, avatarPic, avatarPicName);
         SettingAvatarAdapter settingAvatarAdapter = new SettingAvatarAdapter(this, avatarName);
         settingListView.setAdapter(settingAvatarAdapter);
+        DownloadImageUtils.setImageAvatar(SettingAvatar.this, avatarPic, avatarPicName);
     }
 
     private void saveSetting(boolean flag){
