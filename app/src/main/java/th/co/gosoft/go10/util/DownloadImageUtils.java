@@ -5,10 +5,9 @@ import android.content.res.Resources;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.squareup.picasso.Picasso;
 
-import jp.wasabeef.glide.transformations.CropCircleTransformation;
+import jp.wasabeef.picasso.transformations.CropCircleTransformation;
 
 /**
  * Created by manitkannika on 2/20/2017 AD.
@@ -45,17 +44,13 @@ public class DownloadImageUtils {
             Log.i(LOG_TAG,"Loading Image : "+imageURL);
 
             if(flag) {
-                Glide.with(context)
+                Picasso.with(context)
                         .load(imageURL)
-                        .fitCenter()
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
             } else {
-                Glide.with(context)
+                Picasso.with(context)
                         .load(imageURL)
-                        .fitCenter()
-                        .bitmapTransform(new CropCircleTransformation(context))
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .transform(new CropCircleTransformation())
                         .into(imageView);
             }
 
