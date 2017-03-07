@@ -100,7 +100,6 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                 @Override
                 public void onRefresh() {
                     callGetWebService();
-
                     pullRefreshLayout.setRefreshing(false);
                 }
             });

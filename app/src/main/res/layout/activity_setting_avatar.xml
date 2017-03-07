@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/camera"
+            android:src="@drawable/image_pick"
             android:paddingBottom="10dp"
             android:layout_gravity="center_horizontal|bottom" />
     </FrameLayout>

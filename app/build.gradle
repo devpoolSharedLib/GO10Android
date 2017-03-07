@@ -34,8 +34,6 @@ android {
         targetSdkVersion 23
         versionCode 18
         versionName "1.1.7"
-        manifestPlaceholders = [onesignal_app_id: "fa8c76f3-acb7-4cae-8f89-b0b82c40b7ed",
-                                onesignal_google_project_number: "181972566105"]
         multiDexEnabled true
     }
     packagingOptions {
@@ -45,8 +43,18 @@ android {
         exclude 'META-INF/NOTICE'
     }
     buildTypes {
+        debug {
+            defaultConfig {
+                manifestPlaceholders = [onesignal_app_id: "fa8c76f3-acb7-4cae-8f89-b0b82c40b7ed",
+                                        onesignal_google_project_number: "181972566105"]
+            }
+        }
         release {
             signingConfig signingConfigs.go10_release
+            defaultConfig {
+                manifestPlaceholders = [onesignal_app_id: "dbc694b3-14cb-4e5b-9a56-f7c167572ccb",
+                                        onesignal_google_project_number: "181972566105"]
+            }
         }
     }
 }
@@ -88,9 +96,7 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.5.2'
     compile 'com.android.support:support-v4:23.0.0'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
-//    compile "me.leolin:ShortcutBadger:1.1.13@aar"
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
-    // If you want to use the GPU Filters
     compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
     compile 'com.android.support:support-v4:21.0.+'
     compile 'com.baoyz.pullrefreshlayout:library:1.2.0'
