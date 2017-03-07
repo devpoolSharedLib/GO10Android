@@ -15,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
@@ -29,7 +30,6 @@ import cz.msebera.android.httpclient.Header;
 import th.co.gosoft.go10.R;
 import th.co.gosoft.go10.adapter.HotTopicListAdapter;
 import th.co.gosoft.go10.adapter.RoomGridAdapter;
-import th.co.gosoft.go10.model.TopicModel;
 import th.co.gosoft.go10.util.PropertyUtility;
 
 public class SelectRoomFragment extends Fragment {
@@ -45,6 +45,7 @@ public class SelectRoomFragment extends Fragment {
     private LinearLayout linearRoom;
     private boolean isLoadTopicDone = false;
     private boolean isLoadRoomDone = false;
+    private PullRefreshLayout pullRefreshLayout;
 
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -66,11 +67,14 @@ public class SelectRoomFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Log.i(LOG_TAG, "onCreateView()");
         return inflater.inflate(R.layout.activity_select_room, container, false);
+
     }
 
     @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
+    public void onActivityCreated(final Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        pullRefreshLayout = (PullRefreshLayout) getView().findViewById(R.id.activity_select_room_swipe_refresh_layout);
+
         try{
             hotTopicListView = (ListView) getView().findViewById(R.id.listViewSelectAvatar);
             linearRoom = (LinearLayout) getView().findViewById(R.id.linearRoom);
@@ -79,6 +83,14 @@ public class SelectRoomFragment extends Fragment {
             e.printStackTrace();
             Log.e(LOG_TAG, e.getMessage(), e);
         }
+        pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener(){
+
+            @Override
+            public void onRefresh() {
+                callHotTopicApi();
+                pullRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 
     @Override
@@ -280,3 +292,4 @@ public class SelectRoomFragment extends Fragment {
         return alert;
     }
 }
+

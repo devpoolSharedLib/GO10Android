@@ -6,14 +6,20 @@
     android:orientation="vertical"
     android:background="@color/colorLayoutBg">
 
+    <com.baoyz.widget.PullRefreshLayout
+        android:id="@+id/activity_select_room_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
     <ListView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
         android:id="@+id/commentListView"
         android:smoothScrollbar="true"
         android:divider="@color/colorTopicSpace"
         android:dividerHeight="20.0sp"/>
+    </com.baoyz.widget.PullRefreshLayout>
 
 
 </LinearLayout>

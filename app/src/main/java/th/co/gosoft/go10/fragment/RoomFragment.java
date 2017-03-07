@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
@@ -49,6 +50,7 @@ public class RoomFragment extends Fragment {
     private ListView topicListView;
     private String room_id;
     private String roomName;
+    private PullRefreshLayout pullRefreshLayout;
 
     private SharedPreferences sharedPref;
 
@@ -75,6 +77,7 @@ public class RoomFragment extends Fragment {
         DownloadImageUtils.setImageRoom(getActivity(), imageView, room_id);
         TextView txtRoomName = (TextView)  view.findViewById(R.id.txtRoomName);
         txtRoomName.setText(roomName);
+        pullRefreshLayout = (PullRefreshLayout) view.findViewById(R.id.pullRefreshLayout);
         return view;
     }
 
@@ -90,6 +93,14 @@ public class RoomFragment extends Fragment {
         Log.i(LOG_TAG, "onStart");
         topicListView.setAdapter(null);
         sleep(100);
+        pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
+
+            @Override
+            public void onRefresh() {
+                generateListView();
+                pullRefreshLayout.setRefreshing(false);
+            }
+        });
         callGetWebService();
     }
 

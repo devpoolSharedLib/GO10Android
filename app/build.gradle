@@ -55,6 +55,7 @@ repositories {
     mavenCentral()
     jcenter()
     maven { url 'https://maven.fabric.io/public' }
+
 }
 
 dependencies {
@@ -91,6 +92,9 @@ dependencies {
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     // If you want to use the GPU Filters
     compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+    compile 'com.android.support:support-v4:21.0.+'
+    compile 'com.baoyz.pullrefreshlayout:library:1.2.0'
+
 }
 
 configurations {

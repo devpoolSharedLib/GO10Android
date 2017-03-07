@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.baoyz.widget.PullRefreshLayout;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -57,6 +58,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private LikeModel likeModel;
     private boolean canComent;
     private ListView commentListView;
+    private PullRefreshLayout pullRefreshLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -92,6 +94,16 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
             super.onStart();
             commentListView = (ListView) getView().findViewById(R.id.commentListView);
             Log.i(LOG_TAG, "onStart");
+            pullRefreshLayout = (PullRefreshLayout) getView().findViewById(R.id.activity_select_room_swipe_refresh_layout);
+            pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener(){
+
+                @Override
+                public void onRefresh() {
+                    callGetWebService();
+
+                    pullRefreshLayout.setRefreshing(false);
+                }
+            });
             callGetWebService();
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
@@ -210,8 +222,9 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
                 @Override
                 public void onStart() {
-                    showLoadingDialog();
+//                    showLoadingDialog();
                 }
+
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<Map> response) {
@@ -226,7 +239,8 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                             Log.i(LOG_TAG, "finish get topic");
                             insertLikeModelToSharedPreferences();
                             generateListView();
-                            closeLoadingDialog();
+//                            closeLoadingDialog();
+
                         }
                     } catch (Throwable e) {
                         closeLoadingDialog();
@@ -267,7 +281,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                             Log.i(LOG_TAG, "finish get LikeModel");
                             insertLikeModelToSharedPreferences();
                             generateListView();
-                            closeLoadingDialog();
+//                            closeLoadingDialog();
                         }
                     } catch (Throwable e) {
                         closeLoadingDialog();

@@ -131,30 +131,6 @@ public class TopicAdapter extends BaseAdapter {
                     holder.btnLike = (Button) convertView.findViewById(R.id.btnLike);
                     holder.btnComment = (Button) convertView.findViewById(R.id.btnComment);
                     holder.btnDelete = (ImageButton) convertView.findViewById(R.id.btnDelete);
-                    if(empEmail.equals(topicModelMap.get("empEmail"))) {
-                        holder.btnDelete.setVisibility(View.VISIBLE);
-                        Log.i(LOG_TAG,"EMAIL : "+empEmail.equals(topicModelMap.get("empEmail")));
-                        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                final CharSequence settingAvatar[] = new CharSequence[]{"Delete"};
-                                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                Log.i(LOG_TAG, "Position : " + position);
-                                builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String selected = (String) settingAvatar[which];
-                                        if (selected.toString().equals("Delete")) {
-                                            Log.i(LOG_TAG, "Topic : " + topicModelMap);
-                                            callPostWebService(topicModelMap,true);
-                                        }
-                                    }
-                                });
-                                builder.show();
-                            }
-                        });
-                    }else{
-                        holder.btnDelete.setVisibility(View.GONE);
-                    }
                 } else if(rowType == 1) {
                     convertView = layoutInflater.inflate(rowLayoutMap.get(1), null);
                     holder.content = (TextView) convertView.findViewById(R.id.commentContent);
@@ -162,28 +138,6 @@ public class TopicAdapter extends BaseAdapter {
                     holder.date = (TextView) convertView.findViewById(R.id.commentTime);
                     holder.imageView =(ImageView) convertView.findViewById(R.id.commentImage);
                     holder.btnDelete = (ImageButton) convertView.findViewById(R.id.btnDelete);
-                    if(empEmail.equals(topicModelMap.get("empEmail"))) {
-                        holder.btnDelete.setOnClickListener(new View.OnClickListener() {
-                            public void onClick(View v) {
-                                final CharSequence settingAvatar[] = new CharSequence[]{"Delete"};
-                                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                                builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String selected = (String) settingAvatar[which];
-                                        Log.i(LOG_TAG, "Position : " + position);
-                                        if (selected.toString().equals("Delete")) {
-                                            Log.i(LOG_TAG, "Comment : " + topicModelMap);
-                                            callPostWebService(topicModelMap,false);
-                                        }
-                                    }
-                                });
-                                builder.show();
-                            }
-                        });
-                    }else{
-                        holder.btnDelete.setVisibility(View.GONE);
-                    }
                 }
                 convertView.setTag(holder);
             } else {
@@ -213,6 +167,30 @@ public class TopicAdapter extends BaseAdapter {
                         }
                     });
                 }
+                if(empEmail.equals(topicModelMap.get("empEmail"))) {
+                    holder.btnDelete.setVisibility(View.VISIBLE);
+                    Log.i(LOG_TAG,"EMAIL : "+empEmail.equals(topicModelMap.get("empEmail")));
+                    holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            final CharSequence settingAvatar[] = new CharSequence[]{"Delete"};
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            Log.i(LOG_TAG, "Position : " + position);
+                            builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String selected = (String) settingAvatar[which];
+                                    if (selected.toString().equals("Delete")) {
+                                        Log.i(LOG_TAG, "Topic : " + topicModelMap);
+                                        callPostWebService(topicModelMap,true);
+                                    }
+                                }
+                            });
+                            builder.show();
+                        }
+                    });
+                }else{
+                    holder.btnDelete.setVisibility(View.INVISIBLE);
+                }
             } else if(rowType == 1) {
                 URLImageParser urlImageParser = new URLImageParser(holder.content, this.context);
                 Spanned htmlSpan = Html.fromHtml((String) topicModelMap.get("content"), urlImageParser, null);
@@ -220,6 +198,29 @@ public class TopicAdapter extends BaseAdapter {
                 holder.user.setText((String) topicModelMap.get("avatarName"));
                 holder.date.setText((String) topicModelMap.get("date"));
                 DownloadImageUtils.setImageAvatar(context, holder.imageView, topicModelMap.get("avatarPic").toString());
+                if(empEmail.equals(topicModelMap.get("empEmail"))) {
+                    holder.btnDelete.setVisibility(View.VISIBLE);
+                    holder.btnDelete.setOnClickListener(new View.OnClickListener() {
+                        public void onClick(View v) {
+                            final CharSequence settingAvatar[] = new CharSequence[]{"Delete"};
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setItems(settingAvatar, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    String selected = (String) settingAvatar[which];
+                                    Log.i(LOG_TAG, "Position : " + position);
+                                    if (selected.toString().equals("Delete")) {
+                                        Log.i(LOG_TAG, "Comment : " + topicModelMap);
+                                        callPostWebService(topicModelMap,false);
+                                    }
+                                }
+                            });
+                            builder.show();
+                        }
+                    });
+                }else{
+                    holder.btnDelete.setVisibility(View.INVISIBLE);
+                }
             }
             return convertView;
         } catch (Exception e) {
