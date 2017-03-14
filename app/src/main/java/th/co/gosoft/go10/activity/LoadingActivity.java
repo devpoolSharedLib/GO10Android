@@ -15,6 +15,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.login.LoginFragment;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.auth.api.Auth;
@@ -29,6 +30,7 @@ import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,6 +53,7 @@ public class LoadingActivity extends Activity {
     private String URL_CHECK_USER_ACTIVATION;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
+    private String ACCESS_URL;
     private boolean isActivate;
 
 
@@ -90,6 +93,8 @@ public class LoadingActivity extends Activity {
                 +"user/getUserByAccountId";
         URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/checkUserActivation";
+        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                +"topic/accessapp";
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
@@ -156,11 +161,31 @@ public class LoadingActivity extends Activity {
          return sharedPref.getBoolean("hasLoggedIn", false);
     }
 
+    private void callWebAccess(){
+        final String empEmail = sharedPref.getString("empEmail", null);
+        final String concatAccess = ACCESS_URL+"?empEmail="+empEmail;
+        try {
+            final AsyncHttpClient clientAccess = new AsyncHttpClient();
+            clientAccess.get(this, concatAccess, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(LOG_TAG, "WEBSERVICE : " + concatAccess);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                }
+            });
+        } catch (Exception e) {
+                Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+            }
+    }
+
     private void activateUserAccount() {
-        String empEmail = sharedPref.getString("empEmail", null);
+        final String empEmail = sharedPref.getString("empEmail", null);
         String concatString = URL_CHECK_USER_ACTIVATION+"?empEmail="+empEmail;
         try {
-            AsyncHttpClient client = new AsyncHttpClient();
+            final AsyncHttpClient client = new AsyncHttpClient();
             client.get(this, concatString, new AsyncHttpResponseHandler() {
 
                 @Override
@@ -168,11 +193,14 @@ public class LoadingActivity extends Activity {
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+
                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                     if(statusCode == 201){
+
                         if(hasNotSettingAvatar()){
                             gotoSettingAvatarActivity();
                         } else {
+                            callWebAccess();
                             gotoHomeActivity();
                         }
                     }
@@ -193,6 +221,7 @@ public class LoadingActivity extends Activity {
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
         }
+
     }
 
     private boolean hasNotSettingAvatar() {
@@ -309,6 +338,7 @@ public class LoadingActivity extends Activity {
                             }, SPLASH_TIME_OUT);
                         } else {
                             Log.i(LOG_TAG, "have user model");
+                            Log.i(LOG_TAG,"Acess WebService :"+userModelList);
                             insertUserModelToSharedPreferences(userModelList.get(0));
                             new Handler().postDelayed(new Runnable() {
                                 @Override

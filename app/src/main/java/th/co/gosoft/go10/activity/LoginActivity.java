@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtEmail;
     private EditText txtPassword;
     private ProgressDialog progress;
+    private String ACCESS_URL ;
 
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -50,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
                 +"user/getUserByUserPassword";
         CHECK_ROOM_NOTIFICATION_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/checkRoomNotificationModel";
+        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+                +"topic/accessapp";
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
 
@@ -64,11 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void callWebService(String email, String password){
-        String concatString = URL+"?email="+email+"&password="+password;
+    private void callWebService(final String email, final String password){
+        final String concatString = URL+"?email="+email+"&password="+password;
 
         try {
-            AsyncHttpClient client = new AsyncHttpClient();
+            final AsyncHttpClient client = new AsyncHttpClient();
             client.get(concatString, new BaseJsonHttpResponseHandler<List<Map<String, Object>>>() {
 
                 @Override
@@ -90,6 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                             if(isActivate(userModelList)){
                                 Toast.makeText(getApplication(), "The e-mail or password is incorrect.\nPlease try again.", Toast.LENGTH_SHORT).show();
                             } else {
+                                callWebAccess(email);
                                 insertUserModelToSharedPreferences(userModelList.get(0));
                                 registerRoomNotificationModel();
                             }
@@ -113,11 +117,38 @@ public class LoginActivity extends AppCompatActivity {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
                     return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<Map<String, Object>>>() {});
                 }
-
             });
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
             closeLoadingDialog();
+        }
+    }
+
+    private void callWebAccess(final String email){
+        final String concatAccess = ACCESS_URL+"?empEmail="+email;
+        try {
+            final AsyncHttpClient clientAccess = new AsyncHttpClient();
+            clientAccess.get(concatAccess, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    try {
+                        if(email.isEmpty()){
+                            Log.i(LOG_TAG,"EMAIL IS EXITS : ");
+                        }else{
+                            Log.i(LOG_TAG,"Access Complete : "+concatAccess);
+                        }
+                    }catch (Throwable e){
+                        Log.e(LOG_TAG, e.getMessage(),e);
+                    }
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                }
+            });
+        }catch (Throwable e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 
@@ -161,7 +192,6 @@ public class LoginActivity extends AppCompatActivity {
                     OneSignal.setSubscription(false);
                     closeLoadingDialog();
                 }
-
             });
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
@@ -175,6 +205,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private boolean isActivate(List<Map<String, Object>> userModelList) {
         return ! (Boolean) userModelList.get(0).get("activate");
+
     }
 
     private void insertUserModelToSharedPreferences(Map<String, Object> userModel) {
