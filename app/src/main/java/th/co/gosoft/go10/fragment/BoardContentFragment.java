@@ -44,6 +44,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private String GET_TOPIC_URL;
     private String CHECK_LIKE_URL;
+    private String READTOPIC_URL;
     private String LIKE_URL;
     private ProgressDialog progress;
     private String _id ;
@@ -71,18 +72,20 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                 +"topic/checkLikeTopic";
         LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
                 +"topic/";
-
+        READTOPIC_URL = PropertyUtility.getProperty("httpsUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+                +"topic/readtopic";
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
+        Bundle bundle = getArguments();
+        _id = bundle.getString("_id");
+        empEmail = sharedPref.getString("empEmail", null);
+        callWebAccess();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.activity_board_content, container, false);
-        Bundle bundle = getArguments();
-        _id = bundle.getString("_id");
-        empEmail = sharedPref.getString("empEmail", null);
         Log.i(LOG_TAG, "_id : " + _id);
 
         return view;
@@ -132,6 +135,26 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
             }
         } catch (Exception e) {
             Log.e(LOG_TAG, e.getMessage(), e);
+        }
+    }
+
+    private void callWebAccess(){
+        final String concatReadTopic = READTOPIC_URL +"?empEmail="+empEmail+"&topicId="+_id;
+        Log.i(LOG_TAG,"AccessTopic : "+concatReadTopic);
+        try {
+            final AsyncHttpClient clientAccess = new AsyncHttpClient();
+            clientAccess.get(concatReadTopic, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(LOG_TAG, "readTopic : " + clientAccess);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                }
+            });
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
         }
     }
 

@@ -23,6 +23,7 @@ import com.baoyz.widget.PullRefreshLayout;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 
 import java.util.ArrayList;
@@ -51,6 +52,7 @@ public class RoomFragment extends Fragment {
     private String room_id;
     private String roomName;
     private PullRefreshLayout pullRefreshLayout;
+    private String READROOM_URL;
 
     private SharedPreferences sharedPref;
 
@@ -58,20 +60,23 @@ public class RoomFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        Log.i(LOG_TAG," onCreate RoomFragment");
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
                 +"topic/gettopiclistbyroom";
+        READROOM_URL = PropertyUtility.getProperty("httpsUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+                +"topic/readroom";
+        Bundle bundle = getArguments();
+        room_id = bundle.getString("room_id");
+        roomName = bundle.getString("roomName");
+        callWebAccess();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.activity_room, container, false);
-        Bundle bundle = getArguments();
-        room_id = bundle.getString("room_id");
-        roomName = bundle.getString("roomName");
         Log.i(LOG_TAG, "room_id : " + room_id);
         Log.i(LOG_TAG, "roomName : " + roomName);
-
         generateImageToMap(imageIdMap);
         ImageView imageView = (ImageView) view.findViewById(R.id.roomIcon);
         DownloadImageUtils.setImageRoom(getActivity(), imageView, room_id);
@@ -90,11 +95,10 @@ public class RoomFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        Log.i(LOG_TAG, "onStart");
+        Log.i(LOG_TAG, "onStart RoomFragment");
         topicListView.setAdapter(null);
         sleep(100);
         pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener() {
-
             @Override
             public void onRefresh() {
                 generateListView();
@@ -103,6 +107,28 @@ public class RoomFragment extends Fragment {
         });
         callGetWebService();
     }
+
+    private void callWebAccess(){
+        final String empEmail = sharedPref.getString("empEmail", null);
+        final String concatReadRoom = READROOM_URL +"?empEmail="+empEmail+"&roomId="+room_id;
+        Log.i(LOG_TAG,"AccessRoom : "+concatReadRoom);
+        try {
+            final AsyncHttpClient clientAccess = new AsyncHttpClient();
+            clientAccess.get(concatReadRoom, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i(LOG_TAG, "readRoom : " + clientAccess);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                }
+            });
+        } catch (Exception e) {
+            Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+        }
+    }
+
 
     private void callGetWebService(){
         String concatString = URL+"?roomId="+room_id+"&empEmail="+sharedPref.getString("empEmail", null)+"&startDate="+sharedPref.getString("notificationDate", null);
