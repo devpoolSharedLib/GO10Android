@@ -1,9 +1,9 @@
 package th.co.gosoft.go10.util;
 
-import android.app.Activity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.rampo.updatechecker.UpdateChecker;
+import androidmads.updatehandler.app.UpdateHandler;
 
 /**
  * Created by Plooer on 1/23/2017 AD.
@@ -12,12 +12,11 @@ import com.rampo.updatechecker.UpdateChecker;
 public class CheckUpdateUtil {
     private final String LOG_TAG = "CheckUpdate";
 
-    public void checkUpdateVersion(Activity activity) {
+    public void checkUpdateVersion(AppCompatActivity activity) {
         Log.i( LOG_TAG, "checkUpdateVersion" );
 
-        UpdateChecker checker = new UpdateChecker(activity);
-        checker.setSuccessfulChecksRequired(1);
-        checker.showNotification();
-        checker.start();
+        UpdateHandler updateHandler = new UpdateHandler(activity);
+        updateHandler.start();
+        updateHandler.showDefaultAlert(true);
     }
 }

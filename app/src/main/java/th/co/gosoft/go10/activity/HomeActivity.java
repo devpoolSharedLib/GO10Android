@@ -52,6 +52,7 @@ public class HomeActivity extends AppCompatActivity
             initialOneSignal();
 
             new CheckUpdateUtil().checkUpdateVersion(this);
+
             prepareGmailLoginSession();
             FacebookSdk.sdkInitialize(this.getApplicationContext());
 
