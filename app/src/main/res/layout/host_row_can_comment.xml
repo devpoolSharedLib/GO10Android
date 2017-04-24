@@ -86,7 +86,8 @@
         android:layout_below="@+id/imgLike"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:background="@drawable/host_topic">
+        android:background="@drawable/host_topic"
+        android:id="@+id/linearLayout2">
 
         <Button
             android:layout_width="0dp"
@@ -143,5 +144,15 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_width="15dp" />
+
+    <ImageButton
+        android:id="@+id/btnPoll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/poll_vote"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignRight="@+id/btnDelete"
+        android:layout_alignEnd="@+id/btnDelete" />
+
 
 </RelativeLayout>

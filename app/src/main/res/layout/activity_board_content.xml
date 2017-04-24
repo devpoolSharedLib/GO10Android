@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorLayoutBg">
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:orientation="vertical"
+android:background="@color/colorLayoutBg">
 
-    <com.baoyz.widget.PullRefreshLayout
-        android:id="@+id/activity_select_room_swipe_refresh_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+<com.baoyz.widget.PullRefreshLayout
+    android:id="@+id/activity_select_room_swipe_refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
 
     <ListView
         android:layout_width="match_parent"
@@ -19,7 +19,6 @@
         android:smoothScrollbar="true"
         android:divider="@color/colorTopicSpace"
         android:dividerHeight="20.0sp"/>
-    </com.baoyz.widget.PullRefreshLayout>
-
+</com.baoyz.widget.PullRefreshLayout>\
 
 </LinearLayout>

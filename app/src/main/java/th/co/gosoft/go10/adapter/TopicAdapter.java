@@ -2,12 +2,16 @@ package th.co.gosoft.go10.adapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -26,6 +30,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,12 +39,17 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 import cz.msebera.android.httpclient.entity.StringEntity;
 import th.co.gosoft.go10.R;
+//import th.co.gosoft.go10.fragment.PollFragment;
+import th.co.gosoft.go10.activity.HomeActivity;
+import th.co.gosoft.go10.fragment.PollFragment;
 import th.co.gosoft.go10.model.LikeModel;
 import th.co.gosoft.go10.util.DownloadImageUtils;
 import th.co.gosoft.go10.util.LikeButtonOnClick;
 import th.co.gosoft.go10.util.OnDataPass;
 import th.co.gosoft.go10.util.PropertyUtility;
 import th.co.gosoft.go10.util.URLImageParser;
+
+import static com.facebook.FacebookSdk.getApplicationContext;
 
 public class TopicAdapter extends BaseAdapter {
 
@@ -50,6 +60,9 @@ public class TopicAdapter extends BaseAdapter {
     private Map<Integer,Integer> rowLayoutMap;
     private List<Map> topicModelMapList;
     private LikeModel likeModel;
+    private List<Map> pollModelMap;
+    private int countacceptPoll;
+    private List<Map> topicMap;
     private boolean isClick = false;
     private ViewHolder holder = null;
     private OnDataPass onDataPass;
@@ -62,11 +75,14 @@ public class TopicAdapter extends BaseAdapter {
     private String empEmail;
 
 
-    public TopicAdapter(Context context,  OnDataPass onDataPass, List<Map> topicModelMapList, LikeModel likeModel, boolean canComment) {
+
+    public TopicAdapter(Context context,  OnDataPass onDataPass, List<Map> topicMap, LikeModel likeModel, boolean canComment) {
         URL = PropertyUtility.getProperty("httpUrlSite", context)+"GO10WebService/api/"+ PropertyUtility.getProperty("versionServer", context)
                 +"topic/deleteObj";
         this.layoutInflater =  LayoutInflater.from(context);
-        this.topicModelMapList = topicModelMapList;
+        this.topicModelMapList = (List<Map>) topicMap.get(0).get("boardContentList");
+        this.pollModelMap = (List<Map>) topicMap.get(0).get("pollModel");
+        this.countacceptPoll = (int) topicMap.get(0).get("countAcceptPoll");
         this.context = context;
         this.likeModel = likeModel;
         this.onDataPass = onDataPass;
@@ -74,7 +90,9 @@ public class TopicAdapter extends BaseAdapter {
         rowLayoutMap = new HashMap<>();
         sharedPref = context.getSharedPreferences(context.getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
-
+        Log.i(LOG_TAG,"pollModel : "+pollModelMap);
+        Log.i(LOG_TAG,"topicModelMapList  : "+topicModelMapList);
+        Log.i(LOG_TAG,"countAccPoll : "+ countacceptPoll);
         Log.i(LOG_TAG, "canComment : "+canComment);
         if (canComment) {
             rowLayoutMap.put(0, R.layout.host_row_can_comment);
@@ -85,16 +103,19 @@ public class TopicAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
+        Log.i(LOG_TAG,"getTopicMap ; "+topicModelMapList.size());
         return topicModelMapList.size();
     }
 
     @Override
     public Object getItem(int position) {
+        Log.i(LOG_TAG,"getTopicMapPosition ; "+topicModelMapList.get(position));
         return topicModelMapList.get(position);
     }
 
     @Override
     public long getItemId(int position) {
+        Log.i(LOG_TAG,"Position ; "+position);
         return position;
     }
 
@@ -123,7 +144,7 @@ public class TopicAdapter extends BaseAdapter {
                     empEmail = sharedPref.getString("empEmail", null);
                     convertView = layoutInflater.inflate(rowLayoutMap.get(0), null);
                     holder.subject = (TextView) convertView.findViewById(R.id.hostSubject);
-                    holder.content = (TextView) convertView.findViewById(R.id.hostContent);
+                    holder.content = (TextView) convertView.findViewById(R.id.hostQuestion1);
                     holder.user = (TextView) convertView.findViewById(R.id.hostUsername);
                     holder.date = (TextView) convertView.findViewById(R.id.hostTime);
                     holder.likeCount = (TextView) convertView.findViewById(R.id.txtLikeCount);
@@ -131,6 +152,15 @@ public class TopicAdapter extends BaseAdapter {
                     holder.btnLike = (Button) convertView.findViewById(R.id.btnLike);
                     holder.btnComment = (Button) convertView.findViewById(R.id.btnComment);
                     holder.btnDelete = (ImageButton) convertView.findViewById(R.id.btnDelete);
+                    holder.btnPoll = (ImageButton) convertView.findViewById(R.id.btnPoll);
+                    holder.btnPoll.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View v) {
+                            callPollFragment();
+                        }
+
+                    });
                 } else if(rowType == 1) {
                     convertView = layoutInflater.inflate(rowLayoutMap.get(1), null);
                     holder.content = (TextView) convertView.findViewById(R.id.commentContent);
@@ -209,7 +239,7 @@ public class TopicAdapter extends BaseAdapter {
                                 public void onClick(DialogInterface dialog, int which) {
                                     String selected = (String) settingAvatar[which];
                                     Log.i(LOG_TAG, "Position : " + position);
-                                    if (selected.toString().equals("Delete")) {
+                                        if (selected.toString().equals("Delete")) {
                                         Log.i(LOG_TAG, "Comment : " + topicModelMap);
                                         callPostWebService(topicModelMap,false);
                                     }
@@ -229,6 +259,7 @@ public class TopicAdapter extends BaseAdapter {
         }
     }
 
+
     private static class ViewHolder {
         TextView subject;
         TextView content;
@@ -239,6 +270,7 @@ public class TopicAdapter extends BaseAdapter {
         Button btnLike;
         Button btnComment;
         ImageButton btnDelete;
+        ImageButton btnPoll;
     }
 
     private void callPostWebService(Object topicModelMap, final boolean flag){
@@ -262,7 +294,7 @@ public class TopicAdapter extends BaseAdapter {
                             closeLoadingDialog();
                             if(flag){
                                 callBackActivity();
-                            }else{
+                               }else{
                                 onDataPass.onDataPass("refresh");
                             }
                         }
@@ -302,7 +334,7 @@ public class TopicAdapter extends BaseAdapter {
     }
 
     private void callBackActivity() {
-        final Activity activity = (Activity) context;
+        Activity activity = (Activity) context;
         FragmentManager fragmentManager = activity.getFragmentManager();
         String str="";
         Log.i(LOG_TAG,"backStackName "+fragmentManager.getBackStackEntryCount());
@@ -317,4 +349,18 @@ public class TopicAdapter extends BaseAdapter {
         }
     }
 
+    private void callPollFragment() {
+        Activity activity = (Activity) context;
+        Log.i(LOG_TAG, "PollActivity");
+        Bundle data = new Bundle();
+        data.putSerializable("pollModel" , (Serializable) pollModelMap);
+        Fragment fragment = new PollFragment();
+
+        fragment.setArguments(data);
+        FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").addToBackStack(null).commit();
+//        FragmentManager fragmentManager = activity.getFragmentManager();
+//        fragmentManager.beginTransaction().replace(R.layout.activity_poll, fragment).addToBackStack("tag").addToBackStack(null).commit();
+
+    }
 }

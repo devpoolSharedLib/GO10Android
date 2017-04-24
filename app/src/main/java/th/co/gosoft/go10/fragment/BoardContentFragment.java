@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -53,13 +54,17 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
 
+    private List<Map> topicMap;
     private boolean isLoadTopicDone = false;
     private boolean isCheckLikeDone = false;
     private List<Map> topicModelMap;
+    private List<Map> pollModelMap;
+    private int countAcceptPoll;
     private LikeModel likeModel;
     private boolean canComent;
     private ListView commentListView;
     private PullRefreshLayout pullRefreshLayout;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,11 +79,13 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                 +"topic/";
         READTOPIC_URL = PropertyUtility.getProperty("httpsUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
                 +"topic/readtopic";
+
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         Bundle bundle = getArguments();
         _id = bundle.getString("_id");
         empEmail = sharedPref.getString("empEmail", null);
+        Log.i(LOG_TAG,"URL ");
         callWebAccess();
     }
 
@@ -96,6 +103,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         try {
             super.onStart();
             commentListView = (ListView) getView().findViewById(R.id.commentListView);
+
             Log.i(LOG_TAG, "onStart");
             pullRefreshLayout = (PullRefreshLayout) getView().findViewById(R.id.activity_select_room_swipe_refresh_layout);
             pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener(){
@@ -251,9 +259,17 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<Map> response) {
                     try {
-                        topicModelMap = response;
+                        topicMap =response;
+                        topicModelMap = (List<Map>) topicMap.get(0).get("boardContentList") ;
+//                        pollModelMap = (List<Map>) topicMap.get(0).get("pollModel");
+//                        countAcceptPoll = (int) topicMap.get(0).get("countAcceptPoll");
+//                        Log.i(LOG_TAG," pollModel : "+topicMap.get(0).get("pollModel"));
+                        Log.i(LOG_TAG," boardContentList : "+topicMap.get(0).get("boardContentList"));
+//                        Log.i(LOG_TAG," countAcceptPoll : "+topicMap.get(0).get("countAcceptPoll"));
+                        Log.i(LOG_TAG,"topicModelMap : "+topicModelMap);
                         room_id = (String) topicModelMap.get(0).get("roomId");
                         isLoadTopicDone = true;
+                        Log.i(LOG_TAG,"RoomID    "+room_id);
                         isCommentUser(room_id);
                         setHasOptionsMenu(true);
                         Log.i(LOG_TAG, "Topic Model List Size : " + topicModelMap.size());
@@ -261,6 +277,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                             Log.i(LOG_TAG, "finish get topic");
                             insertLikeModelToSharedPreferences();
                             generateListView();
+
 //                            closeLoadingDialog();
 
                         }
@@ -278,6 +295,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
                 @Override
                 protected List<Map> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
+                    Log.i(LOG_TAG,"RAWJSON ");
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
                     return new ObjectMapper().readValue(rawJsonData,new TypeReference<List<Map<String,Object>>>() {});
                 }
@@ -336,7 +354,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private void generateListView() {
         commentListView.setAdapter(null);
-        TopicAdapter commentAdapter = new TopicAdapter(getActivity(), this, topicModelMap, likeModel, canComent);
+        TopicAdapter commentAdapter = new TopicAdapter(getActivity(),this, topicMap, likeModel, canComent);
         commentListView.setAdapter(commentAdapter);
     }
 
@@ -390,7 +408,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         String empEmail = sharedPref.getString("empEmail", null);
         Set<String> stringSet = sharedPref.getStringSet("commentUser"+room_id, null);
         if (stringSet.contains("all") || stringSet.contains(empEmail)) {
-            Log.i(LOG_TAG, "if");
+            Log.i(LOG_TAG, "CommentUSer");
             result = true;
         }
         canComent = result;
@@ -411,6 +429,8 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         return false;
     }
 
+
+
     private void callWritingCommentFragment() {
         Log.i(LOG_TAG, "click comment");
         Bundle data = new Bundle();
@@ -421,6 +441,8 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").addToBackStack(null).commit();
     }
+
+
 
     @Override
     public void onDataPass(String data) {
