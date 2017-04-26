@@ -149,10 +149,11 @@
         android:id="@+id/btnPoll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/poll_vote"
         android:layout_above="@+id/linearLayout2"
+        android:layout_alignEnd="@+id/btnDelete"
         android:layout_alignRight="@+id/btnDelete"
-        android:layout_alignEnd="@+id/btnDelete" />
+        android:visibility="invisible"
+        app:srcCompat="@drawable/poll_vote" />
 
 
 </RelativeLayout>

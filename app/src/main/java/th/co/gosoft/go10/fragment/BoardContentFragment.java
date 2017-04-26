@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -45,7 +44,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private String GET_TOPIC_URL;
     private String CHECK_LIKE_URL;
-    private String READTOPIC_URL;
+    private String READ_TOPIC_URL;
     private String LIKE_URL;
     private ProgressDialog progress;
     private String _id ;
@@ -58,29 +57,28 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private boolean isLoadTopicDone = false;
     private boolean isCheckLikeDone = false;
     private List<Map> topicModelMap;
-    private List<Map> pollModelMap;
-    private int countAcceptPoll;
     private LikeModel likeModel;
-    private boolean canComent;
+    private boolean canComment;
     private ListView commentListView;
     private PullRefreshLayout pullRefreshLayout;
-
+    private Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         Log.i(LOG_TAG, "onCreate : BoardContentFragment");
         super.onCreate(savedInstanceState);
-
-        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+        this.context = getActivity();
+        
+        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"topic/gettopicbyid";
-        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"topic/checkLikeTopic";
-        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"topic/";
-        READTOPIC_URL = PropertyUtility.getProperty("httpsUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+        READ_TOPIC_URL = PropertyUtility.getProperty("httpsUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"topic/readtopic";
 
-        sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
+        sharedPref = this.context.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
         Bundle bundle = getArguments();
         _id = bundle.getString("_id");
@@ -147,7 +145,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     }
 
     private void callWebAccess(){
-        final String concatReadTopic = READTOPIC_URL +"?empEmail="+empEmail+"&topicId="+_id;
+        final String concatReadTopic = READ_TOPIC_URL +"?empEmail="+empEmail+"&topicId="+_id;
         Log.i(LOG_TAG,"AccessTopic : "+concatReadTopic);
         try {
             final AsyncHttpClient clientAccess = new AsyncHttpClient();
@@ -170,7 +168,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         try {
             String jsonString = new ObjectMapper().writeValueAsString(likeModel);
             AsyncHttpClient client = new AsyncHttpClient();
-            client.post(getActivity(), webServiceURL, new StringEntity(jsonString, "utf-8"),
+            client.post(this.context, webServiceURL, new StringEntity(jsonString, "utf-8"),
                 RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
 
                     @Override
@@ -198,7 +196,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         try {
             String jsonString = new ObjectMapper().writeValueAsString(likeModel);
             AsyncHttpClient client = new AsyncHttpClient();
-            client.put(getActivity(), webServiceURL, new StringEntity(jsonString, "utf-8"),
+            client.put(this.context, webServiceURL, new StringEntity(jsonString, "utf-8"),
                 RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
 
                     @Override
@@ -255,17 +253,11 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 //                    showLoadingDialog();
                 }
 
-
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<Map> response) {
                     try {
                         topicMap =response;
                         topicModelMap = (List<Map>) topicMap.get(0).get("boardContentList") ;
-//                        pollModelMap = (List<Map>) topicMap.get(0).get("pollModel");
-//                        countAcceptPoll = (int) topicMap.get(0).get("countAcceptPoll");
-//                        Log.i(LOG_TAG," pollModel : "+topicMap.get(0).get("pollModel"));
-                        Log.i(LOG_TAG," boardContentList : "+topicMap.get(0).get("boardContentList"));
-//                        Log.i(LOG_TAG," countAcceptPoll : "+topicMap.get(0).get("countAcceptPoll"));
                         Log.i(LOG_TAG,"topicModelMap : "+topicModelMap);
                         room_id = (String) topicModelMap.get(0).get("roomId");
                         isLoadTopicDone = true;
@@ -277,12 +269,10 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                             Log.i(LOG_TAG, "finish get topic");
                             insertLikeModelToSharedPreferences();
                             generateListView();
-
 //                            closeLoadingDialog();
-
                         }
                     } catch (Throwable e) {
-                        closeLoadingDialog();
+//                        closeLoadingDialog();
                         Log.e(LOG_TAG, e.getMessage(), e);
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -324,7 +314,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 //                            closeLoadingDialog();
                         }
                     } catch (Throwable e) {
-                        closeLoadingDialog();
+//                        closeLoadingDialog();
                         Log.e(LOG_TAG, e.getMessage(), e);
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -354,7 +344,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
     private void generateListView() {
         commentListView.setAdapter(null);
-        TopicAdapter commentAdapter = new TopicAdapter(getActivity(),this, topicMap, likeModel, canComent);
+        TopicAdapter commentAdapter = new TopicAdapter(this.context ,this, topicMap, likeModel, canComment);
         commentListView.setAdapter(commentAdapter);
     }
 
@@ -379,7 +369,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     }
 
     private void showLoadingDialog() {
-        progress = ProgressDialog.show(getActivity(), null,
+        progress = ProgressDialog.show(this.context, null,
                 "Processing", true);
     }
 
@@ -388,7 +378,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     }
 
     private AlertDialog.Builder showErrorDialog(){
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alert = new AlertDialog.Builder(this.context);
         alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
         return alert;
@@ -397,7 +387,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         Log.i(LOG_TAG, "onCreateOptionsMenu");
-        if(canComent) {
+        if(canComment) {
             inflater.inflate(R.menu.board_content_menu, menu);
             super.onCreateOptionsMenu(menu, inflater);
         }
@@ -411,8 +401,8 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
             Log.i(LOG_TAG, "CommentUSer");
             result = true;
         }
-        canComent = result;
-        Log.i(LOG_TAG, "isCommentUser : "+canComent);
+        canComment = result;
+        Log.i(LOG_TAG, "isCommentUser : "+ canComment);
         return result;
     }
 
@@ -429,8 +419,6 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         return false;
     }
 
-
-
     private void callWritingCommentFragment() {
         Log.i(LOG_TAG, "click comment");
         Bundle data = new Bundle();
@@ -442,13 +430,11 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").addToBackStack(null).commit();
     }
 
-
-
     @Override
-    public void onDataPass(String data) {
-        if(data.equals("comment")){
+    public void onDataPass(Object data) {
+        if(String.valueOf(data).equals("comment")){
             callWritingCommentFragment();
-        }else if(data.equals("refresh")){
+        }else if(String.valueOf(data).equals("refresh")){
             callGetWebService();
         }
 

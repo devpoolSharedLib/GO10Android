@@ -90,8 +90,8 @@ public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
     }
 
     @Override
-    public void onDataPass(String data) {
-        String[] splietString = data.split("th.co.gosoft.go10:drawable/");
+    public void onDataPass(Object data) {
+        String[] splietString = String.valueOf(data).split("th.co.gosoft.go10:drawable/");
         Log.i(LOG_TAG, "Select avatar ID : " + splietString[1]);
         this.avatarName = splietString[1];
     }

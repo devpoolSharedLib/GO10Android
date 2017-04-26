@@ -11,7 +11,6 @@
             android:layout_height="match_parent"
             android:id="@+id/pollList"
             android:smoothScrollbar="true"
-            android:divider="@color/colorTopicSpace"
-            android:dividerHeight="20.0sp"/>
+        />
 
 </LinearLayout>
