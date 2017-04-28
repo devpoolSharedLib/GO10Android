@@ -25,9 +25,11 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
 
     private final String LOG_TAG = "RoomGridAdapter";
     private Map<String, Integer> imageIdMap = new HashMap<>();
+    private Context context;
 
     public RoomGridAdapter(Context context, int resource, List<Map<String, Object>> items) {
         super(context, resource, items);
+        this.context = context;
         generateImageToMap(imageIdMap);
     }
 
@@ -39,12 +41,12 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
                 holder = new ViewHolder();
 
                 LayoutInflater inflater;
-                inflater = LayoutInflater.from(getContext());
+                inflater = LayoutInflater.from(this.context);
                 convertView = inflater.inflate(R.layout.room_grid, null);
 
                 holder.imgRoomIcon = (ImageView) convertView.findViewById(R.id.roomIcon);
                 holder.txtRoomName = (TextView) convertView.findViewById(R.id.roomName);
-                holder.badge = new BadgeViewUtil(getContext(), holder.imgRoomIcon);
+                holder.badge = new BadgeViewUtil(this.context, holder.imgRoomIcon);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -53,7 +55,7 @@ public class RoomGridAdapter extends ArrayAdapter<Map<String, Object>> {
             Map<String, Object> roomMap = getItem(position);
 
             if (roomMap != null) {
-                DownloadImageUtils.setImageRoom(getContext(), holder.imgRoomIcon, roomMap.get("_id").toString());
+                DownloadImageUtils.setImageRoom(this.context, holder.imgRoomIcon, roomMap.get("_id").toString());
 
                 holder.txtRoomName.setText(roomMap.get("name").toString());
                 int badge = (int) roomMap.get("badgeNumber");

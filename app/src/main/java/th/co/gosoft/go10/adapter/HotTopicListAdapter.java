@@ -55,6 +55,7 @@ public class HotTopicListAdapter extends ArrayAdapter<Map<String, Object>> {
                 holder.txtLikeCount.setText(topicMap.get("countLike") == null ? "0" : topicMap.get("countLike").toString());
                 holder.txtRowDate.setText(topicMap.get("date").toString());
                 DownloadImageUtils.setImageRoom(getContext(), holder.imageView, topicMap.get("roomId").toString());
+                Log.i(LOG_TAG,"Read : "+(Boolean) topicMap.get("statusRead"));
                 if((Boolean) topicMap.get("statusRead") == false) {
                     convertView.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.colorUnreadTopic));
                 } else {

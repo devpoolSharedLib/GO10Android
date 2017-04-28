@@ -28,6 +28,8 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import org.w3c.dom.Text;
+
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +68,6 @@ public class TopicAdapter extends BaseAdapter {
     private ProgressDialog progress;
     private SharedPreferences sharedPref;
     private String empEmail;
-
 
 
     public TopicAdapter(Context context, OnDataPass onDataPass, List<Map> topicMap, LikeModel likeModel, boolean canComment) {
@@ -137,18 +138,14 @@ public class TopicAdapter extends BaseAdapter {
                     holder.btnLike = (Button) convertView.findViewById(R.id.btnLike);
                     holder.btnComment = (Button) convertView.findViewById(R.id.btnComment);
                     holder.btnDelete = (ImageButton) convertView.findViewById(R.id.btnDelete);
+
                     if(this.pollModelMap != null){
-                        holder.btnPoll = (ImageButton) convertView.findViewById(R.id.btnPoll);
-                        holder.btnPoll.setVisibility(View.VISIBLE);
-                        holder.btnPoll.setOnClickListener(new View.OnClickListener() {
-
-                            @Override
-                            public void onClick(View v) {
-                                callPollFragment();
-                            }
-
-                        });
+                        holder.countAcceptIcon = (ImageView) convertView.findViewById(R.id.countAcceptIcon);
+                        holder.countAcceptIcon.setVisibility(View.VISIBLE);
+                        holder.countAcceptPoll = (TextView) convertView.findViewById(R.id.countAcceptPoll);
+                        holder.countAcceptPoll.setVisibility(View.VISIBLE);
                     }
+                    
                 } else if(rowType == 1) {
                     convertView = layoutInflater.inflate(rowLayoutMap.get(1), null);
                     holder.content = (TextView) convertView.findViewById(R.id.commentContent);
@@ -172,6 +169,9 @@ public class TopicAdapter extends BaseAdapter {
                 holder.likeCount.setText(topicModelMap.get("countLike") == null ? "0" : String.valueOf((Integer) topicModelMap.get("countLike")));
                 DownloadImageUtils.setImageAvatar(context, holder.imageView, topicModelMap.get("avatarPic").toString());
 
+                if(this.pollModelMap != null) {
+                holder.countAcceptPoll.setText((countAcceptPoll == null ? "0" : String.valueOf(countAcceptPoll)));
+                }
                 if(likeModel != null && likeModel.isStatusLike()){
                     holder.btnLike.setTextColor(this.context.getResources().getColor(R.color.colorLikeButton));
                     isClick = true;
@@ -247,7 +247,6 @@ public class TopicAdapter extends BaseAdapter {
         }
     }
 
-
     private static class ViewHolder {
         TextView subject;
         TextView content;
@@ -258,7 +257,8 @@ public class TopicAdapter extends BaseAdapter {
         Button btnLike;
         Button btnComment;
         ImageButton btnDelete;
-        ImageButton btnPoll;
+        TextView countAcceptPoll;
+        ImageView countAcceptIcon;
     }
 
     private void callPostWebService(Object topicModelMap, final boolean flag){
@@ -336,13 +336,4 @@ public class TopicAdapter extends BaseAdapter {
         }
     }
 
-    private void callPollFragment() {
-        Log.i(LOG_TAG, "PollActivity");
-        Bundle data = new Bundle();
-        data.putSerializable("pollModel" , (Serializable) pollModelMap);
-        Fragment fragment = new PollFragment();
-        fragment.setArguments(data);
-        FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").addToBackStack(null).commit();
-    }
 }

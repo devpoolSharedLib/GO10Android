@@ -144,14 +144,26 @@
         android:layout_alignParentEnd="true"
         android:layout_width="15dp" />
 
-    <ImageButton
-        android:id="@+id/btnPoll"
+    <ImageView
+        android:id="@+id/countAcceptIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignEnd="@+id/hostUsername"
+        android:layout_alignRight="@+id/hostUsername"
+        android:layout_below="@+id/hostContent"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/countpoll" />
+
+    <TextView
+        android:id="@+id/countAcceptPoll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/linearLayout"
-        android:layout_alignEnd="@+id/imageButton2"
-        android:layout_alignRight="@+id/imageButton2"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/poll_vote" />
+        android:layout_alignBottom="@+id/countAcceptIcon"
+        android:layout_marginLeft="9dp"
+        android:layout_marginStart="9dp"
+        android:layout_toEndOf="@+id/countAcceptIcon"
+        android:layout_toRightOf="@+id/countAcceptIcon"
+        android:text="0"
+        android:visibility="invisible" />
 
 </RelativeLayout>

@@ -1,9 +1,11 @@
 package th.co.gosoft.go10.fragment;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -14,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.baoyz.widget.PullRefreshLayout;
@@ -25,6 +28,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.BaseJsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -62,6 +66,12 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private ListView commentListView;
     private PullRefreshLayout pullRefreshLayout;
     private Context context;
+    private ImageButton pollBtn;
+    private List<Map> pollModelMap;
+    private Integer countAcceptPoll;
+    private Boolean donePoll = false;
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -101,7 +111,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         try {
             super.onStart();
             commentListView = (ListView) getView().findViewById(R.id.commentListView);
-
+            pollBtn = (ImageButton) getView().findViewById(R.id.pollBtn);
             Log.i(LOG_TAG, "onStart");
             pullRefreshLayout = (PullRefreshLayout) getView().findViewById(R.id.activity_select_room_swipe_refresh_layout);
             pullRefreshLayout.setOnRefreshListener(new PullRefreshLayout.OnRefreshListener(){
@@ -258,6 +268,10 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                     try {
                         topicMap =response;
                         topicModelMap = (List<Map>) topicMap.get(0).get("boardContentList") ;
+                        pollModelMap = (List<Map>) topicMap.get(0).get("pollModel");
+                        countAcceptPoll = (Integer) topicMap.get(0).get("countAcceptPoll");
+                        donePoll = (Boolean) topicMap.get(0).get("donePoll");
+                        Log.i(LOG_TAG,"Donepoll "+donePoll);
                         Log.i(LOG_TAG,"topicModelMap : "+topicModelMap);
                         room_id = (String) topicModelMap.get(0).get("roomId");
                         isLoadTopicDone = true;
@@ -269,10 +283,25 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                             Log.i(LOG_TAG, "finish get topic");
                             insertLikeModelToSharedPreferences();
                             generateListView();
-//                            closeLoadingDialog();
+                            if(pollModelMap != null) {
+                                pollBtn.setVisibility(View.VISIBLE);
+                                if (donePoll == true) {
+                                    pollBtn.setBackgroundResource(R.drawable.donepoll);
+                                } else {
+                                    pollBtn.setOnClickListener(new View.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(View v) {
+                                            callPollFragment();
+                                        }
+                                    });
+                                }
+                            }else {
+                                pollBtn.setVisibility(View.INVISIBLE);
+                            }
                         }
+
                     } catch (Throwable e) {
-//                        closeLoadingDialog();
                         Log.e(LOG_TAG, e.getMessage(), e);
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -289,7 +318,6 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                     Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
                     return new ObjectMapper().readValue(rawJsonData,new TypeReference<List<Map<String,Object>>>() {});
                 }
-
             });
 
             String concatCheckLikeString = CHECK_LIKE_URL+"?topicId="+_id+"&empEmail="+empEmail;
@@ -311,10 +339,8 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                             Log.i(LOG_TAG, "finish get LikeModel");
                             insertLikeModelToSharedPreferences();
                             generateListView();
-//                            closeLoadingDialog();
                         }
                     } catch (Throwable e) {
-//                        closeLoadingDialog();
                         Log.e(LOG_TAG, e.getMessage(), e);
                         throw new RuntimeException(e.getMessage(), e);
                     }
@@ -334,7 +360,6 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                         return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<LikeModel>>() {});
                     }
                 }
-
             });
         } catch (Exception e) {
             Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
@@ -415,7 +440,6 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
             default:
                 break;
         }
-
         return false;
     }
 
@@ -430,6 +454,16 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").addToBackStack(null).commit();
     }
 
+    private void callPollFragment(){
+        Log.i(LOG_TAG, "PollActivity");
+        Bundle data = new Bundle();
+        data.putSerializable("pollModel" , (Serializable) pollModelMap);
+        Fragment fragment = new PollFragment();
+        fragment.setArguments(data);
+        FragmentManager fragmentManager = ((Activity) context).getFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").addToBackStack(null).commit();
+    }
+
     @Override
     public void onDataPass(Object data) {
         if(String.valueOf(data).equals("comment")){
@@ -437,6 +471,5 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         }else if(String.valueOf(data).equals("refresh")){
             callGetWebService();
         }
-
     }
 }
