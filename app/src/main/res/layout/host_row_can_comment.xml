@@ -80,6 +80,30 @@
         android:layout_toRightOf="@+id/imgLike"
         android:layout_alignBottom="@+id/imgLike" />
 
+    <ImageView
+        android:id="@+id/countAcceptIcon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/countpoll"
+        android:layout_below="@+id/hostContent"
+        android:layout_toEndOf="@+id/txtLikeCount"
+        android:layout_toRightOf="@+id/txtLikeCount"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/countAcceptPoll"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/countAcceptIcon"
+        android:layout_marginLeft="5dp"
+        android:layout_marginStart="5dp"
+        android:gravity="center_vertical"
+        android:layout_toEndOf="@+id/countAcceptIcon"
+        android:layout_toRightOf="@+id/countAcceptIcon"
+        android:text="0"
+        android:visibility="invisible"
+        android:layout_below="@+id/hostContent" />
 
     <LinearLayout
         android:orientation="horizontal"
@@ -146,28 +170,5 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_width="15dp" />
-
-    <ImageView
-        android:id="@+id/countAcceptIcon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:layout_alignEnd="@+id/hostUsername"
-        android:layout_alignRight="@+id/hostUsername"
-        android:layout_below="@+id/hostContent"
-        android:visibility="invisible"
-        app:srcCompat="@drawable/countpoll" />
-
-    <TextView
-        android:id="@+id/countAcceptPoll"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/countAcceptIcon"
-        android:layout_marginLeft="9dp"
-        android:layout_marginStart="9dp"
-        android:layout_toEndOf="@+id/countAcceptIcon"
-        android:layout_toRightOf="@+id/countAcceptIcon"
-        android:text="0"
-        android:visibility="invisible" />
-
 
 </RelativeLayout>

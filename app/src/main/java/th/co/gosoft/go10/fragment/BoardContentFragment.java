@@ -260,7 +260,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
 
                 @Override
                 public void onStart() {
-//                    showLoadingDialog();
+                    showLoadingDialog();
                 }
 
                 @Override
@@ -281,6 +281,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                         Log.i(LOG_TAG, "Topic Model List Size : " + topicModelMap.size());
                         if(isLoadTopicDone && isCheckLikeDone){
                             Log.i(LOG_TAG, "finish get topic");
+                            closeLoadingDialog();
                             insertLikeModelToSharedPreferences();
                             generateListView();
                             if(pollModelMap != null) {
@@ -337,6 +338,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                         Log.i(LOG_TAG, "LikeModel isNull : " + (response == null));
                         if(isLoadTopicDone && isCheckLikeDone){
                             Log.i(LOG_TAG, "finish get LikeModel");
+                            closeLoadingDialog();
                             insertLikeModelToSharedPreferences();
                             generateListView();
                         }
