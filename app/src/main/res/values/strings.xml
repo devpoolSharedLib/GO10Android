@@ -22,7 +22,7 @@
     <string name="change_avatar_name">Change Avatar Name</string>
     <string name="terms_and_policies">Terms and Policies</string>
     <string name="poll_activity">Poll Activity</string>
-    <string name="drawable_package">th.co.gosoft.sbp:drawable/</string>
+    <string name="drawable_package">th.co.gosoft.go10:drawable/</string>
     <string name="terms_and_policies_content">
 \n1. ห้ามนำข้อมูลหรือข้อความที่มีลักษณะเป็นข้อมูลลับเฉพาะของบริษัท อาทิ เอกสาร รายงาน ข้อความและอื่นๆที่เกิดจากการสนทนาใน Application ออกไปเผยแพร่ภายนอก
 \n\n2. ห้ามนำข้อมูลหรือข้อความที่มีลักษณะไม่ถูกต้องทางลิขสิทธิ์เข้ามาในระบบ Application โดยเด็ดขาด
