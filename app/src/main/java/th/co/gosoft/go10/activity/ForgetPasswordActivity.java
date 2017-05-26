@@ -35,7 +35,7 @@ public class ForgetPasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget_password);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)+"user/resetPasswordByEmail";
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)+"user/resetPasswordByEmail";
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setTitle(R.string.forget_pass);

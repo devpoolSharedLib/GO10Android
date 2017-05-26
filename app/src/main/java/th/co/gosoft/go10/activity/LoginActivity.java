@@ -47,11 +47,11 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ShortcutBadger.removeCount(LoginActivity.this);
-        URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        URL = PropertyUtility.getProperty("httpsUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/getUserByUserPassword";
-        CHECK_ROOM_NOTIFICATION_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        CHECK_ROOM_NOTIFICATION_URL = PropertyUtility.getProperty("httpsUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/checkRoomNotificationModel";
-        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                 +"topic/accessapp";
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);

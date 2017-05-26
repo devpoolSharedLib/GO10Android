@@ -77,7 +77,7 @@ public class SettingAvatar extends AppCompatActivity {
 
         try{
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                     +"user/updateUser";
         URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", this) + "GO10WebService/UploadServlet";
         sharedPref = getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);

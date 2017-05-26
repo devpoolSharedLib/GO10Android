@@ -56,7 +56,7 @@ public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
             setContentView(R.layout.activity_setting_avatar_pic);
 
             Log.i(LOG_TAG, "activity_setting_avatar_pic onCreate()");
-            URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+            URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                     +"user/updateUser";
             ActionBar actionBar = getSupportActionBar();
             actionBar.setTitle(R.string.select_avatar);

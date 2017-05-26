@@ -34,7 +34,6 @@ import th.co.gosoft.go10.util.PropertyUtility;
 public class SettingAvatarName extends AppCompatActivity {
 
     private final String LOG_TAG = "SettingAvatarName";
-//    private final String URL = "http://go10webservice.au-syd.mybluemix.net/GO10WebService/api/user/updateUser";
     private static final int MAX_LENGTH = 20;
 
     private String URL;
@@ -50,9 +49,9 @@ public class SettingAvatarName extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_avatar_name);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/updateUser";
-        CHECK_AVATAR_NAME_URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        CHECK_AVATAR_NAME_URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/checkAvatarName";
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.change_avatar_name);

@@ -62,9 +62,9 @@ public class RoomFragment extends Fragment {
         setHasOptionsMenu(true);
         Log.i(LOG_TAG," onCreate RoomFragment");
         sharedPref = getActivity().getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
-        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"api/"+PropertyUtility.getProperty("versionServer", getActivity())
                 +"topic/gettopiclistbyroom";
-        READROOM_URL = PropertyUtility.getProperty("httpsUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+        READROOM_URL = PropertyUtility.getProperty("httpsUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"api/"+PropertyUtility.getProperty("versionServer", getActivity())
                 +"topic/readroom";
         Bundle bundle = getArguments();
         room_id = bundle.getString("room_id");

@@ -57,7 +57,7 @@ public class FacebookGoogleLoginActivity extends Activity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_facebook_google_login);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/getUserByAccountId";
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/user/getUserByAccountId";
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 

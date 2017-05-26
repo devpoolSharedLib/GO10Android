@@ -31,7 +31,7 @@ public class GO10NotificationExtender extends NotificationExtenderService {
             Log.i(LOG_TAG, "IS FOREGOUD "+foreground);
 
             if(!foreground) {
-                GET_BADGE_NUMBER_URL = PropertyUtility.getProperty("httpsUrlSite", getApplicationContext()) + "GO10WebService/api/" + PropertyUtility.getProperty("versionServer", getApplicationContext())
+                GET_BADGE_NUMBER_URL = PropertyUtility.getProperty("httpsUrlSite", getApplicationContext())+PropertyUtility.getProperty("contextRoot", getApplicationContext())+"api/"+PropertyUtility.getProperty("versionServer", getApplicationContext())
                         + "topic/getbadgenumbernotification";
                 sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
                 Log.i(LOG_TAG, "receive notification");

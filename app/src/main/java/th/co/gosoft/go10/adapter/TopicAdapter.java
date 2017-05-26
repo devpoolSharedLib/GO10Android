@@ -71,7 +71,7 @@ public class TopicAdapter extends BaseAdapter {
 
 
     public TopicAdapter(Context context, OnDataPass onDataPass, List<Map> topicMap, LikeModel likeModel, boolean canComment) {
-        URL = PropertyUtility.getProperty("httpUrlSite", context)+"GO10WebService/api/"+ PropertyUtility.getProperty("versionServer", context)
+        URL = PropertyUtility.getProperty("httpUrlSite", context)+PropertyUtility.getProperty("contextRoot", context)+"api/"+ PropertyUtility.getProperty("versionServer", context)
                 +"topic/deleteObj";
         this.layoutInflater =  LayoutInflater.from(context);
         this.topicModelMapList = (List<Map>) topicMap.get(0).get("boardContentList");

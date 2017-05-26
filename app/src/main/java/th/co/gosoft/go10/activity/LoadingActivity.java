@@ -89,11 +89,11 @@ public class LoadingActivity extends Activity {
 //            }
 //        };
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/getUserByAccountId";
-        URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                 +"user/checkUserActivation";
-        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this)
+        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
                 +"topic/accessapp";
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();

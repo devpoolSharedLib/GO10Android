@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -79,13 +78,13 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         super.onCreate(savedInstanceState);
         this.context = getActivity();
         
-        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
+        GET_TOPIC_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+PropertyUtility.getProperty("contextRoot", this.context)+"api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"topic/gettopicbyid";
-        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
+        CHECK_LIKE_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+PropertyUtility.getProperty("contextRoot", this.context)+"api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"topic/checkLikeTopic";
-        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
+        LIKE_URL = PropertyUtility.getProperty("httpUrlSite", this.context)+PropertyUtility.getProperty("contextRoot", this.context)+"api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"topic/";
-        READ_TOPIC_URL = PropertyUtility.getProperty("httpsUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
+        READ_TOPIC_URL = PropertyUtility.getProperty("httpsUrlSite", this.context)+PropertyUtility.getProperty("contextRoot", this.context)+"api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"topic/readtopic";
 
         sharedPref = this.context.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
@@ -94,7 +93,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         _id = bundle.getString("_id");
         empEmail = sharedPref.getString("empEmail", null);
         Log.i(LOG_TAG,"URL ");
-        callWebAccess();
+        callReadTopicWevService();
     }
 
     @Override
@@ -154,7 +153,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
         }
     }
 
-    private void callWebAccess(){
+    private void callReadTopicWevService(){
         final String concatReadTopic = READ_TOPIC_URL +"?empEmail="+empEmail+"&topicId="+_id;
         Log.i(LOG_TAG,"AccessTopic : "+concatReadTopic);
         try {

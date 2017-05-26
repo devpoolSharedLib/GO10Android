@@ -59,7 +59,7 @@ public class PollFragment extends Fragment implements OnDataPass {
         this.context = getActivity();
         setHasOptionsMenu(true);
 
-        POST_POLL_URL = PropertyUtility.getProperty("httpsUrlSite", this.context)+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", this.context)
+        POST_POLL_URL = PropertyUtility.getProperty("httpsUrlSite", this.context)+PropertyUtility.getProperty("contextRoot", this.context)+"api/"+PropertyUtility.getProperty("versionServer", this.context)
                 +"poll/savePoll";
 
         sharedPref = context.getSharedPreferences(context.getString(R.string.preference_key), Context.MODE_PRIVATE);

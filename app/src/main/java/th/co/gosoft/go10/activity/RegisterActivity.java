@@ -38,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+"GO10WebService/api/user/getUserByToken";
+        URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/user/getUserByToken";
         edtToken = (EditText) findViewById(R.id.edtToken);
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();

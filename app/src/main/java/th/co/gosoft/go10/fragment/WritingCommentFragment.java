@@ -70,9 +70,9 @@ public class WritingCommentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/api/"+PropertyUtility.getProperty("versionServer", getActivity())
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"api/"+PropertyUtility.getProperty("versionServer", getActivity())
                 +"topic/post";
-        URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+"GO10WebService/UploadServlet";
+        URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"UploadServlet";
     }
 
     @Override
