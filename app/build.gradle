@@ -81,7 +81,6 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
-    compile 'com.android.support:support-v4:23.0.1'
     compile 'mobi.parchment:parchment:1.6.9@aar'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha2'
     compile 'com.ibm.mobilefirstplatform.clientsdk.android:push:3.+'

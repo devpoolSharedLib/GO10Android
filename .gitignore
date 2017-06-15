@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+.idea/*.xml
 /.idea/workspace.xml
 /.idea/libraries
 /.idea/.misc.xml
@@ -8,11 +9,10 @@
 /.idea/.name
 /.idea/gradle.xml
 /.idea/inspectionProfiles/
-/.DS_Store
-/.idea/.DS_Store
-projectFilesBackup/.DS_Store
+/.idea/misc.xml
 /build
 /captures
 keystore.properties
 Key_Store/
 app/app-release.apk
+*.DS_Store
