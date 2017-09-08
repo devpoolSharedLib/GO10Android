@@ -9,7 +9,7 @@ import android.graphics.drawable.LevelListDrawable;
 import android.os.AsyncTask;
 import android.text.Html;
 import android.util.Log;
-import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.FileNotFoundException;
@@ -17,8 +17,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import th.co.gosoft.go10.R;
 
 /**
  * Created by manitkan on 08/09/16.
@@ -40,7 +38,6 @@ public class URLImageParser implements Html.ImageGetter {
         URLDrawable emptyDrawable = new URLDrawable();
         levelListDrawable.addLevel(0, 0, emptyDrawable);
         levelListDrawable.setBounds(0, 0, emptyDrawable.getIntrinsicWidth(), emptyDrawable.getIntrinsicHeight());
-
         new LoadImage().execute(source, levelListDrawable);
 
         return levelListDrawable;
@@ -49,12 +46,12 @@ public class URLImageParser implements Html.ImageGetter {
     class LoadImage extends AsyncTask<Object, Void, Bitmap> {
 
         private LevelListDrawable mDrawable;
-
         @Override
         protected Bitmap doInBackground(Object... params) {
             String source = (String) params[0];
             mDrawable = (LevelListDrawable) params[1];
             Log.i(LOG_TAG, "doInBackground " + source);
+            Log.i( LOG_TAG,"Context : "+container);
             try {
                 InputStream is = new URL(source).openStream();
                 return BitmapFactory.decodeStream(is);
@@ -75,6 +72,7 @@ public class URLImageParser implements Html.ImageGetter {
             if (bitmap != null) {
                 BitmapDrawable d = new BitmapDrawable(bitmap);
                 mDrawable.addLevel(1, 1, d);
+                ImageView test = new ImageView(container);
                 Log.i(LOG_TAG, "Bitmap size : "+bitmap.getWidth()+", "+bitmap.getHeight());
 
                 float scaleFactor = (float)mTv.getWidth()/(float)bitmap.getWidth();

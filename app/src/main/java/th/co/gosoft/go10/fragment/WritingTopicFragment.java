@@ -41,6 +41,8 @@ import org.jsoup.Jsoup;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -58,10 +60,13 @@ public class WritingTopicFragment extends Fragment {
 
     private final String LOG_TAG = "WritingTopicFragmentTag";
     private final int RESULT_LOAD_IMAGE = 7;
+    private final int RESULT_LOAD_VIDEO = 8;
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 89;
+    private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_VID = 88;
 
     private String URL;
     private String URL_POST_SERVLET;
+    private String URL_POST_VIDEO_SERVLET;
     private ProgressDialog progress;
     private String room_id;
     private RichEditor mEditor;
@@ -75,6 +80,7 @@ public class WritingTopicFragment extends Fragment {
         URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"api/"+PropertyUtility.getProperty("versionServer", getActivity())
                 +"topic/post";
         URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"UploadServlet";
+        URL_POST_VIDEO_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"UploadVideoServlet";
     }
 
     @Override
@@ -119,6 +125,9 @@ public class WritingTopicFragment extends Fragment {
                 }
 
                 if (Build.VERSION.SDK_INT >= 23){
+                    Log.i( LOG_TAG,"permission : "+(ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED));
                     if (ContextCompat.checkSelfPermission(getActivity(),
                             Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
@@ -151,6 +160,42 @@ public class WritingTopicFragment extends Fragment {
         view.findViewById(R.id.action_insert_link).setOnClickListener(new View.OnClickListener() {
             @Override public void onClick(View v) {
             mEditor.insertLink();
+            Log.i(LOG_TAG,"Insert Link : "+mEditor.getHtml());
+            }
+        });
+
+        view.findViewById(R.id.action_insert_video).setOnClickListener(new View.OnClickListener(){
+            @Override public void onClick(View v){
+                if(!mEditor.hasFocus()){
+                    mEditor.focusEditor();
+                }
+
+                if (Build.VERSION.SDK_INT >= 23){
+                    if (ContextCompat.checkSelfPermission(getActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
+
+                        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                                Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                        } else {
+                            Log.i(LOG_TAG, "else");
+                            requestPermissions(
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_VID);
+
+                        }
+                    }else{
+                        Log.i(LOG_TAG, "ELSE");
+                        requestPermissions(
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_VID);
+                    }
+                }else {
+                    Log.i(LOG_TAG,"Pickvideo");
+                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                    photoPickerIntent.setType("video/*");
+                    startActivityForResult(photoPickerIntent, RESULT_LOAD_VIDEO);
+                }
             }
         });
 
@@ -161,6 +206,7 @@ public class WritingTopicFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
         Log.i(LOG_TAG, "onRequestPermissionsResult");
+        Log.i(LOG_TAG,"permission : "+permissions[0]+" grantResult : "+grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -168,6 +214,18 @@ public class WritingTopicFragment extends Fragment {
                     Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                     photoPickerIntent.setType("image/*");
                     startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
+                }
+                else {
+                    Log.i(LOG_TAG, "else onRequestPermissionsResult");
+                }
+                return;
+            }
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_VID: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.i(LOG_TAG, "if onRequestPermissionsResult");
+                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
+                    photoPickerIntent.setType("video/*");
+                    startActivityForResult(photoPickerIntent, RESULT_LOAD_VIDEO);
 
                 } else {
                     Log.i(LOG_TAG, "else onRequestPermissionsResult");
@@ -287,7 +345,6 @@ public class WritingTopicFragment extends Fragment {
 
                         Map<String, Integer> imageResolutionMap = ImageResolutionUtil.calculateResolution(BitmapUtil.width, BitmapUtil.height);
                         mEditor.insertImage(imgURL, imageResolutionMap.get("width"), imageResolutionMap.get("height"), "insertImageUrl");
-
                         closeLoadingDialog();
                     } catch (JSONException e) {
                         Log.e(LOG_TAG, e.getMessage(), e);
@@ -302,6 +359,51 @@ public class WritingTopicFragment extends Fragment {
                     Log.e(LOG_TAG, e.getMessage(), e);
                 }
             });
+        } else if (requestCode == RESULT_LOAD_VIDEO && resultCode == Activity.RESULT_OK && null != data) {
+            Uri selectedVideo = data.getData();
+            String[] filePathColumn = {MediaStore.Video.Media.DATA};
+            final Cursor cursor = getActivity().getContentResolver().query( selectedVideo, filePathColumn, null, null, null );
+            int columnIndex = cursor.getColumnIndexOrThrow( MediaStore.Video.Media.DATA );
+            cursor.moveToFirst();
+            final String videoPath = cursor.getString( columnIndex );
+            cursor.close();
+
+            Log.i( LOG_TAG, "videoPath : " + videoPath );
+            final File videoFile = new File( videoPath );
+            AsyncHttpClient client = new AsyncHttpClient();
+            client.setTimeout( 1800000 ); //5min
+            RequestParams params = new RequestParams();
+            try {
+                params.put( "videoFile", videoFile );
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            client.post( URL_POST_VIDEO_SERVLET, params, new AsyncHttpResponseHandler() {
+                @Override
+                public void onStart() {
+                    showLoadingDialog();
+                    Log.i( LOG_TAG, "Start post video..." );
+                }
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Log.i( LOG_TAG, String.format( Locale.US, "Return Status Code: %d", statusCode ) );
+                    String responseString = new String( responseBody );
+                    Log.i( LOG_TAG, "vidURL : " + responseString );
+                    String vidTag = "<video width=\"240\" height=\"180\" controls><source src=\""+responseString+"\" type=\"video/mp4\">" +
+                            "  Your browser does not support the video tag.</video><br>";
+                    mEditor.insertVideo(vidTag);
+                    mEditor.focusEditor();
+                    Log.i( LOG_TAG,"mEditor : "+mEditor.getHtml());
+                    closeLoadingDialog();
+                }
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable e) {
+                    Log.e( LOG_TAG, String.format( Locale.US, "Return Status Code: %d", statusCode ) );
+                    Log.e( LOG_TAG, e.getMessage(), e );
+                    closeLoadingDialog();
+                    alertMessage("Error while uploading video");
+                }
+            } );
         }
     }
 
@@ -377,6 +479,7 @@ public class WritingTopicFragment extends Fragment {
                     topicModel.setAvatarPic(sharedPref.getString("avatarPic", null));
                     topicModel.setType("host");
                     topicModel.setRoomId(room_id);
+
                     callPostWebService(topicModel);
                 }
                 return true;

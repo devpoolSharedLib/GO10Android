@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.TextUtils;
@@ -60,7 +61,7 @@ public class RichEditor extends WebView {
     private static final String CALLBACK_SCHEME = "re-callback://";
     private static final String STATE_SCHEME = "re-state://";
     private boolean isReady = false;
-    private String mContents;
+    private String mContents="";
     private OnTextChangeListener mTextChangeListener;
     private OnDecorationStateListener mDecorationStateListener;
     private AfterInitialLoadListener mLoadListener;
@@ -344,6 +345,12 @@ public class RichEditor extends WebView {
     public void insertImage(String url, int width, int height, String alt) {
         exec("javascript:RE.prepareInsert();");
         exec("javascript:RE.insertImage('" + url + "', '" + width + "', '"+ height +"', '"+ alt +"');");
+    }
+
+    public void insertVideo(String vidTag){
+        exec("javascript:RE.prepareInsert();");
+        exec( "javascript:RE.insertVideo('"+ vidTag +"');" );
+        exec("javascript:RE.restorerange();");
     }
 
     public void insertLink() {

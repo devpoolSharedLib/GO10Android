@@ -55,7 +55,6 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
     private String room_id ;
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
-
     private List<Map> topicMap;
     private boolean isLoadTopicDone = false;
     private boolean isCheckLikeDone = false;
@@ -278,6 +277,7 @@ public class BoardContentFragment extends Fragment implements OnDataPass {
                         isCommentUser(room_id);
                         setHasOptionsMenu(true);
                         Log.i(LOG_TAG, "Topic Model List Size : " + topicModelMap.size());
+//                        Log.i(LOG_TAG,"Data" +topicModelMap.get(0).get("vidURL"));
                         if(isLoadTopicDone && isCheckLikeDone){
                             Log.i(LOG_TAG, "finish get topic");
                             closeLoadingDialog();

@@ -177,6 +177,11 @@ RE.insertImage = function(url, width, height, alt) {
     RE.insertHTML(html);
 }
 
+RE.insertVideo = function(vidTag){
+    var html = vidTag;
+    RE.insertHTML(html);
+}
+
 RE.insertHTML = function(html) {
     RE.restorerange();
     document.execCommand('insertHTML', false, html);
