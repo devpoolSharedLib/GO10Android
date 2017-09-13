@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtEmail;
     private EditText txtPassword;
     private ProgressDialog progress;
-    private String ACCESS_URL ;
+    private String ACCESS_URL;
 
     private SharedPreferences sharedPref;
     private SharedPreferences.Editor editor;
@@ -47,28 +47,28 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ShortcutBadger.removeCount(LoginActivity.this);
-        URL = PropertyUtility.getProperty("httpsUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
-                +"user/getUserByUserPassword";
-        CHECK_ROOM_NOTIFICATION_URL = PropertyUtility.getProperty("httpsUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
-                +"user/checkRoomNotificationModel";
-        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
-                +"topic/accessapp";
+        URL = PropertyUtility.getProperty("httpsUrlSite", this) + PropertyUtility.getProperty("contextRoot", this) + "api/" + PropertyUtility.getProperty("versionServer", this)
+                + "user/getUserByUserPassword";
+        CHECK_ROOM_NOTIFICATION_URL = PropertyUtility.getProperty("httpsUrlSite", this) + PropertyUtility.getProperty("contextRoot", this) + "api/" + PropertyUtility.getProperty("versionServer", this)
+                + "user/checkRoomNotificationModel";
+        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this) + PropertyUtility.getProperty("contextRoot", this) + "api/" + PropertyUtility.getProperty("versionServer", this)
+                + "topic/accessapp";
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPassword);
 
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
     }
 
-    public void login(View view){
-        if(isInputsEmpty()){
+    public void login(View view) {
+        if (isInputsEmpty()) {
             Toast.makeText(this, "Please enter your E-mail and Password.", Toast.LENGTH_SHORT).show();
         } else {
             callWebService(txtEmail.getText().toString(), txtPassword.getText().toString());
         }
     }
 
-    private void callWebService(final String email, final String password){
-        final String concatString = URL+"?email="+email+"&password="+password;
+    private void callWebService(final String email, final String password) {
+        final String concatString = URL + "?email=" + email + "&password=" + password;
 
         try {
             final AsyncHttpClient client = new AsyncHttpClient();
@@ -85,12 +85,12 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         closeLoadingDialog();
                         userModelList = response;
-                        Log.i(LOG_TAG, "user modelList size : "+userModelList.size());
-                        if(userModelList.isEmpty()){
+                        Log.i(LOG_TAG, "user modelList size : " + userModelList.size());
+                        if (userModelList.isEmpty()) {
                             Log.i(LOG_TAG, "Not have user model");
                             Toast.makeText(getApplication(), "The e-mail or password is incorrect.\nPlease try again.", Toast.LENGTH_SHORT).show();
                         } else {
-                            if(isActivate(userModelList)){
+                            if (isActivate(userModelList)) {
                                 Toast.makeText(getApplication(), "The e-mail or password is incorrect.\nPlease try again.", Toast.LENGTH_SHORT).show();
                             } else {
                                 callWebAccess(email);
@@ -114,31 +114,32 @@ public class LoginActivity extends AppCompatActivity {
 
                 @Override
                 protected List<Map<String, Object>> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
-                    Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
-                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<Map<String, Object>>>() {});
+                    Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : " + rawJsonData);
+                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<Map<String, Object>>>() {
+                    });
                 }
             });
         } catch (Exception e) {
-            Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+            Log.e(LOG_TAG, "RuntimeException : " + e.getMessage(), e);
             closeLoadingDialog();
         }
     }
 
-    private void callWebAccess(final String email){
-        final String concatAccess = ACCESS_URL+"?empEmail="+email;
+    private void callWebAccess(final String email) {
+        final String concatAccess = ACCESS_URL + "?empEmail=" + email;
         try {
             final AsyncHttpClient clientAccess = new AsyncHttpClient();
             clientAccess.get(concatAccess, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     try {
-                        if(email.isEmpty()){
-                            Log.i(LOG_TAG,"EMAIL IS EXITS : ");
-                        }else{
-                            Log.i(LOG_TAG,"Access Complete : "+concatAccess);
+                        if (email.isEmpty()) {
+                            Log.i(LOG_TAG, "EMAIL IS EXITS : ");
+                        } else {
+                            Log.i(LOG_TAG, "Access Complete : " + concatAccess);
                         }
-                    }catch (Throwable e){
-                        Log.e(LOG_TAG, e.getMessage(),e);
+                    } catch (Throwable e) {
+                        Log.e(LOG_TAG, e.getMessage(), e);
                     }
                 }
 
@@ -146,7 +147,7 @@ public class LoginActivity extends AppCompatActivity {
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 }
             });
-        }catch (Throwable e) {
+        } catch (Throwable e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             throw new RuntimeException(e.getMessage(), e);
         }
@@ -154,8 +155,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void registerRoomNotificationModel() {
         String email = txtEmail.getText().toString();
-        String concatString = CHECK_ROOM_NOTIFICATION_URL+"?empEmail="+email;
-        Log.i(LOG_TAG, "Concat URL : "+concatString);
+        String concatString = CHECK_ROOM_NOTIFICATION_URL + "?empEmail=" + email;
+        Log.i(LOG_TAG, "Concat URL : " + concatString);
         try {
             AsyncHttpClient client = new AsyncHttpClient();
             client.get(concatString, new AsyncHttpResponseHandler() {
@@ -171,11 +172,11 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         closeLoadingDialog();
                         String responseString = new String(response);
-                        Log.i(LOG_TAG, "Room Notification Model Date : "+responseString);
+                        Log.i(LOG_TAG, "Room Notification Model Date : " + responseString);
                         editor = sharedPref.edit();
                         editor.putString("notificationDate", responseString);
                         editor.commit();
-                        if(hasNotSettingAvatar(userModelList)){
+                        if (hasNotSettingAvatar(userModelList)) {
                             gotoSettingAvatarActivity();
                         } else {
                             gotoHomeActivity();
@@ -194,7 +195,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             });
         } catch (Exception e) {
-            Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+            Log.e(LOG_TAG, "RuntimeException : " + e.getMessage(), e);
             closeLoadingDialog();
         }
     }
@@ -204,27 +205,27 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isActivate(List<Map<String, Object>> userModelList) {
-        return ! (Boolean) userModelList.get(0).get("activate");
+        return !(Boolean) userModelList.get(0).get("activate");
 
     }
 
     private void insertUserModelToSharedPreferences(Map<String, Object> userModel) {
         editor = sharedPref.edit();
         editor.putString("_id", (String) userModel.get("_id"));
-        editor.putString("_rev",  (String) userModel.get("_rev"));
-        editor.putString("empName",  (String) userModel.get("empName"));
-        editor.putString("empEmail",  (String) userModel.get("empEmail"));
-        editor.putString("avatarName",  (String) userModel.get("avatarName"));
-        editor.putString("avatarPic",  (String) userModel.get("avatarPic"));
-        editor.putString("birthday",  (String) userModel.get("birthday"));
-        editor.putBoolean("activate",  (Boolean) userModel.get("activate"));
+        editor.putString("_rev", (String) userModel.get("_rev"));
+        editor.putString("empName", (String) userModel.get("empName"));
+        editor.putString("empEmail", (String) userModel.get("empEmail"));
+        editor.putString("avatarName", (String) userModel.get("avatarName"));
+        editor.putString("avatarPic", (String) userModel.get("avatarPic"));
+        editor.putString("birthday", (String) userModel.get("birthday"));
+        editor.putBoolean("activate", (Boolean) userModel.get("activate"));
         editor.putString("type", (String) userModel.get("type"));
         editor.putString("accountId", (String) userModel.get("accountId"));
         editor.putBoolean("hasLoggedIn", true);
         editor.commit();
     }
 
-    private void gotoSettingAvatarActivity(){
+    private void gotoSettingAvatarActivity() {
         Intent intent = new Intent(this, SettingAvatar.class);
         intent.putExtra("state", "register");
         startActivity(intent);
@@ -237,7 +238,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    public void gotoForgetPasswordActivity(View view){
+    public void gotoForgetPasswordActivity(View view) {
         Intent intent = new Intent(this, ForgetPasswordActivity.class);
         startActivity(intent);
     }
@@ -254,7 +255,7 @@ public class LoginActivity extends AppCompatActivity {
         progress = ProgressDialog.show(this, null, "Processing", true);
     }
 
-    private void closeLoadingDialog(){
+    private void closeLoadingDialog() {
         progress.dismiss();
     }
 }

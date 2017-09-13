@@ -77,16 +77,16 @@ public class WritingTopicFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"api/"+PropertyUtility.getProperty("versionServer", getActivity())
-                +"topic/post";
-        URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"UploadServlet";
-        URL_POST_VIDEO_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"UploadVideoServlet";
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity()) + PropertyUtility.getProperty("contextRoot", getActivity()) + "api/" + PropertyUtility.getProperty("versionServer", getActivity())
+                + "topic/post";
+        URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity()) + PropertyUtility.getProperty("contextRoot", getActivity()) + "UploadServlet";
+        URL_POST_VIDEO_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity()) + PropertyUtility.getProperty("contextRoot", getActivity()) + "UploadVideoServlet";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.activity_writing_topic, container, false);
+        View view = inflater.inflate(R.layout.activity_writing_topic, container, false);
 
         edtHostSubject = (EditText) view.findViewById(R.id.txtHostSubject);
 
@@ -100,32 +100,36 @@ public class WritingTopicFragment extends Fragment {
         Log.i(LOG_TAG, "room_id : " + room_id);
 
         view.findViewById(R.id.action_undo).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 mEditor.undo();
             }
         });
 
         view.findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 mEditor.setBold();
             }
         });
 
         view.findViewById(R.id.action_redo).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 mEditor.redo();
             }
         });
 
         view.findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-                if(!mEditor.hasFocus()){
+                if (!mEditor.hasFocus()) {
                     mEditor.focusEditor();
                 }
 
-                if (Build.VERSION.SDK_INT >= 23){
-                    Log.i( LOG_TAG,"permission : "+(ContextCompat.checkSelfPermission(getActivity(),
+                if (Build.VERSION.SDK_INT >= 23) {
+                    Log.i(LOG_TAG, "permission : " + (ContextCompat.checkSelfPermission(getActivity(),
                             Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED));
                     if (ContextCompat.checkSelfPermission(getActivity(),
@@ -141,13 +145,13 @@ public class WritingTopicFragment extends Fragment {
                                     MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
                         }
-                    }else{
+                    } else {
                         Log.i(LOG_TAG, "ELSE");
                         requestPermissions(
                                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                 MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                     }
-                }else {
+                } else {
 
                     Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                     photoPickerIntent.setType("image/*");
@@ -158,19 +162,21 @@ public class WritingTopicFragment extends Fragment {
         });
 
         view.findViewById(R.id.action_insert_link).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-            mEditor.insertLink();
-            Log.i(LOG_TAG,"Insert Link : "+mEditor.getHtml());
+            @Override
+            public void onClick(View v) {
+                mEditor.insertLink();
+                Log.i(LOG_TAG, "Insert Link : " + mEditor.getHtml());
             }
         });
 
-        view.findViewById(R.id.action_insert_video).setOnClickListener(new View.OnClickListener(){
-            @Override public void onClick(View v){
-                if(!mEditor.hasFocus()){
+        view.findViewById(R.id.action_insert_video).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!mEditor.hasFocus()) {
                     mEditor.focusEditor();
                 }
 
-                if (Build.VERSION.SDK_INT >= 23){
+                if (Build.VERSION.SDK_INT >= 23) {
                     if (ContextCompat.checkSelfPermission(getActivity(),
                             Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
@@ -184,14 +190,14 @@ public class WritingTopicFragment extends Fragment {
                                     MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_VID);
 
                         }
-                    }else{
+                    } else {
                         Log.i(LOG_TAG, "ELSE");
                         requestPermissions(
                                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                 MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE_VID);
                     }
-                }else {
-                    Log.i(LOG_TAG,"Pickvideo");
+                } else {
+                    Log.i(LOG_TAG, "Pickvideo");
                     Intent photoPickerIntent = new Intent(Intent.ACTION_PICK, MediaStore.Video.Media.EXTERNAL_CONTENT_URI);
                     photoPickerIntent.setType("video/*");
                     startActivityForResult(photoPickerIntent, RESULT_LOAD_VIDEO);
@@ -206,7 +212,7 @@ public class WritingTopicFragment extends Fragment {
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
         Log.i(LOG_TAG, "onRequestPermissionsResult");
-        Log.i(LOG_TAG,"permission : "+permissions[0]+" grantResult : "+grantResults);
+        Log.i(LOG_TAG, "permission : " + permissions[0] + " grantResult : " + grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -214,8 +220,7 @@ public class WritingTopicFragment extends Fragment {
                     Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                     photoPickerIntent.setType("image/*");
                     startActivityForResult(photoPickerIntent, RESULT_LOAD_IMAGE);
-                }
-                else {
+                } else {
                     Log.i(LOG_TAG, "else onRequestPermissionsResult");
                 }
                 return;
@@ -235,7 +240,7 @@ public class WritingTopicFragment extends Fragment {
         }
     }
 
-    private void callPostWebService(TopicModel topicModel){
+    private void callPostWebService(TopicModel topicModel) {
 
         try {
             String jsonString = new ObjectMapper().writeValueAsString(topicModel);
@@ -244,30 +249,30 @@ public class WritingTopicFragment extends Fragment {
 
             AsyncHttpClient client = new AsyncHttpClient();
             client.post(getActivity(), URL, new StringEntity(jsonString, "utf-8"),
-                RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
+                    RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
 
-                    @Override
-                    public void onStart() {
-                        showLoadingDialog();
-                    }
+                        @Override
+                        public void onStart() {
+                            showLoadingDialog();
+                        }
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                        Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                        Log.i(LOG_TAG, "new id : "+new String(response));
-                        closeLoadingDialog();
-                        callNextActivity(new String(response));
-                    }
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                            Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                            Log.i(LOG_TAG, "new id : " + new String(response));
+                            closeLoadingDialog();
+                            callNextActivity(new String(response));
+                        }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                        Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
-                        closeLoadingDialog();
-                    }
-                });
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                            Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
+                            closeLoadingDialog();
+                        }
+                    });
 
         } catch (JsonProcessingException e) {
-            Log.e(LOG_TAG, "JsonProcessingException : "+e.getMessage(), e);
+            Log.e(LOG_TAG, "JsonProcessingException : " + e.getMessage(), e);
             showErrorDialog().show();
         }
     }
@@ -277,7 +282,7 @@ public class WritingTopicFragment extends Fragment {
                 "Processing", true);
     }
 
-    private void closeLoadingDialog(){
+    private void closeLoadingDialog() {
         progress.dismiss();
     }
 
@@ -304,14 +309,14 @@ public class WritingTopicFragment extends Fragment {
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == Activity.RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            Log.i(LOG_TAG, "picturePath : "+picturePath);
+            Log.i(LOG_TAG, "picturePath : " + picturePath);
             RequestParams params = new RequestParams();
 
             try {
@@ -321,7 +326,7 @@ public class WritingTopicFragment extends Fragment {
 
                 byte[] myByteArray = stream.toByteArray();
                 params.put("imageFile", new ByteArrayInputStream(myByteArray));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
 
@@ -337,11 +342,11 @@ public class WritingTopicFragment extends Fragment {
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                     String responseString = new String(responseBody);
-                    Log.i(LOG_TAG, "Path : "+responseString);
+                    Log.i(LOG_TAG, "Path : " + responseString);
 
                     try {
-                        String imgURL =  new JSONObject(responseString).getString("imgUrl");
-                        Log.i(LOG_TAG, "imgURL : "+imgURL);
+                        String imgURL = new JSONObject(responseString).getString("imgUrl");
+                        Log.i(LOG_TAG, "imgURL : " + imgURL);
 
                         Map<String, Integer> imageResolutionMap = ImageResolutionUtil.calculateResolution(BitmapUtil.width, BitmapUtil.height);
                         mEditor.insertImage(imgURL, imageResolutionMap.get("width"), imageResolutionMap.get("height"), "insertImageUrl");
@@ -362,62 +367,64 @@ public class WritingTopicFragment extends Fragment {
         } else if (requestCode == RESULT_LOAD_VIDEO && resultCode == Activity.RESULT_OK && null != data) {
             Uri selectedVideo = data.getData();
             String[] filePathColumn = {MediaStore.Video.Media.DATA};
-            final Cursor cursor = getActivity().getContentResolver().query( selectedVideo, filePathColumn, null, null, null );
-            int columnIndex = cursor.getColumnIndexOrThrow( MediaStore.Video.Media.DATA );
+            final Cursor cursor = getActivity().getContentResolver().query(selectedVideo, filePathColumn, null, null, null);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA);
             cursor.moveToFirst();
-            final String videoPath = cursor.getString( columnIndex );
+            final String videoPath = cursor.getString(columnIndex);
             cursor.close();
 
-            Log.i( LOG_TAG, "videoPath : " + videoPath );
-            final File videoFile = new File( videoPath );
+            Log.i(LOG_TAG, "videoPath : " + videoPath);
+            final File videoFile = new File(videoPath);
             AsyncHttpClient client = new AsyncHttpClient();
-            client.setTimeout( 1800000 ); //5min
+            client.setTimeout(1800000); //5min
             RequestParams params = new RequestParams();
             try {
-                params.put( "videoFile", videoFile );
+                params.put("videoFile", videoFile);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
-            client.post( URL_POST_VIDEO_SERVLET, params, new AsyncHttpResponseHandler() {
+            client.post(URL_POST_VIDEO_SERVLET, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onStart() {
                     showLoadingDialog();
-                    Log.i( LOG_TAG, "Start post video..." );
+                    Log.i(LOG_TAG, "Start post video...");
                 }
+
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    Log.i( LOG_TAG, String.format( Locale.US, "Return Status Code: %d", statusCode ) );
-                    String responseString = new String( responseBody );
-                    Log.i( LOG_TAG, "vidURL : " + responseString );
-                    String vidTag = "<video width=\"240\" height=\"180\" controls><source src=\""+responseString+"\" type=\"video/mp4\">" +
+                    Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    String responseString = new String(responseBody);
+                    Log.i(LOG_TAG, "vidURL : " + responseString);
+                    String vidTag = "<video width=\"240\" height=\"180\" controls><source src=\"" + responseString + "\" type=\"video/mp4\">" +
                             "  Your browser does not support the video tag.</video><br>";
                     mEditor.insertVideo(vidTag);
                     mEditor.focusEditor();
-                    Log.i( LOG_TAG,"mEditor : "+mEditor.getHtml());
+                    Log.i(LOG_TAG, "mEditor : " + mEditor.getHtml());
                     closeLoadingDialog();
                 }
+
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable e) {
-                    Log.e( LOG_TAG, String.format( Locale.US, "Return Status Code: %d", statusCode ) );
-                    Log.e( LOG_TAG, e.getMessage(), e );
+                    Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                    Log.e(LOG_TAG, e.getMessage(), e);
                     closeLoadingDialog();
                     alertMessage("Error while uploading video");
                 }
-            } );
+            });
         }
     }
 
-    private Map<String,Integer> calculateResolution(int width, int height) {
-        Log.i(LOG_TAG, "calculateResolution width - height : "+width+" * "+height);
-        Double ratio = (Math.round(((float) width / (float) height)*100.0) / 100.0);
-        Log.i(LOG_TAG, "calculateResolution Ration Bitmap : "+ratio);
-        Map<String,Integer> resultMap = new HashMap<>();
-        if(ratio > 1) {
-            if(ratio == 1.33) {
+    private Map<String, Integer> calculateResolution(int width, int height) {
+        Log.i(LOG_TAG, "calculateResolution width - height : " + width + " * " + height);
+        Double ratio = (Math.round(((float) width / (float) height) * 100.0) / 100.0);
+        Log.i(LOG_TAG, "calculateResolution Ration Bitmap : " + ratio);
+        Map<String, Integer> resultMap = new HashMap<>();
+        if (ratio > 1) {
+            if (ratio == 1.33) {
                 Log.i(LOG_TAG, "4:3 landscape");
                 resultMap.put("width", 295);
                 resultMap.put("height", 222);
-            } else if(ratio == 1.78 || ratio == 1.77) {
+            } else if (ratio == 1.78 || ratio == 1.77) {
                 Log.i(LOG_TAG, "16:9 landscape");
                 resultMap.put("width", 295);
                 resultMap.put("height", 166);
@@ -426,12 +433,12 @@ public class WritingTopicFragment extends Fragment {
                 resultMap.put("width", 295);
                 resultMap.put("height", 166);
             }
-        } else if(ratio < 1) {
-            if(ratio == 0.75) {
+        } else if (ratio < 1) {
+            if (ratio == 0.75) {
                 Log.i(LOG_TAG, "3:4 portrait");
                 resultMap.put("width", 230);
                 resultMap.put("height", 307);
-            } else if(ratio == 0.56) {
+            } else if (ratio == 0.56) {
                 Log.i(LOG_TAG, "9:16 portrait");
                 resultMap.put("width", 230);
                 resultMap.put("height", 410);
@@ -440,7 +447,7 @@ public class WritingTopicFragment extends Fragment {
                 resultMap.put("width", 230);
                 resultMap.put("height", 410);
             }
-        } else if(ratio == 1) {
+        } else if (ratio == 1) {
             Log.i(LOG_TAG, "1:1 square");
             resultMap.put("width", 295);
             resultMap.put("height", 295);
@@ -466,7 +473,7 @@ public class WritingTopicFragment extends Fragment {
                 Log.i(LOG_TAG, "title : " + hostSubjectString);
                 Log.i(LOG_TAG, "Content : " + hostContentString);
 
-                if(hostSubjectString == null || isEmpty(hostSubjectString) || hostContentString == null || isEmpty(hostContentString)){
+                if (hostSubjectString == null || isEmpty(hostSubjectString) || hostContentString == null || isEmpty(hostContentString)) {
                     Log.i(LOG_TAG, "empty title & message");
                     alertMessage("Please enter your Title and Comment message.");
                 } else {
@@ -495,21 +502,21 @@ public class WritingTopicFragment extends Fragment {
     }
 
     private boolean isEmpty(String htmlString) {
-        if(htmlString.contains("<img")){
+        if (htmlString.contains("<img")) {
             return false;
         } else {
             String replaceString = htmlString.replace("&nbsp;", " ");
             String string = Jsoup.parse(replaceString).text();
-            Log.i(LOG_TAG, "String is Empty : "+string.isEmpty());
+            Log.i(LOG_TAG, "String is Empty : " + string.isEmpty());
             return string.trim().length() == 0;
         }
     }
 
-    private void hideKeyboard(){
+    private void hideKeyboard() {
         View view = this.getActivity().getCurrentFocus();
         if (view != null) {
             Log.i(LOG_TAG, "view null hide keyboard");
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

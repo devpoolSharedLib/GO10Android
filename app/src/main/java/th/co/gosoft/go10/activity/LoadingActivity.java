@@ -62,44 +62,17 @@ public class LoadingActivity extends Activity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_loading);
-//        notification
-//        BMSClient.getInstance().initialize(this, BMSClient.REGION_SYDNEY);
-//        push = MFPPush.getInstance();
-//        push.initialize(getApplicationContext(), "3c5e9860-be2b-4276-a53b-b12f0d3db6bb", "f1b7da23-fe5e-40d4-99b5-ca39eaae8b35");
-//        push.registerDevice(new MFPPushResponseListener<String>() {
-//            @Override
-//            public void onSuccess(String deviceId) {
-//                Log.d(LOG_TAG,"REGISTER SUCCESS : "+deviceId);    // 180d96c9-8b0f-3f3d-9247-260d4aa635cb
-//            }
-//            @Override
-//            public void onFailure(MFPPushException ex) {
-//                Log.e(LOG_TAG,"REGISTER FALSE : "+ex.getMessage(), ex);
-//            }
-//        });
-//        push.setNotificationStatusListener(new MFPPushNotificationStatusListener() {
-//            @Override
-//            public void onStatusChange(String messageId, MFPPushNotificationStatus status) {
-//                Log.d(LOG_TAG, "Status Change : "+status);
-//            }
-//        });
-//        notificationListener = new MFPPushNotificationListener() {
-//            @Override
-//            public void onReceive (final MFPSimplePushNotification message){
-//                Log.d(LOG_TAG, "Messsage : "+message);
-//            }
-//        };
-
-        URL = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
-                +"user/getUserByAccountId";
-        URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
-                +"user/checkUserActivation";
-        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this)+PropertyUtility.getProperty("contextRoot", this)+"api/"+PropertyUtility.getProperty("versionServer", this)
-                +"topic/accessapp";
+        URL = PropertyUtility.getProperty("httpUrlSite", this) + PropertyUtility.getProperty("contextRoot", this) + "api/" + PropertyUtility.getProperty("versionServer", this)
+                + "user/getUserByAccountId";
+        URL_CHECK_USER_ACTIVATION = PropertyUtility.getProperty("httpUrlSite", this) + PropertyUtility.getProperty("contextRoot", this) + "api/" + PropertyUtility.getProperty("versionServer", this)
+                + "user/checkUserActivation";
+        ACCESS_URL = PropertyUtility.getProperty("httpsUrlSite", this) + PropertyUtility.getProperty("contextRoot", this) + "api/" + PropertyUtility.getProperty("versionServer", this)
+                + "topic/accessapp";
         sharedPref = this.getSharedPreferences(getString(R.string.preference_key), Context.MODE_PRIVATE);
         editor = sharedPref.edit();
 
-        try{
-            if(hasUserLoggedIn()){
+        try {
+            if (hasUserLoggedIn()) {
                 Log.i(LOG_TAG, "User Logged In");
                 activateUserAccount();
             } else {
@@ -129,22 +102,6 @@ public class LoadingActivity extends Activity {
         }, SPLASH_TIME_OUT);
 
     }
-// notification IMPush
-//    @Override
-//    protected void onResume(){
-//        super.onResume();
-//        if(push != null) {
-//            push.listen(notificationListener);
-//        }
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//        if (push != null) {
-//            push.hold();
-//        }
-//    }
 
     private void gotoLoginActivity() {
         new Handler().postDelayed(new Runnable() {
@@ -158,12 +115,12 @@ public class LoadingActivity extends Activity {
     }
 
     private boolean hasUserLoggedIn() {
-         return sharedPref.getBoolean("hasLoggedIn", false);
+        return sharedPref.getBoolean("hasLoggedIn", false);
     }
 
-    private void callWebAccess(){
+    private void callWebAccess() {
         final String empEmail = sharedPref.getString("empEmail", null);
-        final String concatAccess = ACCESS_URL+"?empEmail="+empEmail;
+        final String concatAccess = ACCESS_URL + "?empEmail=" + empEmail;
         try {
             final AsyncHttpClient clientAccess = new AsyncHttpClient();
             clientAccess.get(this, concatAccess, new AsyncHttpResponseHandler() {
@@ -177,27 +134,28 @@ public class LoadingActivity extends Activity {
                 }
             });
         } catch (Exception e) {
-                Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
-            }
+            Log.e(LOG_TAG, "RuntimeException : " + e.getMessage(), e);
+        }
     }
 
     private void activateUserAccount() {
         final String empEmail = sharedPref.getString("empEmail", null);
-        String concatString = URL_CHECK_USER_ACTIVATION+"?empEmail="+empEmail;
+        String concatString = URL_CHECK_USER_ACTIVATION + "?empEmail=" + empEmail;
         try {
             final AsyncHttpClient client = new AsyncHttpClient();
             client.get(this, concatString, new AsyncHttpResponseHandler() {
 
                 @Override
-                public void onStart() {}
+                public void onStart() {
+                }
 
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] response) {
 
                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                    if(statusCode == 201){
+                    if (statusCode == 201) {
 
-                        if(hasNotSettingAvatar()){
+                        if (hasNotSettingAvatar()) {
                             gotoSettingAvatarActivity();
                         } else {
                             callWebAccess();
@@ -210,7 +168,7 @@ public class LoadingActivity extends Activity {
                 public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
                     Log.e(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                     Log.e(LOG_TAG, "AsyncHttpClient returned error", e);
-                    if(statusCode == 404) {
+                    if (statusCode == 404) {
                         Toast.makeText(getApplication(), new String(errorResponse), Toast.LENGTH_LONG).show();
                         editor.putBoolean("hasLoggedIn", false);
                         editor.commit();
@@ -219,16 +177,16 @@ public class LoadingActivity extends Activity {
                 }
             });
         } catch (Exception e) {
-            Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+            Log.e(LOG_TAG, "RuntimeException : " + e.getMessage(), e);
         }
 
     }
 
     private boolean hasNotSettingAvatar() {
-        return "Avatar Name".equals(sharedPref.getString("avatarName","Avatar Name")) || "default_avatar".equals(sharedPref.getString("avatarPic","default_avatar"));
+        return "Avatar Name".equals(sharedPref.getString("avatarName", "Avatar Name")) || "default_avatar".equals(sharedPref.getString("avatarPic", "default_avatar"));
     }
 
-    private void gotoSettingAvatarActivity(){
+    private void gotoSettingAvatarActivity() {
         Intent intent = new Intent(this, SettingAvatar.class);
         intent.putExtra("state", "register");
         startActivity(intent);
@@ -248,22 +206,22 @@ public class LoadingActivity extends Activity {
 
     private void initialNewFacebookBundle() {
         Bundle params = new Bundle();
-        params.putString("fields","id, name");
+        params.putString("fields", "id, name");
 
         new GraphRequest(AccessToken.getCurrentAccessToken(), "me", params, HttpMethod.GET,
-            new GraphRequest.Callback() {
-                @Override
-                public void onCompleted(GraphResponse response) {
-                    if (response != null) {
-                        try {
-                            JSONObject data = response.getJSONObject();
-                            getUserDataFromServer(data.getString("id"));
-                        } catch (Exception e) {
-                            Log.e(LOG_TAG, e.getMessage(), e);
+                new GraphRequest.Callback() {
+                    @Override
+                    public void onCompleted(GraphResponse response) {
+                        if (response != null) {
+                            try {
+                                JSONObject data = response.getJSONObject();
+                                getUserDataFromServer(data.getString("id"));
+                            } catch (Exception e) {
+                                Log.e(LOG_TAG, e.getMessage(), e);
+                            }
                         }
                     }
-                }
-            }).executeAsync();
+                }).executeAsync();
     }
 
     private void checkCurrentTokenGmail() {
@@ -292,7 +250,7 @@ public class LoadingActivity extends Activity {
     }
 
     private void prepareGmailLoginSession() {
-        try{
+        try {
             GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .build();
@@ -307,8 +265,8 @@ public class LoadingActivity extends Activity {
         }
     }
 
-    private void getUserDataFromServer(final String accountId){
-        String concatString = URL+"?accountId="+accountId;
+    private void getUserDataFromServer(final String accountId) {
+        String concatString = URL + "?accountId=" + accountId;
 
         try {
             AsyncHttpClient client = new AsyncHttpClient();
@@ -324,8 +282,8 @@ public class LoadingActivity extends Activity {
                 public void onSuccess(int statusCode, Header[] headers, String rawJsonResponse, List<UserModel> response) {
                     try {
                         List<UserModel> userModelList = response;
-                        Log.i(LOG_TAG, "user modelList size : "+userModelList.size());
-                        if(userModelList.isEmpty()){
+                        Log.i(LOG_TAG, "user modelList size : " + userModelList.size());
+                        if (userModelList.isEmpty()) {
                             Log.i(LOG_TAG, "Not have user model");
                             insertUserModelToSharedPreferences(accountId);
                             new Handler().postDelayed(new Runnable() {
@@ -338,7 +296,7 @@ public class LoadingActivity extends Activity {
                             }, SPLASH_TIME_OUT);
                         } else {
                             Log.i(LOG_TAG, "have user model");
-                            Log.i(LOG_TAG,"Acess WebService :"+userModelList);
+                            Log.i(LOG_TAG, "Acess WebService :" + userModelList);
                             insertUserModelToSharedPreferences(userModelList.get(0));
                             new Handler().postDelayed(new Runnable() {
                                 @Override
@@ -364,48 +322,49 @@ public class LoadingActivity extends Activity {
 
                 @Override
                 protected List<UserModel> parseResponse(String rawJsonData, boolean isFailure) throws Throwable {
-                    Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : "+rawJsonData);
-                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<UserModel>>() {});
+                    Log.i(LOG_TAG, ">>>>>>>>>>>>>>>>.. Json String : " + rawJsonData);
+                    return new ObjectMapper().readValue(rawJsonData, new TypeReference<List<UserModel>>() {
+                    });
                 }
 
             });
         } catch (Exception e) {
-            Log.e(LOG_TAG, "RuntimeException : "+e.getMessage(), e);
+            Log.e(LOG_TAG, "RuntimeException : " + e.getMessage(), e);
         }
     }
 
-    private void insertUserModelToSharedPreferences(String accountId){
+    private void insertUserModelToSharedPreferences(String accountId) {
 
-        Log.i(LOG_TAG, "account id : "+accountId);
+        Log.i(LOG_TAG, "account id : " + accountId);
         clearSharedPreference();
-        editor.putString("accountId",  accountId);
-        if(!sharedPref.contains("empName")){
-            editor.putString("empName",  "Employee Name");
+        editor.putString("accountId", accountId);
+        if (!sharedPref.contains("empName")) {
+            editor.putString("empName", "Employee Name");
         }
-        if(!sharedPref.contains("empEmail")){
-            editor.putString("empEmail",  "email@gosoft.com");
+        if (!sharedPref.contains("empEmail")) {
+            editor.putString("empEmail", "email@gosoft.com");
         }
-        if(!sharedPref.contains("avatarName")){
-            editor.putString("avatarName",  "Avatar Name");
+        if (!sharedPref.contains("avatarName")) {
+            editor.putString("avatarName", "Avatar Name");
         }
-        if(!sharedPref.contains("avatarPic")) {
+        if (!sharedPref.contains("avatarPic")) {
             editor.putString("avatarPic", "default_avatar");
         }
         editor.commit();
     }
 
-    private void insertUserModelToSharedPreferences(UserModel userModel){
-        Log.i(LOG_TAG, "AVATAR DATA : "+userModel.getAvatarPic()+" : "+userModel.getAvatarName());
+    private void insertUserModelToSharedPreferences(UserModel userModel) {
+        Log.i(LOG_TAG, "AVATAR DATA : " + userModel.getAvatarPic() + " : " + userModel.getAvatarName());
         clearSharedPreference();
-        editor.putString("_id",  userModel.get_id());
-        editor.putString("_rev",  userModel.get_rev());
-        editor.putString("accountId",  userModel.getAccountId());
-        editor.putString("empName",  userModel.getEmpName());
-        editor.putString("empEmail",  userModel.getEmpEmail());
-        editor.putString("avatarName",  userModel.getAvatarName());
+        editor.putString("_id", userModel.get_id());
+        editor.putString("_rev", userModel.get_rev());
+        editor.putString("accountId", userModel.getAccountId());
+        editor.putString("empName", userModel.getEmpName());
+        editor.putString("empEmail", userModel.getEmpEmail());
+        editor.putString("avatarName", userModel.getAvatarName());
         editor.putString("avatarPic", userModel.getAvatarPic());
-        editor.putString("token",  userModel.getToken());
-        editor.putBoolean("activate",  userModel.isActivate());
+        editor.putString("token", userModel.getToken());
+        editor.putBoolean("activate", userModel.isActivate());
         editor.putString("type", userModel.getType());
         editor.commit();
     }
