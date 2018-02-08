@@ -51,7 +51,7 @@ public class TopicAdapter extends BaseAdapter {
     private final String TYPE_HOST = "host";
 
     private Context context;
-    private Map<Integer,Integer> rowLayoutMap;
+    private Map<Integer, Integer> rowLayoutMap;
     private List<Map> topicModelMapList;
     private LikeModel likeModel;
     private List<Map> pollModelMap;
@@ -61,16 +61,16 @@ public class TopicAdapter extends BaseAdapter {
     private OnDataPass onDataPass;
     private boolean canComment;
     private LayoutInflater layoutInflater;
-    private String URL ;
+    private String URL;
     private ProgressDialog progress;
     private SharedPreferences sharedPref;
     private String empEmail;
 
 
     public TopicAdapter(Context context, OnDataPass onDataPass, List<Map> topicMap, LikeModel likeModel, boolean canComment) {
-        URL = PropertyUtility.getProperty("httpUrlSite", context)+PropertyUtility.getProperty("contextRoot", context)+"api/"+ PropertyUtility.getProperty("versionServer", context)
-                +"topic/deleteObj";
-        this.layoutInflater =  LayoutInflater.from(context);
+        URL = PropertyUtility.getProperty("httpUrlSite", context) + PropertyUtility.getProperty("contextRoot", context) + "api/" + PropertyUtility.getProperty("versionServer", context)
+                + "topic/deleteObj";
+        this.layoutInflater = LayoutInflater.from(context);
         this.topicModelMapList = (List<Map>) topicMap.get(0).get("boardContentList");
         this.pollModelMap = (List<Map>) topicMap.get(0).get("pollModel");
         this.countAcceptPoll = (Integer) topicMap.get(0).get("countAcceptPoll");
@@ -82,7 +82,8 @@ public class TopicAdapter extends BaseAdapter {
         sharedPref = context.getSharedPreferences(context.getString(R.string.preference_key), Context.MODE_PRIVATE);
         if (canComment) {
             rowLayoutMap.put(0, R.layout.host_row_can_comment);
-        } else {rowLayoutMap.put(0, R.layout.host_row_not_comment);
+        } else {
+            rowLayoutMap.put(0, R.layout.host_row_not_comment);
         }
         rowLayoutMap.put(1, R.layout.comment_row);
     }
@@ -115,16 +116,16 @@ public class TopicAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         try {
-            Log.i(LOG_TAG, "Position : "+position);
+            Log.i(LOG_TAG, "Position : " + position);
 
             final Map<String, Object> topicModelMap = (Map<String, Object>) getItem(position);
-            Log.i(LOG_TAG, "Item Type : "+topicModelMap.get("type"));
+            Log.i(LOG_TAG, "Item Type : " + topicModelMap.get("type"));
 
             int rowType = getItemViewType(position);
             if (convertView == null) {
                 holder = new ViewHolder();
-                if(rowType == 0) {
-                    Log.i( LOG_TAG,"convert View : row 0 ");
+                if (rowType == 0) {
+                    Log.i(LOG_TAG, "convert View : row 0 ");
                     empEmail = sharedPref.getString("empEmail", null);
                     convertView = layoutInflater.inflate(rowLayoutMap.get(0), null);
                     holder.subject = (TextView) convertView.findViewById(R.id.hostSubject);
@@ -132,25 +133,25 @@ public class TopicAdapter extends BaseAdapter {
                     holder.user = (TextView) convertView.findViewById(R.id.hostUsername);
                     holder.date = (TextView) convertView.findViewById(R.id.hostTime);
                     holder.likeCount = (TextView) convertView.findViewById(R.id.txtLikeCount);
-                    holder.imageView =(ImageView) convertView.findViewById(R.id.hostImage);
+                    holder.imageView = (ImageView) convertView.findViewById(R.id.hostImage);
                     holder.btnLike = (Button) convertView.findViewById(R.id.btnLike);
                     holder.btnComment = (Button) convertView.findViewById(R.id.btnComment);
                     holder.btnDelete = (ImageButton) convertView.findViewById(R.id.btnDelete);
 
-                    if(this.pollModelMap != null){
+                    if (this.pollModelMap != null) {
                         holder.countAcceptIcon = (ImageView) convertView.findViewById(R.id.countAcceptIcon);
                         holder.countAcceptIcon.setVisibility(View.VISIBLE);
                         holder.countAcceptPoll = (TextView) convertView.findViewById(R.id.countAcceptPoll);
                         holder.countAcceptPoll.setVisibility(View.VISIBLE);
                     }
-                    
-                } else if(rowType == 1) {
-                    Log.i( LOG_TAG,"convert View : row 1 ");
+
+                } else if (rowType == 1) {
+                    Log.i(LOG_TAG, "convert View : row 1 ");
                     convertView = layoutInflater.inflate(rowLayoutMap.get(1), null);
                     holder.contenttext = (TextView) convertView.findViewById(R.id.commentContent);
                     holder.user = (TextView) convertView.findViewById(R.id.commentUsername);
                     holder.date = (TextView) convertView.findViewById(R.id.commentTime);
-                    holder.imageView =(ImageView) convertView.findViewById(R.id.commentImage);
+                    holder.imageView = (ImageView) convertView.findViewById(R.id.commentImage);
                     holder.btnDelete = (ImageButton) convertView.findViewById(R.id.btnDelete);
                 }
                 convertView.setTag(holder);
@@ -159,24 +160,24 @@ public class TopicAdapter extends BaseAdapter {
             }
             if (rowType == 0) {
                 holder.subject.setText((String) topicModelMap.get("subject"));
-                holder.content.setWebChromeClient( new WebChromeClient() );
-                holder.content.loadData((String) topicModelMap.get("content"),"text/html", null);
-                Log.i(LOG_TAG,"htmlContent : "+(String) topicModelMap.get("content"));
+                holder.content.setWebChromeClient(new WebChromeClient());
+                holder.content.loadData((String) topicModelMap.get("content"), "text/html ; charset=utf-8", "UTF-8");
+                Log.i(LOG_TAG, "htmlContent : " + (String) topicModelMap.get("content"));
                 holder.user.setText((String) topicModelMap.get("avatarName"));
                 holder.date.setText((String) topicModelMap.get("date"));
-                Log.i(LOG_TAG, "countLike : "+topicModelMap.get("countLike"));
+                Log.i(LOG_TAG, "countLike : " + topicModelMap.get("countLike"));
                 holder.likeCount.setText(topicModelMap.get("countLike") == null ? "0" : String.valueOf((Integer) topicModelMap.get("countLike")));
                 DownloadImageUtils.setImageAvatar(context, holder.imageView, topicModelMap.get("avatarPic").toString());
 
-                if(this.pollModelMap != null) {
-                holder.countAcceptPoll.setText((countAcceptPoll == null ? "0" : String.valueOf(countAcceptPoll)));
+                if (this.pollModelMap != null) {
+                    holder.countAcceptPoll.setText((countAcceptPoll == null ? "0" : String.valueOf(countAcceptPoll)));
                 }
-                if(likeModel != null && likeModel.isStatusLike()){
+                if (likeModel != null && likeModel.isStatusLike()) {
                     holder.btnLike.setTextColor(this.context.getResources().getColor(R.color.colorLikeButton));
                     isClick = true;
                 }
                 holder.btnLike.setOnClickListener(new LikeButtonOnClick(this.context, holder.btnLike, holder.likeCount, isClick));
-                if(canComment){
+                if (canComment) {
                     holder.btnComment.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -184,9 +185,9 @@ public class TopicAdapter extends BaseAdapter {
                         }
                     });
                 }
-                if(empEmail.equals(topicModelMap.get("empEmail"))) {
+                if (empEmail.equals(topicModelMap.get("empEmail"))) {
                     holder.btnDelete.setVisibility(View.VISIBLE);
-                    Log.i(LOG_TAG,"EMAIL : "+empEmail.equals(topicModelMap.get("empEmail")));
+                    Log.i(LOG_TAG, "EMAIL : " + empEmail.equals(topicModelMap.get("empEmail")));
                     holder.btnDelete.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                             final CharSequence settingAvatar[] = new CharSequence[]{"Delete"};
@@ -198,25 +199,25 @@ public class TopicAdapter extends BaseAdapter {
                                     String selected = (String) settingAvatar[which];
                                     if (selected.toString().equals("Delete")) {
                                         Log.i(LOG_TAG, "Topic : " + topicModelMap);
-                                        callPostWebService(topicModelMap,true);
+                                        callPostWebService(topicModelMap, true);
                                     }
                                 }
                             });
                             builder.show();
                         }
                     });
-                }else{
+                } else {
                     holder.btnDelete.setVisibility(View.INVISIBLE);
                 }
-            } else if(rowType == 1) {
+            } else if (rowType == 1) {
                 URLImageParser urlImageParser = new URLImageParser(holder.contenttext, this.context);
                 Spanned htmlSpan = Html.fromHtml((String) topicModelMap.get("content"), urlImageParser, null);
                 holder.contenttext.setText(htmlSpan);
-                Log.i( LOG_TAG,"rowType : "+htmlSpan);
+                Log.i(LOG_TAG, "rowType : " + htmlSpan);
                 holder.user.setText((String) topicModelMap.get("avatarName"));
                 holder.date.setText((String) topicModelMap.get("date"));
                 DownloadImageUtils.setImageAvatar(context, holder.imageView, topicModelMap.get("avatarPic").toString());
-                if(empEmail.equals(topicModelMap.get("empEmail"))) {
+                if (empEmail.equals(topicModelMap.get("empEmail"))) {
                     holder.btnDelete.setVisibility(View.VISIBLE);
                     holder.btnDelete.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
@@ -227,16 +228,16 @@ public class TopicAdapter extends BaseAdapter {
                                 public void onClick(DialogInterface dialog, int which) {
                                     String selected = (String) settingAvatar[which];
                                     Log.i(LOG_TAG, "Position : " + position);
-                                        if (selected.toString().equals("Delete")) {
+                                    if (selected.toString().equals("Delete")) {
                                         Log.i(LOG_TAG, "Comment : " + topicModelMap);
-                                        callPostWebService(topicModelMap,false);
+                                        callPostWebService(topicModelMap, false);
                                     }
                                 }
                             });
                             builder.show();
                         }
                     });
-                }else{
+                } else {
                     holder.btnDelete.setVisibility(View.INVISIBLE);
                 }
             }
@@ -262,14 +263,14 @@ public class TopicAdapter extends BaseAdapter {
         ImageView countAcceptIcon;
     }
 
-    private void callPostWebService(Object topicModelMap, final boolean flag){
-        Log.i(LOG_TAG,"TOPIC MODEL : "+topicModelMap);
+    private void callPostWebService(Object topicModelMap, final boolean flag) {
+        Log.i(LOG_TAG, "TOPIC MODEL : " + topicModelMap);
         try {
             String jsonString = new ObjectMapper().writeValueAsString(topicModelMap);
             Log.i(LOG_TAG, jsonString);
 
             AsyncHttpClient client = new AsyncHttpClient();
-            client.post(context, URL, new StringEntity(jsonString,"utf-8"),
+            client.post(context, URL, new StringEntity(jsonString, "utf-8"),
                     RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
                         @Override
                         public void onStart() {
@@ -279,11 +280,11 @@ public class TopicAdapter extends BaseAdapter {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] response) {
                             Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                            Log.i(LOG_TAG, "New id : "+new String(response));
+                            Log.i(LOG_TAG, "New id : " + new String(response));
                             closeLoadingDialog();
-                            if(flag){
+                            if (flag) {
                                 callBackActivity();
-                               }else{
+                            } else {
                                 onDataPass.onDataPass("refresh");
                             }
                         }
@@ -296,7 +297,7 @@ public class TopicAdapter extends BaseAdapter {
                     });
 
         } catch (JsonProcessingException e) {
-            Log.e(LOG_TAG, "JsonProcessingException : "+e.getMessage(), e);
+            Log.e(LOG_TAG, "JsonProcessingException : " + e.getMessage(), e);
             showErrorDialog().show();
         }
     }
@@ -311,11 +312,11 @@ public class TopicAdapter extends BaseAdapter {
                 "Processing", true);
     }
 
-    private void closeLoadingDialog(){
+    private void closeLoadingDialog() {
         progress.dismiss();
     }
 
-    private android.app.AlertDialog.Builder showErrorDialog(){
+    private android.app.AlertDialog.Builder showErrorDialog() {
         android.app.AlertDialog.Builder alert = new android.app.AlertDialog.Builder(context);
         alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
@@ -325,14 +326,14 @@ public class TopicAdapter extends BaseAdapter {
     private void callBackActivity() {
         Activity activity = (Activity) context;
         FragmentManager fragmentManager = activity.getFragmentManager();
-        Log.i(LOG_TAG,"backStackName : "+fragmentManager.getBackStackEntryCount());
-        FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount()-1);
+        Log.i(LOG_TAG, "backStackName : " + fragmentManager.getBackStackEntryCount());
+        FragmentManager.BackStackEntry backEntry = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1);
         String str = backEntry.getName();
 
-        Log.i(LOG_TAG,"backStackName : "+str);
-        if(str.equals("tag")){
-            for(int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
-                fragmentManager.popBackStack("tag",FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        Log.i(LOG_TAG, "backStackName : " + str);
+        if (str.equals("tag")) {
+            for (int i = 0; i < fragmentManager.getBackStackEntryCount(); ++i) {
+                fragmentManager.popBackStack("tag", FragmentManager.POP_BACK_STACK_INCLUSIVE);
             }
         }
     }

@@ -61,7 +61,7 @@ public class WritingCommentFragment extends Fragment {
     private String URL;
     private String URL_POST_SERVLET;
     private ProgressDialog progress;
-    private String _id ;
+    private String _id;
     private String room_id;
     private RichEditor mEditor;
 
@@ -70,15 +70,15 @@ public class WritingCommentFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
 
-        URL = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"api/"+PropertyUtility.getProperty("versionServer", getActivity())
-                +"topic/post";
-        URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity())+PropertyUtility.getProperty("contextRoot", getActivity())+"UploadServlet";
+        URL = PropertyUtility.getProperty("httpUrlSite", getActivity()) + PropertyUtility.getProperty("contextRoot", getActivity()) + "api/" + PropertyUtility.getProperty("versionServer", getActivity())
+                + "topic/post";
+        URL_POST_SERVLET = PropertyUtility.getProperty("httpUrlSite", getActivity()) + PropertyUtility.getProperty("contextRoot", getActivity()) + "UploadServlet";
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view =  inflater.inflate(R.layout.activity_writing_comment, container, false);
+        View view = inflater.inflate(R.layout.activity_writing_comment, container, false);
 
         mEditor = (RichEditor) view.findViewById(R.id.richCommentContent);
         mEditor.setEditorFontSize(22);
@@ -90,31 +90,35 @@ public class WritingCommentFragment extends Fragment {
         room_id = bundle.getString("room_id");
 
         view.findViewById(R.id.action_undo).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 mEditor.undo();
             }
         });
 
         view.findViewById(R.id.action_bold).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 mEditor.setBold();
             }
         });
 
         view.findViewById(R.id.action_redo).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
                 mEditor.redo();
             }
         });
 
         view.findViewById(R.id.action_insert_image).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
+            @Override
+            public void onClick(View v) {
 
-                if(!mEditor.hasFocus()){
+                if (!mEditor.hasFocus()) {
                     mEditor.focusEditor();
                 }
 
-                if (Build.VERSION.SDK_INT >= 23){
+                if (Build.VERSION.SDK_INT >= 23) {
                     if (ContextCompat.checkSelfPermission(getActivity(),
                             Manifest.permission.READ_EXTERNAL_STORAGE)
                             != PackageManager.PERMISSION_GRANTED) {
@@ -128,7 +132,7 @@ public class WritingCommentFragment extends Fragment {
                                     MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
                         }
-                    } else{
+                    } else {
                         Log.i(LOG_TAG, "ELSE");
                         requestPermissions(
                                 new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
@@ -145,8 +149,9 @@ public class WritingCommentFragment extends Fragment {
         });
 
         view.findViewById(R.id.action_insert_link).setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-            mEditor.insertLink();
+            @Override
+            public void onClick(View v) {
+                mEditor.insertLink();
             }
         });
 
@@ -175,38 +180,38 @@ public class WritingCommentFragment extends Fragment {
         }
     }
 
-    private void callPostWebService(TopicModel topicModel){
+    private void callPostWebService(TopicModel topicModel) {
 
         try {
             String jsonString = new ObjectMapper().writeValueAsString(topicModel);
             Log.i(LOG_TAG, jsonString);
 
             AsyncHttpClient client = new AsyncHttpClient();
-            client.post(getActivity(), URL, new StringEntity(jsonString,"utf-8"),
-                RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
+            client.post(getActivity(), URL, new StringEntity(jsonString, "utf-8"),
+                    RequestParams.APPLICATION_JSON, new AsyncHttpResponseHandler() {
 
-                    @Override
-                    public void onStart() {
-                        showLoadingDialog();
-                    }
+                        @Override
+                        public void onStart() {
+                            showLoadingDialog();
+                        }
 
-                    @Override
-                    public void onSuccess(int statusCode, Header[] headers, byte[] response) {
-                        Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
-                        Log.i(LOG_TAG, "New id : "+new String(response));
-                        closeLoadingDialog();
-                        callNextActivity(_id);
-                    }
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] response) {
+                            Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
+                            Log.i(LOG_TAG, "New id : " + new String(response));
+                            closeLoadingDialog();
+                            callNextActivity(_id);
+                        }
 
-                    @Override
-                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
-                        Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
-                        closeLoadingDialog();
-                    }
-                });
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                            Log.e(LOG_TAG, "Error code : " + statusCode + ", " + e.getMessage(), e);
+                            closeLoadingDialog();
+                        }
+                    });
 
         } catch (JsonProcessingException e) {
-            Log.e(LOG_TAG, "JsonProcessingException : "+e.getMessage(), e);
+            Log.e(LOG_TAG, "JsonProcessingException : " + e.getMessage(), e);
             showErrorDialog().show();
         }
     }
@@ -216,7 +221,7 @@ public class WritingCommentFragment extends Fragment {
                 "Processing", true);
     }
 
-    private void closeLoadingDialog(){
+    private void closeLoadingDialog() {
         progress.dismiss();
     }
 
@@ -229,7 +234,7 @@ public class WritingCommentFragment extends Fragment {
         fragmentManager.beginTransaction().replace(R.id.content_frame, fragment).addToBackStack("tag").commit();
     }
 
-    private AlertDialog.Builder showErrorDialog(){
+    private AlertDialog.Builder showErrorDialog() {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
         alert.setMessage("Error while loading content.");
         alert.setCancelable(true);
@@ -242,14 +247,14 @@ public class WritingCommentFragment extends Fragment {
 
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == getActivity().RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getActivity().getContentResolver().query(selectedImage,filePathColumn, null, null, null);
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = getActivity().getContentResolver().query(selectedImage, filePathColumn, null, null, null);
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
 
-            Log.i(LOG_TAG, "picturePath : "+picturePath);
+            Log.i(LOG_TAG, "picturePath : " + picturePath);
             RequestParams params = new RequestParams();
 
             try {
@@ -259,7 +264,7 @@ public class WritingCommentFragment extends Fragment {
 
                 byte[] myByteArray = stream.toByteArray();
                 params.put("imageFile", new ByteArrayInputStream(myByteArray));
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
             }
 
@@ -275,11 +280,11 @@ public class WritingCommentFragment extends Fragment {
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                     Log.i(LOG_TAG, String.format(Locale.US, "Return Status Code: %d", statusCode));
                     String responseString = new String(responseBody);
-                    Log.i(LOG_TAG, "Path : "+responseString);
+                    Log.i(LOG_TAG, "Path : " + responseString);
 
                     try {
-                        String imgURL =  new JSONObject(responseString).getString("imgUrl");
-                        Log.i(LOG_TAG, "imgURL : "+imgURL);
+                        String imgURL = new JSONObject(responseString).getString("imgUrl");
+                        Log.i(LOG_TAG, "imgURL : " + imgURL);
 
                         Map<String, Integer> imageResolutionMap = ImageResolutionUtil.calculateResolution(BitmapUtil.width, BitmapUtil.height);
                         mEditor.insertImage(imgURL, imageResolutionMap.get("width"), imageResolutionMap.get("height"), "insertImageUrl");
@@ -316,7 +321,7 @@ public class WritingCommentFragment extends Fragment {
                 String commentContentString = mEditor.getHtml();
                 Log.i(LOG_TAG, "Content : " + commentContentString);
 
-                if(commentContentString == null || isEmpty(commentContentString)){
+                if (commentContentString == null || isEmpty(commentContentString)) {
                     Log.i(LOG_TAG, "empty message");
                     alertMessage("Please enter your Comment message.");
                 } else {
@@ -344,21 +349,21 @@ public class WritingCommentFragment extends Fragment {
     }
 
     private boolean isEmpty(String htmlString) {
-        if(htmlString.contains("<img")){
+        if (htmlString.contains("<img")) {
             return false;
         } else {
             String replaceString = htmlString.replace("&nbsp;", " ");
             String string = Jsoup.parse(replaceString).text();
-            Log.i(LOG_TAG, "String is Empty : "+string.isEmpty());
+            Log.i(LOG_TAG, "String is Empty : " + string.isEmpty());
             return string.trim().length() == 0;
         }
     }
 
-    private void hideKeyboard(){
+    private void hideKeyboard() {
         View view = this.getActivity().getCurrentFocus();
         if (view != null) {
             Log.i(LOG_TAG, "view null hide keyboard");
-            InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

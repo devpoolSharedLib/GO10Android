@@ -16,3 +16,4 @@ keystore.properties
 Key_Store/
 app/app-release.apk
 *.DS_Store
+.idea/misc.xml
