@@ -117,7 +117,7 @@ public class LoadingActivity extends Activity {
     private boolean hasUserLoggedIn() {
         return sharedPref.getBoolean("hasLoggedIn", false);
     }
-
+     /***************/
     private void callWebAccess() {
         final String empEmail = sharedPref.getString("empEmail", null);
         final String concatAccess = ACCESS_URL + "?empEmail=" + empEmail;
