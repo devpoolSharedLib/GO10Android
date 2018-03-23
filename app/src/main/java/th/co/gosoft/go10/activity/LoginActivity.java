@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.i(LOG_TAG, "Not have user model");
                             Toast.makeText(getApplication(), "The e-mail or password is incorrect.\nPlease try again.", Toast.LENGTH_SHORT).show();
                         } else {
-                            if (isActivate(userModelList)) {
+                            if (isNotActivate(userModelList)) {
                                 Toast.makeText(getApplication(), "The e-mail or password is incorrect.\nPlease try again.", Toast.LENGTH_SHORT).show();
                             } else {
                                 callWebAccess(email);
@@ -204,7 +204,7 @@ public class LoginActivity extends AppCompatActivity {
         return "Avatar Name".equals(userModelList.get(0).get("avatarName")) || "default_avatar".equals(userModelList.get(0).get("avatarPic"));
     }
 
-    private boolean isActivate(List<Map<String, Object>> userModelList) {
+    private boolean isNotActivate(List<Map<String, Object>> userModelList) {
         return !(Boolean) userModelList.get(0).get("activate");
 
     }

@@ -84,7 +84,7 @@ public class SettingAvatar extends AppCompatActivity {
         editor = sharedPref.edit();
         Bundle extras = getIntent().getExtras();
 
-        if(extras == null) {
+        if(isComeFromHomeActivity(extras)) {
             isSeparateUpdate = true;
             ActionBar actionBar = getSupportActionBar();
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -149,7 +149,7 @@ public class SettingAvatar extends AppCompatActivity {
             }
         });
 
-        settingListView = (ListView) findViewById(R.id.settingListview);
+        settingListView = this.findViewById(R.id.settingListview);
         settingListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
@@ -230,6 +230,10 @@ public class SettingAvatar extends AppCompatActivity {
 
     private boolean isComeFromRegisterActivity(Bundle extras) {
         return extras != null && extras.getString("state").equals("register");
+    }
+
+    private boolean isComeFromHomeActivity(Bundle extras) {
+        return extras == null || extras.getString("state") == null;
     }
 
     @Override

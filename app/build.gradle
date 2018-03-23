@@ -26,8 +26,8 @@ android {
         }
     }
 
-    compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.2'
     defaultConfig {
         applicationId "th.co.gosoft.go10"
         minSdkVersion 15
@@ -73,11 +73,12 @@ dependencies {
     }
     compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.ibm.mobilefirstplatform.clientsdk.android:facebookauthentication:2.1.0@aar'
-    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:appcompat-v7:27.0.2'
+    compile 'com.android.support:design:27.0.2'
+    compile 'com.android.support:support-v4:27.0.2'
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.5.0'
     compile 'com.google.android.gms:play-services-auth:11.8.0'
-    compile 'com.android.support:design:25.3.1'
     compile 'de.hdodenhof:circleimageview:2.0.0'
     compile 'com.facebook.android:facebook-android-sdk:[4,5)'
     compile 'mobi.parchment:parchment:1.6.9@aar'
@@ -91,7 +92,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-location:11.8.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.github.bumptech.glide:glide:3.5.2'
-    compile 'com.android.support:support-v4:25.3.1'
     compile 'jp.wasabeef:glide-transformations:2.0.1'
     compile 'jp.wasabeef:picasso-transformations:2.1.0'
     compile 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'

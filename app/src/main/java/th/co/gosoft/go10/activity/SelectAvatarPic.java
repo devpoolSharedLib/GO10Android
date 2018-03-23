@@ -91,9 +91,9 @@ public class SelectAvatarPic extends AppCompatActivity implements OnDataPass {
 
     @Override
     public void onDataPass(Object data) {
-        String[] splietString = String.valueOf(data).split(getResources().getString(R.string.drawable_package));
-        Log.i(LOG_TAG, "Select avatar ID : " + splietString[1]);
-        this.avatarName = splietString[1];
+        String[] splitString = String.valueOf(data).split(getResources().getString(R.string.drawable_package));
+        Log.i(LOG_TAG, "Select avatar ID : " + splitString[1]);
+        this.avatarName = splitString[1];
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

@@ -76,6 +76,7 @@ public class HomeActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent( HomeActivity.this, SettingAvatar.class );
+                    Log.i(LOG_TAG, "Call SettingAvatar");
                     startActivity( intent );
                     DrawerLayout drawer = (DrawerLayout) findViewById( R.id.drawer_layout );
                     drawer.closeDrawer( GravityCompat.START );
